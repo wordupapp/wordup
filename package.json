@@ -1,5 +1,5 @@
 {
-  "name": "boilermaker",
+  "name": "wordup-server",
   "version": "1.0.0",
   "description": "Some boilerplate code to get you started - get shakin'!",
   "engines": {
@@ -13,7 +13,7 @@
     "start": "node server",
     "start-dev": "npm run build-client-watch & npm run start-server",
     "start-server": "NODE_ENV='development' nodemon server -e html,js,scss --ignore public",
-    "test": "NODE_ENV='test' DATABASE_URL='postgres://localhost:5432/boilermaker-test' mocha ./**/*.spec.js --compilers js:babel-register"
+    "test": "NODE_ENV='test' DATABASE_URL='postgres://localhost:5432/wordup-server-test' mocha ./**/*.spec.js --compilers js:babel-register"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +25,8 @@
     "express-session": "^1.15.1",
     "history": "^4.6.3",
     "morgan": "^1.8.1",
+    "neo4j": "^2.0.0-RC2",
+    "neo4j-driver": "^1.2.0",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "pg": "^6.1.2",
