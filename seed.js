@@ -3,6 +3,7 @@ const chance = require('chance')(123);
 const toonavatar = require('cartoon-avatar');
 
 const { db, graphDb } = require('./server/db');
+const wordData = require('./public/assets/middleSchool-words.json');
 
 const session = graphDb.session();
 
@@ -55,9 +56,26 @@ const seedDb = () => (
   createUsers()
 );
 
+/* -----------  Set up Word data for Neo4j ----------- */
+const numWords = wordData.length; // 100 for now
+
+const createWords = () => {
+  let cyperCode = '';
+  let id = 0;
+  wordData.forEach(datum => {
+    const { name } = datum;
+    id += 1;
+    cyperCode += `CREATE (word${id}:Word {
+      intId:${id},
+      name:'${name}'
+    })`;
+  });
+
+  return cyperCode;
+};
+
 
 /* -----------  Set up User data for Neo4j ----------- */
-
 const createGraphUsers = pgUsers => {
   let cypherCode = '';
   pgUsers.forEach(pgUser => {
@@ -71,15 +89,24 @@ const createGraphUsers = pgUsers => {
       image:'${image}',
       level:${level}
     })`;
+    const numWordsUsed = chance.integer({ min: 10, max: 30 });
+    for (let i = 0; i < numWordsUsed; i += 1) {
+      const timesUsed = chance.integer({ min: 1, max: 10 });
+      const randWordId = chance.integer({ min: 1, max: numWords });
+      cypherCode += `,(user${id})-[:USED {times: ${timesUsed}}]->(word${randWordId})`;
+    }
   });
 
-  return session.run(cypherCode);
+  return cypherCode;
 };
 
 const seedGrapDb = pgUsers => {
-  const cyperCode = 'MATCH (n) DETACH DELETE n';
-  return session.run(cyperCode)
-    .then(() => createGraphUsers(pgUsers));
+  // let cyperCode = 'MATCH (n) DETACH DELETE n ';
+  let cyperCode = '';
+  cyperCode += createWords();
+  cyperCode += createGraphUsers(pgUsers);
+
+  return session.run(cyperCode);
 };
 
 /* -----------  Sync databases ----------- */
