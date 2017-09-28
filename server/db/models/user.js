@@ -6,26 +6,42 @@ const User = db.define('user', {
   email: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
   },
   password: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   salt: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   googleId: {
-    type: Sequelize.STRING
-  }
-})
+    type: Sequelize.STRING,
+  },
+  name: {
+    type: Sequelize.STRING,
+  },
+  phone: {
+    type: Sequelize.STRING,
+  },
+  gender: {
+    type: Sequelize.ENUM,
+    values: ['male', 'female'],
+  },
+  image: {
+    type: Sequelize.STRING,
+  },
+  level: {
+    type: Sequelize.INTEGER,
+  },
+});
 
-module.exports = User
+module.exports = User;
 
 /**
  * instanceMethods
  */
 User.prototype.correctPassword = function (candidatePwd) {
-  return User.encryptPassword(candidatePwd, this.salt) === this.password
+  return User.encryptPassword(candidatePwd, this.salt) === this.password;
 }
 
 /**
