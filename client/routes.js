@@ -1,33 +1,30 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Router} from 'react-router';
-import {Route, Switch} from 'react-router-dom';
-import PropTypes from 'prop-types';
-import history from './history';
-import {Main, Login, Signup, UserHome} from './components';
-import {me} from './store';
-
 /* eslint-disable arrow-parens */
 /* eslint-disable react/jsx-indent */
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Router } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import history from './history';
+import { Main, Login, Signup, UserHome, Record } from './components';
+import { me } from './store';
 
-/**
- * COMPONENT
- */
 class Routes extends Component {
   componentDidMount() {
     this.props.loadInitialData();
   }
 
   render() {
-    const {isLoggedIn} = this.props;
+    const { isLoggedIn } = this.props;
 
     return (
       <Router history={history}>
         <Main>
           <Switch>
             {/* Routes placed here are available to all visitors */}
-            <Route path='/login' component={Login} />
-            <Route path='/signup' component={Signup} />
+            <Route path="/login" component={Login} />
+            <Route path="/signup" component={Signup} />
+            <Route path="/record" component={Record} />
             {
               isLoggedIn &&
                 <Switch>
@@ -40,7 +37,7 @@ class Routes extends Component {
           </Switch>
         </Main>
       </Router>
-    )
+    );
   }
 }
 
@@ -71,4 +68,4 @@ export default connect(mapState, mapDispatch)(Routes);
 Routes.propTypes = {
   loadInitialData: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-}
+};

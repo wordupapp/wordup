@@ -1,3 +1,5 @@
+/* eslint-disable arrow-parens */
+/* eslint-disable react/jsx-indent */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -7,15 +9,6 @@ import {
   Navbar,
 } from './';
 
-/* eslint-disable arrow-parens */
-/* eslint-disable react/jsx-indent */
-
-/**
- * COMPONENT
- *  The Main component is our 'picture frame' - it displays the navbar and anything
- *  else common to our entire app. The 'picture' inside the frame is the space
- *  rendered out by the component's `children`.
- */
 const Main = (props) => {
   const { children, handleClick, isLoggedIn } = props;
   const styles = {
