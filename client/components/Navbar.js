@@ -44,7 +44,18 @@ class Navbar extends Component {
 
   render() {
     const { isLoggedIn, handleLogout } = this.props;
-
+    const loggedInMenuOptions = this.links.map((link) => {
+      return (
+        <Menu.Item
+          active={this.props.location.pathname === link.url}
+          key={link.name}
+          name={link.name}
+          as={Link}
+          to={link.url}>
+          {link.name}
+        </Menu.Item>
+      );
+    });
     return (
       <Menu inverted floated fixed="top" stackable style={this.styles.navbar}>
         <Menu.Menu>
@@ -56,25 +67,16 @@ class Navbar extends Component {
             wordUp
           </Menu.Item>
         </Menu.Menu>
-        {this.links.map((link) => {
-          return (
-            <Menu.Item
-              active={this.props.location.pathname === link.url}
-              key={link.name}
-              name={link.name}
-              as={Link}
-              to={link.url}>
-              {link.name}
-            </Menu.Item>
-          );
-        })}
         {isLoggedIn ? (
-          <Menu.Menu style={this.styles.rightMenu}>
-            <Menu.Item name={`Logout`} onClick={handleLogout} />
-            <Menu.Item active={this.props.location.pathname === '/'} as={Link} to={'/'}>
-              <Icon name="user" size="big" />
-            </Menu.Item>
-          </Menu.Menu>
+          <div>
+            {loggedInMenuOptions}
+            <Menu.Menu style={this.styles.rightMenu}>
+              <Menu.Item name={`Logout`} onClick={handleLogout} />
+              <Menu.Item active={this.props.location.pathname === '/'} as={Link} to={'/'}>
+                <Icon name="user" size="big" />
+              </Menu.Item>
+            </Menu.Menu>
+          </div>
         ) : (
           <Menu.Menu style={this.styles.rightMenu}>
             <Menu.Item name="Login" as={Link} to={`/login`} />
