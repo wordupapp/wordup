@@ -1,8 +1,14 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {withRouter, Link} from 'react-router-dom'
-import {logout} from '../store'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom';
+import { logout } from '../store';
+import {
+  Navbar,
+} from './';
+
+/* eslint-disable arrow-parens */
+/* eslint-disable react/jsx-indent */
 
 /**
  * COMPONENT
@@ -11,11 +17,18 @@ import {logout} from '../store'
  *  rendered out by the component's `children`.
  */
 const Main = (props) => {
-  const {children, handleClick, isLoggedIn} = props
+  const { children, handleClick, isLoggedIn } = props;
+  const styles = {
+    body: {
+      display: 'flex',
+      minHeight: '100vh',
+      flexDirection: 'column',
+    },
+  };
 
   return (
-    <div>
-      <h1>BOILERMAKER</h1>
+    <div style={styles.body}>
+      <Navbar />
       <nav>
         {
           isLoggedIn
@@ -34,29 +47,29 @@ const Main = (props) => {
       <hr />
       {children}
     </div>
-  )
-}
+  );
+};
 
 /**
  * CONTAINER
  */
 const mapState = (state) => {
   return {
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
-    handleClick () {
-      dispatch(logout())
+    handleClick() {
+      dispatch(logout());
     }
   }
 }
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
-export default withRouter(connect(mapState, mapDispatch)(Main))
+export default withRouter(connect(mapState, mapDispatch)(Main));
 
 /**
  * PROP TYPES
@@ -64,5 +77,5 @@ export default withRouter(connect(mapState, mapDispatch)(Main))
 Main.propTypes = {
   children: PropTypes.object,
   handleClick: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
 }
