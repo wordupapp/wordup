@@ -88,32 +88,35 @@ collegeWordData = collegeWordData.filter(collegeWord => {
 
 
 const numWords = middleWordData.length + highWordData.length + collegeWordData.length;
-let wordIdIndex = 0;
+let wordIndex = 0;
 let definitionIndex = 0;
 let exampleIndex = 0;
-let relationIndex =0;
+let relationIndex = 0;
 
 const createWords = (wordData, level) => {
   let cyperCode = '';
   wordData.forEach(datum => {
     const { name, definitions, examples, relations } = datum;
-    wordIdIndex += 1;
+    wordIndex += 1;
 
     // Create node for word
-    cyperCode += `CREATE (word${wordIdIndex}:Word {
-      name:'${name}',
-      level: ${level}
-    })`;
+    cyperCode += `
+      CREATE (word${wordIndex}:Word {
+        intId: ${wordIndex},
+        name:'${name}',
+        level: ${level}
+      })`;
 
     // Create relationships to definitions
     Object.keys(definitions).forEach(pos => {
       const defText = definitions[pos];
       if (defText.length > 0) {
         definitionIndex += 1;
-        cyperCode += `CREATE (def${definitionIndex}:Definition {
+        cyperCode += `
+          CREATE (def${definitionIndex}:Definition {
             text: "${defText}"
           }),
-          (word${wordIdIndex})
+          (word${wordIndex})
           -[:DEFINITON {partOfSpeech: "${pos}"}]
           ->(def${definitionIndex})`;
       }
@@ -123,10 +126,11 @@ const createWords = (wordData, level) => {
     examples.forEach(example => {
       if (example.length > 0) {
         exampleIndex += 1;
-        cyperCode += `CREATE (example${exampleIndex}:Example {
-            text: "${exampleIndex}"
+        cyperCode += `
+          CREATE (example${exampleIndex}:Example {
+            text: "${example}"
           }),
-          (word${wordIdIndex})
+          (word${wordIndex})
           -[:Example]
           ->(example${exampleIndex})`;
       }
@@ -137,10 +141,11 @@ const createWords = (wordData, level) => {
       const relationText = relations[relation];
       if (relationText.length > 0) {
         relationIndex += 1;
-        cyperCode += `CREATE (relation${relationIndex}:RelatedWords {
-            text: "${relationText}"
+        cyperCode += `
+          CREATE (relation${relationIndex}:RelatedWords {
+              text: "${relationText}"
           }),
-          (word${wordIdIndex})
+          (word${wordIndex})
           -[:RELATEDTO {relation: "${relation}"}]
           ->(relation${relationIndex})`;
       }
@@ -152,12 +157,15 @@ const createWords = (wordData, level) => {
 
 
 /* -----------  Set up User data for Neo4j ----------- */
+let userWordIndex = 0;
 
 const createGraphUsers = pgUsers => {
-  let cypherCode = '';
-  pgUsers.forEach(pgUser => {
+
+  const createUserPromiseArr = pgUsers.map(pgUser => {
     const { id, name, email, phone, gender, image, level } = pgUser;
-    cypherCode += `CREATE (user${id}:User {
+
+    let cypherCode = `
+    CREATE (user${id}:User {
       pgId:${id},
       name:'${name}',
       email:'${email}',
@@ -167,26 +175,54 @@ const createGraphUsers = pgUsers => {
       level:${level}
     })`;
     const numWordsUsed = chance.integer({ min: 10, max: 30 });
+
     for (let i = 0; i < numWordsUsed; i += 1) {
       const timesUsed = chance.integer({ min: 1, max: 10 });
       const randWordId = chance.integer({ min: 1, max: numWords });
-      cypherCode += `,(user${id})-[:USED {times: ${timesUsed}}]
-        ->(word${randWordId})`;
+      userWordIndex += 1;
+
+      cypherCode += `
+        WITH user${id}
+        MATCH (word${userWordIndex}:Word)
+          WHERE word${userWordIndex}.intId = ${randWordId}
+        CREATE (user${id})
+        -[:USED {times: ${timesUsed}}]
+        ->(word${userWordIndex})`;
     }
+    console.log('cypher code for user creation: ', cypherCode);
+    return () => session.run(cypherCode);
   });
 
-  return cypherCode;
+  return createUserPromiseArr;
 };
 
 const seedGrapDb = pgUsers => {
-  // let cyperCode = 'MATCH (n) DETACH DELETE n';
-  let cyperCode = '';
-  cyperCode += createWords(middleWordData, 7); // give level 7 for all middle school words
-  cyperCode += createWords(highWordData, 8); // give level 8 for all middle school words
-  cyperCode += createWords(collegeWordData, 9); // give level 9 for all middle school words
-  cyperCode += createGraphUsers(pgUsers);
 
-  return session.run(cyperCode);
+  const cyperForMiddle = createWords(middleWordData, 7); // give level 7 for all middle school words
+  const cyperForHigh = createWords(highWordData, 8); // give level 8 for all middle school words
+  const cyperForCollege = createWords(collegeWordData, 9); // give level 9 for all middle school words
+  // const cyperForUser = createGraphUsers(pgUsers);
+
+  return session.run(cyperForMiddle)
+    .then(() => {
+      console.log('Seeded words for middle school!');
+      return session.run(cyperForHigh);
+    })
+    .then(() => {
+      console.log('Seeded words for high school!');
+      session.run(cyperForCollege);
+    })
+    .then(() => {
+      console.log('Seeded words for college!');
+      // session.run(cyperForUser);
+      return new Promise(async (resolve, reject) => {
+        const createUserThunks = createGraphUsers(pgUsers);
+        for (let i = 0; i < createUserThunks.length; i++) {
+          await createUserThunks[i]();
+        }
+        resolve(true);
+      })
+    });
 };
 
 /* -----------  Sync databases ----------- */
@@ -203,6 +239,7 @@ db.sync({ force: true })
     return seedGrapDb(pgUsers);
   })
   .then(() => {
+    console.log('Seeded users with random relationships to words!');
     console.log('Seeding successful!');
   })
   .catch(console.error)
