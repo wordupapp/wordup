@@ -5,5 +5,7 @@
  */
 export { default as Main } from './main';
 export { default as UserHome } from './user-home';
-export { Login, Signup } from './auth-form';
 export { default as Record } from './Record.jsx';
+export { default as Navbar } from './Navbar';
+export {Login, Signup} from './auth-form';
+

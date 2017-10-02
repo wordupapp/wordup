@@ -1,3 +1,5 @@
+/* eslint-disable arrow-parens */
+/* eslint-disable react/jsx-indent */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Router } from 'react-router';
@@ -58,7 +60,7 @@ const mapDispatch = (dispatch) => {
   };
 };
 
-export default connect(mapState, mapDispatch)(Routes)
+export default connect(mapState, mapDispatch)(Routes);
 
 /**
  * PROP TYPES
