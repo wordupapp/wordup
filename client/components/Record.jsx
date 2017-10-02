@@ -93,9 +93,10 @@ class Record extends Component {
         height: 200,
         color: "#d50000",
       },
-      flex: {
+      outerDiv: {
         width: "100%",
         height: "100%",
+        margin: "auto",
       },
       button: {
         backgroundColor: "#0a00b6",
@@ -124,7 +125,7 @@ class Record extends Component {
     );
 
     return (
-      <div style={styles.flex}>
+      <div style={styles.outerDiv}>
         <div>
           <h2>Hi, user!</h2>
         </div>
