@@ -4,18 +4,18 @@ import {Router} from 'react-router'
 import {Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import history from './history'
-import {Main, Login, Signup, UserHome} from './components'
+import {Main, Landing, Login, Signup, UserHome} from './components'
 import {me} from './store'
 
 /**
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount () {
+  componentDidMount() {
     this.props.loadInitialData()
   }
 
-  render () {
+  render() {
     const {isLoggedIn} = this.props
 
     return (
@@ -23,6 +23,7 @@ class Routes extends Component {
         <Main>
           <Switch>
             {/* Routes placed here are available to all visitors */}
+            <Route path='/landing' component={Landing} />
             <Route path='/login' component={Login} />
             <Route path='/signup' component={Signup} />
             {
