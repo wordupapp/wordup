@@ -3,7 +3,9 @@ const chance = require('chance')(123);
 const toonavatar = require('cartoon-avatar');
 
 const { db, graphDb } = require('./server/db');
-const wordData = require('./public/assets/middleSchool-words.json');
+const middleWordData = require('./public/assets/middleSchool-output.json');
+let highWordData = require('./public/assets/highSchool-output.json');
+let collegeWordData = require('./public/assets/college-output.json');
 
 const session = graphDb.session();
 
@@ -57,18 +59,92 @@ const seedDb = () => (
 );
 
 /* -----------  Set up Word data for Neo4j ----------- */
-const numWords = wordData.length; // 100 for now
 
-const createWords = () => {
+highWordData = highWordData.filter(highWord => {
+
+  // check for duplicates in middle school words
+  for (let i = 0; i < middleWordData.length; i += 1) {
+    if (middleWordData[i].name === highWord.name) return false;
+  }
+
+  return true;
+});
+
+
+collegeWordData = collegeWordData.filter(collegeWord => {
+
+  // check for duplicates in middle school words
+  for (let i = 0; i < middleWordData.length; i += 1) {
+    if (middleWordData[i].name === collegeWord.name) return false;
+  }
+
+  // check for duplicates in high school words
+  for (let i = 0; i < highWordData.length; i += 1) {
+    if (highWordData[i].name === collegeWord.name) return false;
+  }
+
+  return true;
+});
+
+
+const numWords = middleWordData.length + highWordData.length + collegeWordData.length;
+let wordIdIndex = 0;
+let definitionIndex = 0;
+let exampleIndex = 0;
+let relationIndex =0;
+
+const createWords = (wordData, level) => {
   let cyperCode = '';
-  let id = 0;
   wordData.forEach(datum => {
-    const { name } = datum;
-    id += 1;
-    cyperCode += `CREATE (word${id}:Word {
-      intId:${id},
-      name:'${name}'
+    const { name, definitions, examples, relations } = datum;
+    wordIdIndex += 1;
+
+    // Create node for word
+    cyperCode += `CREATE (word${wordIdIndex}:Word {
+      name:'${name}',
+      level: ${level}
     })`;
+
+    // Create relationships to definitions
+    Object.keys(definitions).forEach(pos => {
+      const defText = definitions[pos];
+      if (defText.length > 0) {
+        definitionIndex += 1;
+        cyperCode += `CREATE (def${definitionIndex}:Definition {
+            text: "${defText}"
+          }),
+          (word${wordIdIndex})
+          -[:DEFINITON {partOfSpeech: "${pos}"}]
+          ->(def${definitionIndex})`;
+      }
+    });
+
+    // Create relationships to examples
+    examples.forEach(example => {
+      if (example.length > 0) {
+        exampleIndex += 1;
+        cyperCode += `CREATE (example${exampleIndex}:Example {
+            text: "${exampleIndex}"
+          }),
+          (word${wordIdIndex})
+          -[:Example]
+          ->(example${exampleIndex})`;
+      }
+    });
+
+    // Create relationships to related words
+    Object.keys(relations).forEach(relation => {
+      const relationText = relations[relation];
+      if (relationText.length > 0) {
+        relationIndex += 1;
+        cyperCode += `CREATE (relation${relationIndex}:RelatedWords {
+            text: "${relationText}"
+          }),
+          (word${wordIdIndex})
+          -[:RELATEDTO {relation: "${relation}"}]
+          ->(relation${relationIndex})`;
+      }
+    });
   });
 
   return cyperCode;
@@ -76,6 +152,7 @@ const createWords = () => {
 
 
 /* -----------  Set up User data for Neo4j ----------- */
+
 const createGraphUsers = pgUsers => {
   let cypherCode = '';
   pgUsers.forEach(pgUser => {
@@ -93,7 +170,8 @@ const createGraphUsers = pgUsers => {
     for (let i = 0; i < numWordsUsed; i += 1) {
       const timesUsed = chance.integer({ min: 1, max: 10 });
       const randWordId = chance.integer({ min: 1, max: numWords });
-      cypherCode += `,(user${id})-[:USED {times: ${timesUsed}}]->(word${randWordId})`;
+      cypherCode += `,(user${id})-[:USED {times: ${timesUsed}}]
+        ->(word${randWordId})`;
     }
   });
 
@@ -101,9 +179,11 @@ const createGraphUsers = pgUsers => {
 };
 
 const seedGrapDb = pgUsers => {
-  // let cyperCode = 'MATCH (n) DETACH DELETE n ';
+  // let cyperCode = 'MATCH (n) DETACH DELETE n';
   let cyperCode = '';
-  cyperCode += createWords();
+  cyperCode += createWords(middleWordData, 7); // give level 7 for all middle school words
+  cyperCode += createWords(highWordData, 8); // give level 8 for all middle school words
+  cyperCode += createWords(collegeWordData, 9); // give level 9 for all middle school words
   cyperCode += createGraphUsers(pgUsers);
 
   return session.run(cyperCode);
