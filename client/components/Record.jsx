@@ -40,9 +40,6 @@ class Record extends Component {
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       const newResult = [speechResult, confidence];
-      // home.setState({
-      //   results: [...home.state.results, [newResult]],
-      // });
       const newWords = home.getFormattedWords(newResult);
       console.log('newWords: ', newWords)
       dispatchSendWords(newWords, user.id);
@@ -79,7 +76,9 @@ class Record extends Component {
     const formattedWords = new Set();
     if (result[1] > 0.5) {
       const tempArr = result[0].split(' ');
-      tempArr.forEach(word => formattedWords.add(word));
+      tempArr.forEach(word => {
+        if (word) formattedWords.add(word);
+      });
     }
     return [...formattedWords];
   }
@@ -103,11 +102,13 @@ class Record extends Component {
         width: 200,
         height: 200,
         color: "#0a00b6",
+        margin: "auto",
       },
       iconOff: {
         width: 200,
         height: 200,
         color: "#d50000",
+        margin: "auto",
       },
       outerDiv: {
         width: "100%",
@@ -117,6 +118,7 @@ class Record extends Component {
       button: {
         backgroundColor: "#0a00b6",
         color: "#ffffff",
+        margin: "auto",
       },
     };
 
@@ -143,7 +145,7 @@ class Record extends Component {
             ? startRecordingButton
             : stopRecordingButton
         }
-        <div>
+        <div style={styles.outerDiv}>
           <h3>Need a prompt?</h3>
           <Button
             onClick={this.randomPrompt}
