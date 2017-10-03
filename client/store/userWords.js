@@ -20,36 +20,41 @@ export const addUserWords = newWords => ({ type: ADD_USER_WORDS, newWords });
 /**
  * THUNK CREATORS
  */
-export const getWords = (userId) => dispatch => {
-  axios.get(`/api/users/${userId}/words`)
-    .then(res => res.data)
-    .then(userWords => {
-      const finalWords = userWords.map(word => {
-        return {
-          name: word[0],
-          level: word[1] ? word[1].low : null,
-          numUsed: word[2] ? word[2].low : null,
-        };
-      });
-      dispatch(getUserWords(finalWords));
-    })
-    .catch(console.error);
+// REVIEW: more async/await opportunity
+export const getWords = (userId) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/users/${userId}/words`);
+    const userWords = res.data;
+    const finalWords = userWords.map(word => {
+      return {
+        name: word[0],
+        level: word[1] ? word[1].low : null,
+        numUsed: word[2] ? word[2].low : null,
+      };
+    });
+    dispatch(getUserWords(finalWords));
+  }
+  catch (error) {
+    console.error(error);
+  }
 };
 
-export const sendWords = (words, userId) => dispatch => {
-  axios.post(`/api/users/${userId}/words`, words)
-    .then(res => res.data)
-    .then(userWords => {
-      const finalWords = userWords.map(word => {
-        return {
-          name: word[0],
-          level: word[1] ? word[1].low : null,
-          numUsed: word[2] ? word[2].low : null,
-        };
-      });
-      dispatch(addUserWords(finalWords));
-    })
-    .catch(console.error);
+export const sendWords = (words, userId) => async (dispatch) => {
+  try {
+    const res = await axios.post(`/api/users/${userId}/words`, words);
+    const userWords = res.data;
+    const finalWords = userWords.map(word => {
+      return {
+        name: word[0],
+        level: word[1] ? word[1].low : null,
+        numUsed: word[2] ? word[2].low : null,
+      };
+    });
+    dispatch(addUserWords(finalWords));
+  }
+  catch (error) {
+    console.error(error);
+  }
 };
 
 /**

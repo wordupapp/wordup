@@ -228,6 +228,27 @@ const seedGrapDb = pgUsers => {
 
 console.log('Syncing Postgres database wordup ...');
 
+// REVIEW: don't change this right now, but this is a good place to practice
+//          using async/await
+/* THIS:
+async function runSeed () {
+  try {
+    const pgUsers = await seedDb();
+    await seedGrapDb(pgUsers);
+    console.log('Seeded users with random relationships to words!');
+    console.log('Seeding successful!');
+    await db.close();
+    await session.close();
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+
+runSeed();
+
+VS THIS:
+*/
 db.sync({ force: true })
   .then(() => {
     console.log('Seeding Postgres database wordup ...');
