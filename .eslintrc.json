@@ -6,8 +6,7 @@
 		"airbnb"
 	],
 	"plugins": [
-		"react",
-		"react-native"
+		"react"
 	],
 	"parserOptions": {
 		"ecmaVersion": 6,
@@ -57,17 +56,12 @@
 		"object-curly-spacing": 1,
 		"one-var": 0,
 		"quotes": 0,
-		"react-native/no-color-literals": 0,
-		"react-native/no-inline-styles": 0,
-		"react-native/no-unused-styles": 2,
-		"react-native/split-platform-components": 2,
 		"react/display-name": [ 1, { "ignoreTranspilerName": false }],
 		"react/forbid-prop-types": [1, { "forbid": ["any"] }],
 		"react/jsx-boolean-value": 1,
 		"react/jsx-closing-bracket-location": [1, { "selfClosing": "tag-aligned", "nonEmpty": "after-props" }],
 		"react/jsx-curly-spacing": 1,
 		"react/jsx-filename-extension": 0,
-		"react/jsx-indent-props": 0,
 		"react/jsx-key": 1,
 		"react/jsx-max-props-per-line": [1, { "maximum": 5 }],
 		"react/jsx-no-bind": 0,
