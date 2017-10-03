@@ -2,19 +2,23 @@ import React from 'react'
 import {withRouter, Link} from 'react-router-dom'
 
 const containerStyles = {
+  display: "flex",
+  "align-items": "center",
+};
+
+const backgroundStyles = {
   height: "100vh",
   backgroundImage: "url(\"landing.jpg\")",
   backgroundSize: "cover",
   // opacity: ".65",
-  paddingTop: "15px",
-  display: "flex",
-  "align-items": "center",
+  width: "100%",
 };
 
 const headerStyles = {
   color: "#ffd600",
   width: "110px",
   "margin-left": "200px",
+  position: "absolute",
 };
 
 const imgStyles = {
@@ -31,7 +35,9 @@ const imgStyles = {
 const Landing = props => {
   return (
     <div style={containerStyles}>
-      {/* <img src="landing.jpg" alt="landing.jpg" style={imgStyles} /> */}
+      <div style={backgroundStyles}>
+        {/* <img src="landing.jpg" alt="landing.jpg" style={imgStyles} /> */}
+      </div>
       <h3 style={headerStyles}>
         Lorem ipsum
         Lorem ipsum
