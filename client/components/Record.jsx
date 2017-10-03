@@ -35,6 +35,7 @@ class Record extends Component {
 
     const home = this;
     recognition.onresult = function (event) {
+      console.log('adding result')
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       const newResult = [speechResult, confidence];
@@ -78,10 +79,13 @@ class Record extends Component {
   }
 
   render() {
+    console.log(this.state.results)
     const styles = {
       mic: {
         width: 200,
         height: 200,
+        margin: "auto",
+        cursor: "pointer",
       },
       iconOn: {
         width: 200,
@@ -105,37 +109,30 @@ class Record extends Component {
     };
 
     const startRecordingButton = (
-      <Icon.Group
-        size="huge"
+      <div
         onClick={this.startRecording}
         style={styles.mic}>
-        <Icon size="big" name="thin circle" style={styles.iconOn} />
-        <Icon name="microphone" style={styles.iconOn} />
-      </Icon.Group>
+        <Icon name="microphone" size="massive"style={styles.iconOn} />
+      </div>
     );
 
     const stopRecordingButton = (
-      <Icon.Group
-        size="huge"
+      <div
         onClick={this.stopRecording}
         style={styles.mic}>
-        <Icon size="big" name="thin circle" style={styles.iconOff} />
-        <Icon name="microphone" style={styles.iconOff} />
-      </Icon.Group>
+        <Icon name="microphone" size="massive"style={styles.iconOff} />
+      </div>
     );
 
     return (
       <div style={styles.outerDiv}>
-        <div>
-          <h2>Hi, user!</h2>
-        </div>
         {
           !this.state.recording
             ? startRecordingButton
             : stopRecordingButton
         }
         <div>
-          <h3>Need some prompts?</h3>
+          <h3>Need a prompt?</h3>
           <Button
             onClick={this.randomPrompt}
             style={styles.button}>

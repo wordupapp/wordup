@@ -21,16 +21,16 @@ export const addUserWords = newWords => ({ type: ADD_USER_WORDS, newWords });
  * THUNK CREATORS
  */
 export const getWords = () => dispatch => {
-  axios.get('user/words')
+  axios.get('users/id/words')
     .then(res => res.data)
-    .then(dispatch(getUserWords))
+    .then(userWords => dispatch(getUserWords(userWords)))
     .catch(console.error);
 };
 
 export const sendWords = words => dispatch => {
-  axios.post('user/words', words)
+  axios.post('users/id/words', words)
     .then(res => res.data)
-    .then(dispatch(addUserWords))
+    .then(newWords => dispatch(addUserWords(newWords)))
     .catch(console.error);
 };
 
