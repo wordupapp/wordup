@@ -24,9 +24,9 @@ export const getWords = (userId) => dispatch => {
   axios.get(`/api/users/${userId}/words`)
     .then(res => res.data)
     .then(userWords => {
-      const finalWords = userWords.map(word => {
-        return {
-          name: word[0],
+      const finalWords = {};
+      userWords.forEach(word => {
+        finalWords[word[0]] = {
           level: word[1] ? word[1].low : null,
           numUsed: word[2] ? word[2].low : null,
         };
@@ -40,9 +40,9 @@ export const sendWords = (words, userId) => dispatch => {
   axios.post(`/api/users/${userId}/words`, words)
     .then(res => res.data)
     .then(userWords => {
-      const finalWords = userWords.map(word => {
-        return {
-          name: word[0],
+      const finalWords = {};
+      userWords.forEach(word => {
+        finalWords[word[0]] = {
           level: word[1] ? word[1].low : null,
           numUsed: word[2] ? word[2].low : null,
         };
