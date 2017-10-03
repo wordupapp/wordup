@@ -14,7 +14,8 @@
     "start-dev": "npm run build-client-watch & npm run start-server",
     "start-server": "NODE_ENV='development' nodemon server -e html,js,scss --ignore public",
     "test": "NODE_ENV='test' DATABASE_URL='postgres://localhost:5432/wordup-test' mocha ./**/*.spec.js --compilers js:babel-register",
-    "seed": "node seed"
+    "seed": "node seed",
+    "prepWordData": "node prepWordData"
   },
   "author": "",
   "license": "ISC",
@@ -69,11 +70,13 @@
     "mocha": "^3.3.0",
     "node-sass": "^4.5.0",
     "nodemon": "^1.12.1",
+    "promise-retry": "^1.1.1",
     "react-test-renderer": "^15.6.1",
     "redux-mock-store": "^1.2.3",
     "sass-loader": "^6.0.0",
     "style-loader": "^0.13.1",
     "supertest": "^3.0.0",
+    "unirest": "^0.5.1",
     "webpack": "^2.2.1"
   }
 }
