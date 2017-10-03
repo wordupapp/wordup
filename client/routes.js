@@ -1,13 +1,21 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable react/jsx-indent */
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Router } from 'react-router';
-import { Route, Switch } from 'react-router-dom';
+/* eslint-disable indent */
+
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {Router} from 'react-router';
+import {Route, Switch} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import history from './history';
-import { Main, Login, Signup, UserHome, Record } from './components';
-import { me, getWords } from './store';
+import {Main,
+        Login,
+        Signup,
+        UserHome,
+        Landing,
+        Record,
+      } from './components';
+import {me} from './store';
 
 class Routes extends Component {
   componentDidMount() {
@@ -23,18 +31,19 @@ class Routes extends Component {
         <Main>
           <Switch>
             {/* Routes placed here are available to all visitors */}
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
+            <Route exact path="/" component={Landing} />
+            <Route path="/login" component={Landing} />
+            <Route path="/signup" component={Landing} />
+
             <Route path="/record" component={Record} />
             {
               isLoggedIn &&
                 <Switch>
                   {/* Routes placed here are only available after logging in */}
-                  <Route path='/home' component={UserHome} />
+                  <Route path="/home" component={UserHome} />
+                  <Route path="/login" component={UserHome} />
                 </Switch>
             }
-            {/* Displays our Login component as a fallback */}
-            <Route component={Login} />
           </Switch>
         </Main>
       </Router>

@@ -1,12 +1,19 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import { Card, Form, Message } from 'semantic-ui-react';
-import {auth} from '../store';
-
 /* eslint-disable arrow-parens */
 /* eslint-disable react/jsx-indent */
 /* eslint-disable indent */
+
+import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Card, Form, Message } from 'semantic-ui-react';
+import { auth } from '../store';
+
+const authStyles = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  margin: "auto",
+};
 
 /**
  * COMPONENT
@@ -15,11 +22,11 @@ const AuthForm = (props) => {
   const {name, displayName, handleSubmit, error} = props
 
   return (
-    // <Splash>
+    <div style={authStyles}>
       <Card centered raised>
         <Card.Content>
-          <Card.Header textAlign="center">
-            <h2>{displayName}</h2>
+          <Card.Header as="h2" textAlign="center">
+            {displayName}
           </Card.Header>
           <Form onSubmit={handleSubmit} name={name}>
             <Form.Input label="Email" name="email" type="email" />
@@ -32,26 +39,9 @@ const AuthForm = (props) => {
           <a href="/auth/google">{displayName} with Google</a>
         </Card.Content>
       </Card>
-    // </Splash>
-    // <div>
-    //   <form onSubmit={handleSubmit} name={name}>
-    //     <div>
-    //       <label htmlFor='email'><small>Email</small></label>
-    //       <input name='email' type='text' />
-    //     </div>
-    //     <div>
-    //       <label htmlFor='password'><small>Password</small></label>
-    //       <input name='password' type='password' />
-    //     </div>
-    //     <div>
-    //       <button type='submit'>{displayName}</button>
-    //     </div>
-    //     {error && error.response && <div> {error.response.data} </div>}
-    //   </form>
-    //   <a href='/auth/google'>{displayName} with Google</a>
-    // </div>
-  )
-}
+    </div>
+  );
+};
 
 /**
  * CONTAINER
