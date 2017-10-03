@@ -6,21 +6,29 @@ const session = graphDb.session();
 
 module.exports = router;
 
-router.get('/', (req, res, next) => {
-  User.findAll({
-    attributes: ['id', 'email'],
-  })
-    .then(users => res.json(users))
-    .catch(next);
+// REVIEW: more async/await opportunities
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'email'],
+    });
+    res.json(users);
+  }
+  catch (error) {
+    next(error):
+  }
 });
 
-router.get('/:id', (req, res, next) => {
-  User.findById(req.params.id)
-    .then(user => res.json(user))
-    .catch(next);
+router.get('/:id', async (req, res, next) => {
+  try {
+    res.json(await User.findById(req.params.id));
+  }
+  catch (error) {
+    next(error);
+  }
 });
 
-router.get('/:id/words', (req, res, next) => {
+router.get('/:id/words', async (req, res, next) => {
   const userId = req.params.id;
   const cypherCode = `
     MATCH (user:User {pgId: ${userId}})
@@ -28,21 +36,22 @@ router.get('/:id/words', (req, res, next) => {
       ->(words:Word)
     RETURN words.name,words.level,r.times
   `;
-  session.run(cypherCode)
-    .then(data => data.records)
-    .then(words => {
-      const wordData = words.map(word => word._fields);
-      res.json(wordData);
-    })
-    .catch(next);
+  try {
+    const words = (await session.run(cypherCode)).records;
+    const wordData = words.map(mord => word._fields);
+    res.json(wordData);
+  }
+  catch (error) {
+    next(error);
+  }
+
 });
 
-router.post('/:id/words', (req, res, next) => {
+router.post('/:id/words', async (req, res, next) => {
   const userId = req.params.id;
   const newWords = req.body;
-  const newWordPromiseArr = [];
 
-  newWords.forEach(newWord => {
+  const newWordPromiseArr = newWords.map(newWord => {
     const cypherCode = `
       MATCH (user:User {pgId: ${userId}})
       MERGE (word:Word {name: '${newWord}'})
@@ -51,13 +60,15 @@ router.post('/:id/words', (req, res, next) => {
       ON MATCH SET r.times = r.times + 1
       RETURN word.name,word.level,r.times
     `;
-    newWordPromiseArr.push(session.run(cypherCode));
+    return session.run(cypherCode);
   });
 
-  Promise.all(newWordPromiseArr)
-    .then(data => {
-      const wordData = data.map(wordDatum => wordDatum.records[0]._fields);
-      res.json(wordData);
-    })
-    .catch(next);
+  try {
+    const data = await Promise.all(newWordPromiseArr);
+    const wordData = data.map(wordDatum => wordDatum.records[0]._fields);
+    res.json(wordData);
+  }
+  catch (error) {
+    next(error);
+  }
 });
