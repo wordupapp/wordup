@@ -17,7 +17,6 @@ class Navbar extends Component {
     this.links = [
       { url: '/data', name: 'Data' },
       { url: '/games', name: 'Games' },
-      { url: '/profile', name: 'Profile' },
     ];
     this.styles = {
       navbar: {
@@ -30,14 +29,7 @@ class Navbar extends Component {
         background: '#6200ea',
       },
       rightMenu: {
-        width: '145px',
-        minHeight: `3.5em`,
-        height: `3.8em`,
-        margin: 0,
-        top: 'auto',
-        right: 10,
-        left: 'auto',
-        position: 'fixed',
+        marginRight: 30,
       },
     };
   }
@@ -70,15 +62,15 @@ class Navbar extends Component {
         {isLoggedIn ? (
           <div>
             {loggedInMenuOptions}
-            <Menu.Menu style={this.styles.rightMenu}>
-              <Menu.Item name={`Logout`} onClick={handleLogout} />
-              <Menu.Item active={this.props.location.pathname === '/'} as={Link} to={'/'}>
+            <Menu.Menu position="right" style={this.styles.rightMenu}>
+              <Menu.Item active={this.props.location.pathname === '/home'} as={Link} to={'/home'}>
                 <Icon name="user" size="big" />
               </Menu.Item>
+              <Menu.Item name={`Logout`} onClick={handleLogout} />
             </Menu.Menu>
           </div>
         ) : (
-          <Menu.Menu style={this.styles.rightMenu}>
+          <Menu.Menu position="right" style={this.styles.rightMenu}>
             <Menu.Item name="Login" as={Link} to={`/login`} />
           </Menu.Menu>
         )}
