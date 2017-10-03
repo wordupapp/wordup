@@ -29,7 +29,7 @@ const Welcome = props => (
       Want to up your vocabulary game?
     </h1>
     <h3 style={headerStyles}>
-      Analyze yoru vocabulary level, get custom recommendations and play some games to learn new words.
+      Analyze your vocabulary level, get custom recommendations and play some games to learn new words.
     </h3>
     <Link to="/signup">
       <Button>Get Started</Button>
