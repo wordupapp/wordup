@@ -20,17 +20,35 @@ export const addUserWords = newWords => ({ type: ADD_USER_WORDS, newWords });
 /**
  * THUNK CREATORS
  */
-export const getWords = () => dispatch => {
-  axios.get('user/words')
+export const getWords = (userId) => dispatch => {
+  axios.get(`/api/users/${userId}/words`)
     .then(res => res.data)
-    .then(dispatch(getUserWords))
+    .then(userWords => {
+      const finalWords = userWords.map(word => {
+        return {
+          name: word[0],
+          level: word[1] ? word[1].low : null,
+          numUsed: word[2] ? word[2].low : null,
+        };
+      });
+      dispatch(getUserWords(finalWords));
+    })
     .catch(console.error);
 };
 
-export const sendWords = words => dispatch => {
-  axios.post('user/words', words)
+export const sendWords = (words, userId) => dispatch => {
+  axios.post(`/api/users/${userId}/words`, words)
     .then(res => res.data)
-    .then(dispatch(addUserWords))
+    .then(userWords => {
+      const finalWords = userWords.map(word => {
+        return {
+          name: word[0],
+          level: word[1] ? word[1].low : null,
+          numUsed: word[2] ? word[2].low : null,
+        };
+      });
+      dispatch(addUserWords(finalWords));
+    })
     .catch(console.error);
 };
 
@@ -42,7 +60,7 @@ export default function (state = userWords, action) {
     case GET_USER_WORDS:
       return action.userWords;
     case ADD_USER_WORDS:
-      return Object.assign({}, state, action.userWords);
+      return Object.assign({}, state, action.newWords);
     default:
       return state;
   }
