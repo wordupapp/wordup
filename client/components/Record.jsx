@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon, Button } from 'semantic-ui-react';
+import { sendWords } from '../store/userWords';
 
 
 const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
@@ -22,7 +23,7 @@ class Record extends Component {
     this.randomPrompt = this.randomPrompt.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const grammar = '#JSGF V1.0; grammar phrase;';
     const recognition = new SpeechRecognition();
     const speechRecognitionList = new SpeechGrammarList();
@@ -35,13 +36,13 @@ class Record extends Component {
 
     const home = this;
     recognition.onresult = function (event) {
-      console.log('adding result')
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       const newResult = [speechResult, confidence];
       home.setState({
         results: [...home.state.results, [newResult]],
       });
+
     };
 
     recognition.onerror = function (event) {
@@ -64,11 +65,26 @@ class Record extends Component {
   }
 
   stopRecording() {
+    const { dispatchSendWords, user } = this.props;
     this.state.recognition.stop();
     this.setState({
       userEnded: true,
       recording: false,
     });
+    const newWords = this.getFormattedWords(this.state.results);
+    console.log('newWords: ', newWords);
+    dispatchSendWords(newWords, user.id);
+  }
+
+  getFormattedWords(results) {
+    const formattedWords = new Set();
+    results.forEach(result => {
+      if (result[1] > 0.5) {
+        const tempArr = result[0].split(' ');
+        tempArr.forEach(word => formattedWords.add(word));
+      }
+    });
+    return [...formattedWords];
   }
 
   randomPrompt() {
@@ -79,7 +95,7 @@ class Record extends Component {
   }
 
   render() {
-    console.log(this.state.results)
+    console.log('results are in ', this.state.results)
     const styles = {
       mic: {
         width: 200,
@@ -146,6 +162,7 @@ class Record extends Component {
 }
 
 const mapState = (state, ownProps) => ({
+  user: state.user,
   prompts: [
     "If you were a city, which city would you choose to be and why?",
     "Share a description of your favorite material object that you already own",
@@ -154,11 +171,8 @@ const mapState = (state, ownProps) => ({
   ],
 });
 
-// const mapDispatch = dispatch => ({
-
-// });
-
-const mapDispatch = null;
-
+const mapDispatch = dispatch => ({
+  dispatchSendWords: (newWords, userId) => dispatch(sendWords(newWords, userId)),
+});
 
 export default connect(mapState, mapDispatch)(Record);

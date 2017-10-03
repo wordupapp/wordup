@@ -20,15 +20,24 @@ export const addUserWords = newWords => ({ type: ADD_USER_WORDS, newWords });
 /**
  * THUNK CREATORS
  */
-export const getWords = () => dispatch => {
-  axios.get('users/id/words')
+export const getWords = (userId) => dispatch => {
+  axios.get(`/api/users/${userId}/words`)
     .then(res => res.data)
-    .then(userWords => dispatch(getUserWords(userWords)))
+    .then(userWords => {
+      const finalWords = userWords.map(word => {
+        return {
+          name: word[0],
+          level: word[1].low,
+          numUsed: word[2].low,
+        };
+      });
+      dispatch(getUserWords(finalWords));
+    })
     .catch(console.error);
 };
 
-export const sendWords = words => dispatch => {
-  axios.post('users/id/words', words)
+export const sendWords = (words, userId) => dispatch => {
+  axios.post(`users/${userId}/words`, { words })
     .then(res => res.data)
     .then(newWords => dispatch(addUserWords(newWords)))
     .catch(console.error);
