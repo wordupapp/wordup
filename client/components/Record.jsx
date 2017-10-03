@@ -36,13 +36,16 @@ class Record extends Component {
 
     const home = this;
     recognition.onresult = function (event) {
+      const { dispatchSendWords, user } = home.props;
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       const newResult = [speechResult, confidence];
-      home.setState({
-        results: [...home.state.results, [newResult]],
-      });
-
+      // home.setState({
+      //   results: [...home.state.results, [newResult]],
+      // });
+      const newWords = home.getFormattedWords(newResult);
+      console.log('newWords: ', newWords)
+      dispatchSendWords(newWords, user.id);
     };
 
     recognition.onerror = function (event) {
@@ -65,25 +68,19 @@ class Record extends Component {
   }
 
   stopRecording() {
-    const { dispatchSendWords, user } = this.props;
     this.state.recognition.stop();
     this.setState({
       userEnded: true,
       recording: false,
     });
-    const newWords = this.getFormattedWords(this.state.results);
-    console.log('newWords: ', newWords);
-    dispatchSendWords(newWords, user.id);
   }
 
-  getFormattedWords(results) {
+  getFormattedWords(result) {
     const formattedWords = new Set();
-    results.forEach(result => {
-      if (result[1] > 0.5) {
-        const tempArr = result[0].split(' ');
-        tempArr.forEach(word => formattedWords.add(word));
-      }
-    });
+    if (result[1] > 0.5) {
+      const tempArr = result[0].split(' ');
+      tempArr.forEach(word => formattedWords.add(word));
+    }
     return [...formattedWords];
   }
 
@@ -95,7 +92,6 @@ class Record extends Component {
   }
 
   render() {
-    console.log('results are in ', this.state.results)
     const styles = {
       mic: {
         width: 200,

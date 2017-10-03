@@ -27,8 +27,8 @@ export const getWords = (userId) => dispatch => {
       const finalWords = userWords.map(word => {
         return {
           name: word[0],
-          level: word[1].low,
-          numUsed: word[2].low,
+          level: word[1] ? word[1].low : null,
+          numUsed: word[2] ? word[2].low : null,
         };
       });
       dispatch(getUserWords(finalWords));
@@ -37,9 +37,18 @@ export const getWords = (userId) => dispatch => {
 };
 
 export const sendWords = (words, userId) => dispatch => {
-  axios.post(`users/${userId}/words`, { words })
+  axios.post(`/api/users/${userId}/words`, words)
     .then(res => res.data)
-    .then(newWords => dispatch(addUserWords(newWords)))
+    .then(userWords => {
+      const finalWords = userWords.map(word => {
+        return {
+          name: word[0],
+          level: word[1] ? word[1].low : null,
+          numUsed: word[2] ? word[2].low : null,
+        };
+      });
+      dispatch(addUserWords(finalWords));
+    })
     .catch(console.error);
 };
 
@@ -51,7 +60,7 @@ export default function (state = userWords, action) {
     case GET_USER_WORDS:
       return action.userWords;
     case ADD_USER_WORDS:
-      return Object.assign({}, state, action.userWords);
+      return Object.assign({}, state, action.newWords);
     default:
       return state;
   }
