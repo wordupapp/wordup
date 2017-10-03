@@ -6,6 +6,6 @@
 export { default as Main } from './main';
 export { default as Landing } from './Landing';
 export { default as UserHome } from './user-home';
-export { default as Record } from './Record.jsx';
+export { default as Record } from './Record';
 export { default as Navbar } from './Navbar';
 export { Login, Signup } from './auth-form';

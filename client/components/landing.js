@@ -2,7 +2,7 @@ import React from 'react';
 import {withRouter, Link} from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 
-import Splash from './Splash.jsx';
+import Splash from './Splash';
 import {
   Login,
   Signup,
