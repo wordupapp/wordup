@@ -61,9 +61,6 @@ const getWordDetailFromApi = async (wordData) => {
   const wordName = wordData.name;
   const newWordData = Object.assign({}, wordData);
 
-  // const meaning = await getDefinition(wordName);
-  // const examples = await getExample(wordName);
-  // const relations = await getRelation(wordName);
   const meaning = await retryCallsToApi(getDefinition, wordName);
   const examples = await retryCallsToApi(getExample, wordName);
   const relations = await retryCallsToApi(getRelation, wordName);

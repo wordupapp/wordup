@@ -175,10 +175,11 @@ const createGraphUsers = pgUsers => {
       level:${level}
     })`;
     const numWordsUsed = chance.integer({ min: 10, max: 30 });
+    const randWordIds = chance.unique(chance.integer, numWordsUsed, { min: 1, max: numWords });
 
     for (let i = 0; i < numWordsUsed; i += 1) {
       const timesUsed = chance.integer({ min: 1, max: 10 });
-      const randWordId = chance.integer({ min: 1, max: numWords });
+      const randWordId = randWordIds.pop();
       userWordIndex += 1;
 
       cypherCode += `
@@ -189,7 +190,7 @@ const createGraphUsers = pgUsers => {
         -[:USED {times: ${timesUsed}}]
         ->(word${userWordIndex})`;
     }
-    console.log('cypher code for user creation: ', cypherCode);
+
     return () => session.run(cypherCode);
   });
 
@@ -201,7 +202,6 @@ const seedGrapDb = pgUsers => {
   const cyperForMiddle = createWords(middleWordData, 7); // give level 7 for all middle school words
   const cyperForHigh = createWords(highWordData, 8); // give level 8 for all middle school words
   const cyperForCollege = createWords(collegeWordData, 9); // give level 9 for all middle school words
-  // const cyperForUser = createGraphUsers(pgUsers);
 
   return session.run(cyperForMiddle)
     .then(() => {
@@ -214,7 +214,6 @@ const seedGrapDb = pgUsers => {
     })
     .then(() => {
       console.log('Seeded words for college!');
-      // session.run(cyperForUser);
       return new Promise(async (resolve, reject) => {
         const createUserThunks = createGraphUsers(pgUsers);
         for (let i = 0; i < createUserThunks.length; i++) {
