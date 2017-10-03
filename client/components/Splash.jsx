@@ -17,7 +17,7 @@ const Splash = props => {
       background: `url(${background}) no-repeat center center fixed`,
       backgroundSize: 'cover',
       marginTop: 0,
-      // boxShadow: '0 0 0 1000px rgba(0,0,0,0.45) inset',
+      boxShadow: '0 0 0 1000px rgba(0,0,0,0.25) inset',
     },
   };
 
