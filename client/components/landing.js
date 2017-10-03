@@ -1,49 +1,58 @@
-import React from 'react'
-import {withRouter, Link} from 'react-router-dom'
+import React from 'react';
+import {withRouter, Link} from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
+
+import Splash from './Splash.jsx';
+import {
+  Login,
+  Signup,
+} from './auth-form';
 
 const containerStyles = {
+  width: "650px",
   display: "flex",
-  "align-items": "center",
-};
-
-const backgroundStyles = {
-  height: "100vh",
-  backgroundImage: "url(\"landing.jpg\")",
-  backgroundSize: "cover",
-  // opacity: ".65",
-  width: "100%",
+  alignItems: "left",
+  justifyContent: "center",
+  flexWrap: "wrap",
+  flexDirection: "column",
+  marginTop: "auto",
+  padding: "0px 50px 300px 100px",
 };
 
 const headerStyles = {
   color: "#ffd600",
-  width: "110px",
-  "margin-left": "200px",
-  position: "absolute",
 };
 
-const imgStyles = {
-  "max-width": "100%",
-  "max-height": "100%",
-};
+const Welcome = props => (
+  <div style={containerStyles}>
+    <h1 style={headerStyles}>
+      Want to up your vocabulary game?
+    </h1>
+    <h3 style={headerStyles}>
+      Analyze yoru vocabulary level, get custom recommendations and play some games to learn new words.
+    </h3>
+    <Link to="/signup">
+      <Button>Get Started</Button>
+    </Link>
+  </div>
+);
 
-/**
- * COMPONENT
- *  The Main component is our 'picture frame' - it displays the navbar and anything
- *  else common to our entire app. The 'picture' inside the frame is the space
- *  rendered out by the component's `children`.
- */
+
 const Landing = props => {
+  let component = "";
+  switch (props.match.path) {
+    case "/login":
+      component = <Login />;
+      break;
+    case "/signup":
+      component = <Signup />;
+      break;
+    default: component = <Welcome />;
+  }
   return (
-    <div style={containerStyles}>
-      <div style={backgroundStyles}>
-        {/* <img src="landing.jpg" alt="landing.jpg" style={imgStyles} /> */}
-      </div>
-      <h3 style={headerStyles}>
-        Lorem ipsum
-        Lorem ipsum
-        Lorem ipsum
-      </h3>
-    </div>
+    <Splash>
+      {component}
+    </Splash>
   );
 };
 

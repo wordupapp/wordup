@@ -31,15 +31,17 @@ class Routes extends Component {
         <Main>
           <Switch>
             {/* Routes placed here are available to all visitors */}
-            <Route path="/landing" component={Landing} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
+            <Route exact path="/" component={Landing} />
+            <Route path="/login" component={Landing} />
+            <Route path="/signup" component={Landing} />
+
             <Route path="/record" component={Record} />
             {
               isLoggedIn &&
                 <Switch>
                   {/* Routes placed here are only available after logging in */}
                   <Route path="/home" component={UserHome} />
+                  <Route path="/login" component={UserHome} />
                 </Switch>
             }
           </Switch>
