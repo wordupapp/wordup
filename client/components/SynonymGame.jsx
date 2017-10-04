@@ -11,6 +11,7 @@ class SynonymGame extends Component {
       opponentScore: 0,
       currentWord: 'Test',
       correctSynonyms: ['Correct'],
+      level: 6,
     };
     // this.startGame = this.startGame.bind(this);
     this.handleClick = this.handleClick.bind(this);
