@@ -5,7 +5,7 @@ import user from './user';
 import userWords from './userWords';
 
 const reducer = combineReducers({ user, userWords });
-const middleware = [thunkMiddleware, createLogger({collapsed: true})]
+const middleware = [thunkMiddleware, createLogger({ collapsed: true })];
 
 // SETUP w/ REDUX DevTools
 
