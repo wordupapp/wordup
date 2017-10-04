@@ -3,8 +3,9 @@ import createLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import user from './user';
 import userWords from './userWords';
+import userLevel from './userLevel';
 
-const reducer = combineReducers({ user, userWords });
+const reducer = combineReducers({ user, userWords, userLevel });
 const middleware = [thunkMiddleware, createLogger({ collapsed: true })];
 
 // SETUP w/ REDUX DevTools
@@ -18,3 +19,4 @@ const store = createStore(reducer, composeEnhancers(applyMiddleware(...middlewar
 export default store;
 export * from './user';
 export * from './userWords';
+export * from './userLevel';
