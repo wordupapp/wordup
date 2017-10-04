@@ -77,7 +77,7 @@ class Record extends Component {
     if (result[1] > 0.5) {
       const tempArr = result[0].split(' ');
       tempArr.forEach(word => {
-        if (word) formattedWords.add(word);
+        if (word) formattedWords.add(word.toLowerCase());
       });
     }
     return [...formattedWords];

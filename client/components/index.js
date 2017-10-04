@@ -4,7 +4,7 @@
  * having to figure out which file they belong to!
  */
 export { default as Main } from './main';
-export { default as Landing } from './Landing';
+export { default as Landing } from './landing';
 export { default as Splash } from './Splash';
 export { default as DataVisPanel } from './DataVisPanel';
 export { default as UserHome } from './user-home';
