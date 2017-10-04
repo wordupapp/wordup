@@ -3,9 +3,9 @@ const chance = require('chance')(123);
 const toonavatar = require('cartoon-avatar');
 
 const { db, graphDb } = require('./server/db');
-const middleWordData = require('./public/assets/middleSchool-output.json');
-let highWordData = require('./public/assets/highSchool-output.json');
-let collegeWordData = require('./public/assets/college-output.json');
+const middleWordData = require('./public/assets/json/middleSchool-output.json');
+let highWordData = require('./public/assets/json/highSchool-output.json');
+let collegeWordData = require('./public/assets/json/college-output.json');
 
 const session = graphDb.session();
 
@@ -94,13 +94,13 @@ let exampleIndex = 0;
 let relationIndex = 0;
 
 const createWords = (wordData, level) => {
-  let cyperCode = '';
+  let cypherCode = '';
   wordData.forEach(datum => {
     const { name, definitions, examples, relations } = datum;
     wordIndex += 1;
 
     // Create node for word
-    cyperCode += `
+    cypherCode += `
       CREATE (word${wordIndex}:Word {
         intId: ${wordIndex},
         name:'${name}',
@@ -112,7 +112,7 @@ const createWords = (wordData, level) => {
       const defText = definitions[pos];
       if (defText.length > 0) {
         definitionIndex += 1;
-        cyperCode += `
+        cypherCode += `
           CREATE (def${definitionIndex}:Definition {
             text: "${defText}"
           }),
@@ -126,7 +126,7 @@ const createWords = (wordData, level) => {
     examples.forEach(example => {
       if (example.length > 0) {
         exampleIndex += 1;
-        cyperCode += `
+        cypherCode += `
           CREATE (example${exampleIndex}:Example {
             text: "${example}"
           }),
@@ -141,7 +141,7 @@ const createWords = (wordData, level) => {
       const relationText = relations[relation];
       if (relationText.length > 0) {
         relationIndex += 1;
-        cyperCode += `
+        cypherCode += `
           CREATE (relation${relationIndex}:RelatedWords {
               text: "${relationText}"
           }),
@@ -152,7 +152,7 @@ const createWords = (wordData, level) => {
     });
   });
 
-  return cyperCode;
+  return cypherCode;
 };
 
 
