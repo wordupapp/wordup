@@ -5,14 +5,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Card, Form, Message } from 'semantic-ui-react';
+import { Container, Header } from 'semantic-ui-react';
 
 /**
  * STYLES
  */
 const styles = {
+  container: {
+    margin: "auto",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
   definitions: {
-    marginTop: "100px",
+    // marginTop: "100px",
   },
 }
 
@@ -30,7 +37,10 @@ class Definitions extends Component {
 
   render() {
     return (
-      <div style={styles.definitions}>hello!</div>
+      <Container style={styles.container}>
+        <Header as="h1">Match the correct word to the definition:</Header>
+        <div style={styles.definitions}>hello!</div>
+      </Container>
     );
   }
 }
