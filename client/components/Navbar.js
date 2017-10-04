@@ -15,7 +15,7 @@ class Navbar extends Component {
 
     };
     this.links = [
-      { url: '/data', name: 'Data' },
+      { url: '/data/1', name: 'Data' },
       { url: '/games', name: 'Games' },
     ];
     this.styles = {
