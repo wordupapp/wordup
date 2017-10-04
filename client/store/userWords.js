@@ -20,7 +20,7 @@ export const addUserWords = newWords => ({ type: ADD_USER_WORDS, newWords });
 /**
  * THUNK CREATORS
  */
-export const getWords = (userId) => dispatch => {
+export const getWords = userId => dispatch => {
   axios.get(`/api/users/${userId}/words`)
     .then(res => res.data)
     .then(userWords => {

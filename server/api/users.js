@@ -93,11 +93,21 @@ const getRelation = wordName => {
 
 const retryCallsToApi = (getDetail, wordName) => {
   return promiseRetry(function (retry, number) {
-      console.log('Attempt number to Twinword API:', number);
-
+      if (number > 1) console.log('Retry attempt to Twinword API:', number);
       return getDetail(wordName)
         .catch(retry);
   })
+}
+
+const wordInDb = (wordName) => {
+  const cypherCode = `
+    MATCH (word:Word {name: '${wordName}'})
+    RETURN word
+  `
+  return session.run(cypherCode)
+    .then(data => data.records)
+    .then(words => words[0] ? words[0] : null)
+    .catch(console.error);
 }
 
 const getWordDetailFromApi = async (wordName) => {
@@ -117,12 +127,84 @@ const getWordDetailFromApi = async (wordName) => {
   return wordData;
 };
 
+const cypherCodeForNewWord = (userId, wordData) => {
+
+  const { name, level, definitions, examples, relations } = wordData;
+  let definitionIndex = 0;
+  let exampleIndex = 0;
+  let relationIndex = 0;
+
+  // Merge for User & Word
+  let cypherCode = `
+    MATCH (user:User {pgId: ${userId}})
+    MERGE (word:Word {name: '${name}'})
+      ON CREATE SET word.level = ${level}
+      ON MATCH SET word.level = ${level}
+    MERGE (user)-[r:USED]->(word)
+      ON CREATE SET r.times = 1
+      ON MATCH SET r.times = r.times + 1
+  `;
+
+  // Create relationships to definitions
+  if (definitions){
+    Object.keys(definitions).forEach(pos => {
+      const defText = definitions[pos];
+      if (defText.length > 0) {
+        definitionIndex += 1;
+        cypherCode += `
+          CREATE (def${definitionIndex}:Definition
+            {text: "${defText}"}),
+          (word)
+            -[:DEFINITON {partOfSpeech: "${pos}"}]
+            ->(def${definitionIndex})
+          `;
+      }
+    });
+  }
+
+  // Create relationships to examples
+  if (examples) {
+    examples.forEach(example => {
+      if (example.length > 0) {
+        exampleIndex += 1;
+        cypherCode += `
+          CREATE (example${exampleIndex}:Example
+            {text: "${example}"}),
+          (word)
+            -[:Example]
+            ->(example${exampleIndex})`;
+      }
+    });
+  }
+
+  // Create relationships to related words
+  if (relations) {
+    Object.keys(relations).forEach(relation => {
+      const relationText = relations[relation];
+      if (relationText.length > 0) {
+        relationIndex += 1;
+        cypherCode += `
+          CREATE (relation${relationIndex}:RelatedWords
+            {text: "${relationText}"}),
+          (word)
+            -[:RELATEDTO {relation: "${relation}"}]
+            ->(relation${relationIndex})`;
+      }
+    });
+  }
+
+  cypherCode += `
+    RETURN word.name,word.level,r.times
+    `;
+
+  return cypherCode;
+}
+
 router.post('/:id/words', (req, res, next) => {
   const userId = req.params.id;
   const newWords = req.body;
-  const newWordPromiseArr = [];
 
-  newWords.forEach(async newWord => {
+  const newWordPromiseArr = newWords.map(async newWord => {
 
     let newWordData ={};
 
@@ -131,21 +213,21 @@ router.post('/:id/words', (req, res, next) => {
       newWordData.name = newWord;
       newWordData.level = 0;
     } else {
-      newWordData = await getWordDetailFromApi(newWord);
+      const  wordStoredInDb = await wordInDb(newWord);
+      if (wordStoredInDb) {
+        const level = wordStoredInDb._fields[0].properties.level.low;
+        newWordData.name = newWord;
+        newWordData.level = level;
+      } else {
+        // only call api to get word detail if word is neither stop word
+        // nor in database already
+        newWordData = await getWordDetailFromApi(newWord);
+      }
     }
 
-    console.log('newWordData', newWordData);
+    const cypherCode = cypherCodeForNewWord(userId, newWordData);
 
-    const cypherCode = `
-      MATCH (user:User {pgId: ${userId}})
-      MERGE (word:Word {name: '${newWord}'})
-      ON CREATE SET word.level = ${newWordData.level}
-      MERGE (user)-[r:USED]->(word)
-      ON CREATE SET r.times = 1
-      ON MATCH SET r.times = r.times + 1
-      RETURN word.name,word.level,r.times
-    `;
-    newWordPromiseArr.push(session.run(cypherCode));
+    return session.run(cypherCode);
   });
 
   Promise.all(newWordPromiseArr)
