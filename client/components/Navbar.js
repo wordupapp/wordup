@@ -15,7 +15,7 @@ class Navbar extends Component {
 
     };
     this.links = [
-      { url: '/data', name: 'Data' },
+      { url: '/data/1', name: 'Data' },
       { url: '/games', name: 'Games' },
     ];
     this.styles = {
@@ -60,19 +60,15 @@ class Navbar extends Component {
           </Menu.Item>
         </Menu.Menu>
         {isLoggedIn ? (
-          <div>
-            {loggedInMenuOptions}
-            <Menu.Menu position="right" style={this.styles.rightMenu}>
-              <Menu.Item active={this.props.location.pathname === '/home'} as={Link} to={'/home'}>
-                <Icon name="user" size="big" />
-              </Menu.Item>
-              <Menu.Item name={`Logout`} onClick={handleLogout} />
-            </Menu.Menu>
-          </div>
-        ) : (
           <Menu.Menu position="right" style={this.styles.rightMenu}>
-            <Menu.Item name="Login" as={Link} to={`/login`} />
+            {loggedInMenuOptions}
+            <Menu.Item active={this.props.location.pathname === '/home'} as={Link} to={'/home'}>
+              <Icon name="user" size="big" />
+            </Menu.Item>
+            <Menu.Item name={`Logout`} onClick={handleLogout} />
           </Menu.Menu>
+        ) : (
+          <Menu.Item name="Login" as={Link} to={`/login`} position="right" style={this.styles.rightMenu} />
         )}
       </Menu>
     );
