@@ -10,4 +10,6 @@ export { default as DataVisPanel } from './DataVisPanel';
 export { default as UserHome } from './user-home';
 export { default as Record } from './Record';
 export { default as Navbar } from './Navbar';
+export { default as Definitions } from './matching-game/Definitions';
+
 export { Login, Signup } from './auth-form';
