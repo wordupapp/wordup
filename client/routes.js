@@ -14,7 +14,11 @@ import {Main,
         UserHome,
         Landing,
         Record,
+<<<<<<< HEAD
         Definitions,
+=======
+        DataVisPanel,
+>>>>>>> 879492a9c4208a1abab8bd5ef10b7b85cb2c801d
       } from './components';
 import {me} from './store';
 
@@ -36,7 +40,11 @@ class Routes extends Component {
                   {/* Routes placed here are only available after logging in */}
                   <Route path="/home" component={UserHome} />
                   <Route path="/record" component={Record} />
+<<<<<<< HEAD
                   <Route path="/definitions" component={Definitions} />
+=======
+                  <Route path="/data" component={DataVisPanel} />
+>>>>>>> 879492a9c4208a1abab8bd5ef10b7b85cb2c801d
                   <Route path="*" component={UserHome} />
                 </Switch>
             }
