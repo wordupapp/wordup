@@ -3,7 +3,7 @@ const unirest = require('unirest');
 const promiseRetry = require('promise-retry');
 
 // Change below to use different data file!!
-const wordData = require('./public/assets/college-words.json');
+const wordData = require('./public/assets/json/college-words.json');
 
 /* ----------- API calls to Twinword to get word details ----------- */
 
@@ -13,7 +13,7 @@ const getDefinition = (wordName) => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200 ) resolve(result.body.meaning);
+        if (result.status === 200) resolve(result.body.meaning);
         else reject(`Failed to get definitions for: ${wordName}`);
       });
   })
@@ -25,7 +25,7 @@ const getExample = (wordName) => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200 ) resolve(result.body.example);
+        if (result.status === 200) resolve(result.body.example);
         else reject(`Failed to get examples for: ${wordName}`);
       });
   })
@@ -37,7 +37,7 @@ const getRelation = (wordName) => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200 ) resolve(result.body.relation);
+        if (result.status === 200) resolve(result.body.relation);
         else reject(`Failed to get relations for: ${wordName}`);
       });
   })
@@ -81,7 +81,7 @@ const wordPromiseArr = wordData.map(wordDatum => {
 Promise.all(wordPromiseArr)
   .then(() => {
     // Change below to use different output file!!
-    fs.writeFile("./public/assets/college-output.json",
+    fs.writeFile("./public/assets/json/college-output.json",
       JSON.stringify(wordsWithDetail, null, 2),
       'utf-8',
       err => {

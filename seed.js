@@ -3,9 +3,9 @@ const chance = require('chance')(123);
 const toonavatar = require('cartoon-avatar');
 
 const { db, graphDb } = require('./server/db');
-const middleWordData = require('./public/assets/middleSchool-output.json');
-let highWordData = require('./public/assets/highSchool-output.json');
-let collegeWordData = require('./public/assets/college-output.json');
+const middleWordData = require('./public/assets/json/middleSchool-output.json');
+let highWordData = require('./public/assets/json/highSchool-output.json');
+let collegeWordData = require('./public/assets/json/college-output.json');
 
 const session = graphDb.session();
 
