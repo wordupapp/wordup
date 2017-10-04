@@ -5,22 +5,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Grid, Menu } from 'semantic-ui-react';
 // import history from '../history';
-import { DataVisWordCloud, DataVisLevelCloud, DataVisUsageTrends } from '../components';
 
 /**
  * COMPONENT
  */
-class DataVisPanel extends Component {
+class DataVisWordCloud extends Component {
   constructor(props) {
     super(props);
     this.state = {};
     this.links = [
-      { url: '/data/1', name: 'Your Word Cloud' },
-      { url: '/data/2', name: 'Your Level Cloud' },
-      { url: '/data/3', name: 'Top Word Usage Trends' },
     ];
   }
 
@@ -45,11 +41,11 @@ class DataVisPanel extends Component {
             </Menu>
           }
         </Grid.Column>
-         <Grid.Column stretched width={12}>
+        {/* <Grid.Column stretched width={12}>
           {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
-          {/* {this.props.location.pathname === '/data/2' && <DataVisLevelCloud />}
-          {this.props.location.pathname === '/data/3' && <DataVisUsageTrends />} */}
-        </Grid.Column> 
+          {this.props.location.pathname === '/data/2' && <DataVisLevelCloud />}
+          {this.props.location.pathname === '/data/3' && <DataVisUsageTrends />}
+        </Grid.Column> */}
       </Grid>
     );
   }
@@ -67,10 +63,10 @@ const mapDispatch = (dispatch) => {
   return {};
 };
 
-export default withRouter(connect(mapState, mapDispatch)(DataVisPanel));
+export default withRouter(connect(mapState, mapDispatch)(DataVisWordCloud));
 
 /**
  * PROP TYPES
  */
-DataVisPanel.propTypes = {
+DataVisWordCloud.propTypes = {
 };
