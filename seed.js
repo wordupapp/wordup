@@ -25,23 +25,20 @@ const adminUser = () => {
     phone: '222-222-2222',
     gender: 'female',
     image: toonavatar.generate_avatar({ gender: 'female' }),
-    level: 1,
   })
     .catch(console.error);
 }
 
 const randomUser = () => {
   const gender = chance.gender().toLocaleLowerCase();
-  const level = Math.ceil(Math.random() * 5);
 
   return User.create({
     email: userEmails.pop(),
-    password: chance.string(),
+    password: 'admin',  // set 'admin' for every user for now
     name: chance.name({ gender }),
     phone: userPhones.pop(),
     gender,
     image: toonavatar.generate_avatar({ gender }),
-    level,
   })
     .catch(console.error);
 };
@@ -162,7 +159,7 @@ let userWordIndex = 0;
 const createGraphUsers = pgUsers => {
 
   const createUserPromiseArr = pgUsers.map(pgUser => {
-    const { id, name, email, phone, gender, image, level } = pgUser;
+    const { id, name, email, phone, gender, image } = pgUser;
 
     let cypherCode = `
     CREATE (user${id}:User {
@@ -171,8 +168,7 @@ const createGraphUsers = pgUsers => {
       email:'${email}',
       phone:'${phone}',
       gender:'${gender}',
-      image:'${image}',
-      level:${level}
+      image:'${image}'
     })`;
     const numWordsUsed = chance.integer({ min: 10, max: 30 });
     const randWordIds = chance.unique(chance.integer, numWordsUsed, { min: 1, max: numWords });
