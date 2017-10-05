@@ -1,20 +1,25 @@
 import axios from 'axios';
-// import history from '../history';
+import _ from 'lodash';
 
 /**
  * ACTION TYPES
  */
 const GET_RELATED_WORDS = 'GET_RELATED_WORDS';
+const GET_DEFINITIONS_FOR_LEVEL = 'GET_DEFINITIONS_FOR_LEVEL';
 
 /**
  * INITIAL STATE
  */
-const relatedWords = {};
+const state = {
+  relatedWords: {},
+  definitions: {},
+};
 
 /**
  * ACTION CREATORS
  */
 export const getRelatedWords = words => ({ type: GET_RELATED_WORDS, words });
+export const getDefinitionsForLevel = definitions => ({ type: GET_DEFINITIONS_FOR_LEVEL, definitions });
 /**
  * THUNK CREATORS
  */
@@ -35,16 +40,27 @@ export const getNewRelatedWords = userLevel => dispatch => {
 };
 
 
-
+export const fetchDefinitionsForLevelThunk = userLevel => dispatch => {
+  axios.get(`/api/words/definitions/${userLevel}`)
+    .then(res => res.data)
+    .then(definitions => dispatch(getDefinitionsForLevel(definitions)))
+    .catch(console.error);
+};
 
 /**
  * REDUCER
  */
-export default function (state = relatedWords, action) {
+export default function (prevState = state, action) {
+  const nextState = _.cloneDeep(prevState);
   switch (action.type) {
     case GET_RELATED_WORDS:
-      return action.words;
+      nextState.relatedWords = action.words;
+      break;
+    case GET_DEFINITIONS_FOR_LEVEL:
+      nextState.definitions = action.definitions;
+      break;
     default:
-      return state;
+      return prevState;
   }
+  return nextState;
 }
