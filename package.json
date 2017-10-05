@@ -28,6 +28,7 @@
     "express-session": "^1.15.1",
     "history": "^4.6.3",
     "konva": "^1.6.8",
+    "lodash": "^4.17.4",
     "morgan": "^1.8.1",
     "neo4j": "^2.0.0-RC2",
     "neo4j-driver": "^1.2.0",

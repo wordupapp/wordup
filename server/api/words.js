@@ -46,21 +46,29 @@ router.get('/related/:level/', (req, res, next) => {
       }
     })
     .catch(next);
-});
+})
 
-// Get new random vocab word in next level
-router.get('/all/:level/', (req, res, next) => {
-  const level = +req.params.level + 1;
-  const cypherCode = `
-
+// GET all definitions for a specific level
+.get('/definitions/:level', (req, res, next) => {
+  const level = +req.params.level;
+  const cypherQuery = `
+    MATCH (n:Word)-[:DEFINITON]->(m:Definition)
+    WHERE n.level = ${level}
+    RETURN n.intId, n.name, m.text;
   `;
-  session.run(cypherCode)
+  session.run(cypherQuery)
     .then(data => data.records)
-    .then(count => {
-      const numWords = count[0]._fields[0].low;
-      return numWords;
+    .then(records => {
+      const wordsAndDefinitions = records.map( record => {
+        let id = record._fields[0].low;
+        let word = record._fields[1];
+        let meaning = record._fields[2];
+
+        return {id, word, meaning};
+      })
+      res.send(wordsAndDefinitions);
     })
     .catch(next);
-});
+})
 
 module.exports = router;

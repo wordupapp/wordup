@@ -3,8 +3,9 @@ import createLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import user from './user';
 import userWords from './userWords';
+import words from './words';
 
-const reducer = combineReducers({ user, userWords });
+const reducer = combineReducers({ user, userWords, words });
 const middleware = [thunkMiddleware, createLogger({ collapsed: true })];
 
 // SETUP w/ REDUX DevTools
