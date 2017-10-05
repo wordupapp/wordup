@@ -30,9 +30,6 @@ const User = db.define('user', {
   image: {
     type: Sequelize.STRING,
   },
-  level: {
-    type: Sequelize.INTEGER,
-  },
 });
 
 module.exports = User;
