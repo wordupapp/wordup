@@ -5,6 +5,7 @@ import _ from 'lodash';
  * ACTION TYPES
  */
 const GET_RELATED_WORDS = 'GET_RELATED_WORDS';
+const REMOVE_RELATED_WORD = 'REMOVE_RELATED_WORD';
 const GET_DEFINITIONS_FOR_LEVEL = 'GET_DEFINITIONS_FOR_LEVEL';
 
 /**
@@ -22,6 +23,12 @@ export const getRelatedWords = (randomWord, relatedWords) => ({
   type: GET_RELATED_WORDS,
   randomWord,
   relatedWords,
+});
+
+export const removeRelatedWord = (currentWord, wordToRemove) => ({
+  type: REMOVE_RELATED_WORD,
+  currentWord,
+  wordToRemove,
 });
 
 export const getDefinitionsForLevel = definitions => ({ type: GET_DEFINITIONS_FOR_LEVEL, definitions });
@@ -57,6 +64,9 @@ export default function (prevState = state, action) {
   switch (action.type) {
     case GET_RELATED_WORDS:
       nextState.relatedWords[action.randomWord] = action.relatedWords;
+      break;
+    case REMOVE_RELATED_WORD:
+      nextState.relatedWords[action.currentWord] = nextState.relatedWords[action.currentWord].filter(word => word !== action.wordToRemove);
       break;
     case GET_DEFINITIONS_FOR_LEVEL:
       nextState.definitions = action.definitions;
