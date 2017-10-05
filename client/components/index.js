@@ -11,5 +11,5 @@ export { default as UserHome } from './user-home';
 export { default as Record } from './Record';
 export { default as Navbar } from './Navbar';
 export { default as SynonymGame } from './SynonymGame';
-export { default as Definitions } from './matching-game/Definitions';
+export { default as Definitions } from './games/Definitions';
 export { Login, Signup } from './auth-form';
