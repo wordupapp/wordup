@@ -114,7 +114,7 @@ const createWords = (wordData, level) => {
             text: "${defText}"
           }),
           (word${wordIndex})
-          -[:DEFINITON {partOfSpeech: "${pos}"}]
+          -[:DEFINITION {partOfSpeech: "${pos}"}]
           ->(def${definitionIndex})`;
       }
     });
@@ -124,11 +124,11 @@ const createWords = (wordData, level) => {
       if (example.length > 0) {
         exampleIndex += 1;
         cypherCode += `
-          CREATE (example${exampleIndex}:Example {
+          CREATE (example${exampleIndex}:EXAMPLE {
             text: "${example}"
           }),
           (word${wordIndex})
-          -[:Example]
+          -[:EXAMPLE]
           ->(example${exampleIndex})`;
       }
     });

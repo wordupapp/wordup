@@ -41,6 +41,130 @@ router.get('/:id/words', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/:id/words/suggest/:level', (req, res, next) => {
+  const userId = req.params.id;
+  const userLevel = +req.params.level;
+  const level = userLevel === 10 ? userLevel : userLevel+1;
+  const cypherCodeForCount = `
+    MATCH (n:Word {level: ${level}})
+    RETURN count(*)
+  `;
+  session.run(cypherCodeForCount)
+    .then(data => data.records)
+    .then(count => {
+      const numWords = count[0]._fields[0].low;
+      return numWords;
+    })
+    .then(numWords => {
+
+      // Get random words that user have not spoken for certain level
+
+      if (numWords < 1) return null;
+      const randomNumber = Math.floor(Math.random() * ((numWords - 1)));
+      const cypherCodeForWord = `
+        MATCH (user:User {pgId: ${userId}})
+        MATCH (word:Word {level: ${level}})
+          WHERE NOT ((user)-[:USED]-(word))
+        RETURN word
+        SKIP ${randomNumber}
+        LIMIT 9
+      `;
+      return session.run(cypherCodeForWord);
+    })
+    .then(data => data.records)
+    .then(randWordArr => {
+
+      // Get random words' definitions
+
+      const wordNameArr = randWordArr.map(wordData => {
+        return wordData._fields[0].properties.name;
+      })
+      const getDefPromiseArr = wordNameArr.map(wordName =>
+       {
+        //TODO: DEFINITON -> DEFINITION
+        const cypherCode = `
+          MATCH (word:Word {name: "${wordName}"})
+          MATCH (word)-[r:DEFINITON]
+            ->(def:Definition)
+          RETURN r.partOfSpeech, def.text
+        `;
+        return session.run(cypherCode)
+      })
+      return Promise.all([wordNameArr, Promise.all(getDefPromiseArr)]);
+    })
+    .then(([wordNameArr, wordDefDataArr]) => {
+
+      // Get random words' examples
+
+      const wordDefArr = wordDefDataArr.map(wordData => {
+        return wordData.records.map(record => ({
+          pos: record._fields[0],
+          text: record._fields[1]
+        }));
+      })
+
+      const getExamplePromiseArr = wordNameArr.map(wordName =>
+       {
+        //TODO: Example -> EXAMPLE
+        const cypherCode = `
+          MATCH (word:Word {name: "${wordName}"})
+          MATCH (word)-[:Example]
+            ->(ex:Example)
+          RETURN ex.text
+        `;
+        return session.run(cypherCode)
+      })
+
+      return Promise.all([wordNameArr, wordDefArr, Promise.all(getExamplePromiseArr)]);
+    })
+    .then(([wordNameArr, wordDefArr, wordExampleDataArr]) => {
+
+      // Get random words' realtions
+
+      const wordExampleArr = wordExampleDataArr.map(wordData => {
+        return wordData.records.map(record => record._fields[0]);
+      })
+
+      const getRelationPromiseArr = wordNameArr.map(wordName =>
+       {
+        const cypherCode = `
+          MATCH (word:Word {name: "${wordName}"})
+          MATCH (word)-[r:RELATEDTO]
+            ->(relWords:RelatedWords)
+          RETURN r.relation, relWords.text
+         `;
+        return session.run(cypherCode)
+      })
+
+      return Promise.all([wordNameArr, wordDefArr,wordExampleArr, Promise.all(getRelationPromiseArr)]);
+    })
+    .then(([wordNameArr, wordDefArr, wordExampleArr, wordRelationDataArr]) => {
+
+      // Combine word detail arrays into a single array
+
+      const wordRelationArr = wordRelationDataArr.map(wordData => {
+        return wordData.records.map(record => ({
+          type: record._fields[0],
+          text: record._fields[1]
+        }));
+      });
+
+      const retArr = [];
+      for (let i = 0; i < wordNameArr.length; i++) {
+        retArr.push({
+          name: wordNameArr[i],
+          definitions: wordDefArr[i],
+          examples: wordExampleArr[i],
+          realtions: wordRelationArr[i],
+        })
+      }
+      return retArr;
+    })
+    .then(data => res.json(data))
+    .catch(next);
+
+});
+
 /* -----------  Helper functions to Twinword APIs get word details ----------- */
 
 const getLevel = wordName => {
@@ -199,6 +323,8 @@ const cypherCodeForNewWord = (userId, wordData) => {
 
   return cypherCode;
 }
+
+/* --------------------------------------------------------------------------- */
 
 router.post('/:id/words', (req, res, next) => {
   const userId = req.params.id;

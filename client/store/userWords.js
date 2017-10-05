@@ -1,6 +1,6 @@
 import axios from 'axios';
-// import history from '../history';
 import { setUserLevel } from './userLevel';
+import { getSuggestedWords } from './userSuggestedWords';
 
 /**
  * ACTION TYPES
@@ -49,7 +49,9 @@ export const getWords = userId => dispatch => {
         };
       });
       dispatch(getUserWords(finalWords));
-      dispatch(setUserLevel(calcUserLevel(finalWords)));
+      const level = calcUserLevel(finalWords);
+      dispatch(setUserLevel(level));
+      dispatch(getSuggestedWords(userId, level));
     })
     .catch(console.error);
 };
