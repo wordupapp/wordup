@@ -4,11 +4,13 @@
  * having to figure out which file they belong to!
  */
 export { default as Main } from './main';
-export { default as Landing } from './Landing';
+export { default as Landing } from './landing';
 export { default as Splash } from './Splash';
 export { default as DataVisPanel } from './DataVisPanel';
 export { default as DataVisWordCloud } from './DataVisWordCloud';
 export { default as UserHome } from './user-home';
 export { default as Record } from './Record';
 export { default as Navbar } from './Navbar';
+export { default as SynonymGame } from './SynonymGame';
+export { default as Definitions } from './matching-game/Definitions';
 export { Login, Signup } from './auth-form';

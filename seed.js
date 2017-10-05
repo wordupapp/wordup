@@ -3,9 +3,9 @@ const chance = require('chance')(123);
 const toonavatar = require('cartoon-avatar');
 
 const { db, graphDb } = require('./server/db');
-const middleWordData = require('./public/assets/middleSchool-output.json');
-let highWordData = require('./public/assets/highSchool-output.json');
-let collegeWordData = require('./public/assets/college-output.json');
+const middleWordData = require('./public/assets/json/middleSchool-output.json');
+let highWordData = require('./public/assets/json/highSchool-output.json');
+let collegeWordData = require('./public/assets/json/college-output.json');
 
 const session = graphDb.session();
 
@@ -25,23 +25,20 @@ const adminUser = () => {
     phone: '222-222-2222',
     gender: 'female',
     image: toonavatar.generate_avatar({ gender: 'female' }),
-    level: 1,
   })
     .catch(console.error);
 }
 
 const randomUser = () => {
   const gender = chance.gender().toLocaleLowerCase();
-  const level = Math.ceil(Math.random() * 5);
 
   return User.create({
     email: userEmails.pop(),
-    password: chance.string(),
+    password: 'admin',  // set 'admin' for every user for now
     name: chance.name({ gender }),
     phone: userPhones.pop(),
     gender,
     image: toonavatar.generate_avatar({ gender }),
-    level,
   })
     .catch(console.error);
 };
@@ -94,13 +91,13 @@ let exampleIndex = 0;
 let relationIndex = 0;
 
 const createWords = (wordData, level) => {
-  let cyperCode = '';
+  let cypherCode = '';
   wordData.forEach(datum => {
     const { name, definitions, examples, relations } = datum;
     wordIndex += 1;
 
     // Create node for word
-    cyperCode += `
+    cypherCode += `
       CREATE (word${wordIndex}:Word {
         intId: ${wordIndex},
         name:'${name}',
@@ -112,7 +109,7 @@ const createWords = (wordData, level) => {
       const defText = definitions[pos];
       if (defText.length > 0) {
         definitionIndex += 1;
-        cyperCode += `
+        cypherCode += `
           CREATE (def${definitionIndex}:Definition {
             text: "${defText}"
           }),
@@ -126,7 +123,7 @@ const createWords = (wordData, level) => {
     examples.forEach(example => {
       if (example.length > 0) {
         exampleIndex += 1;
-        cyperCode += `
+        cypherCode += `
           CREATE (example${exampleIndex}:Example {
             text: "${example}"
           }),
@@ -141,7 +138,7 @@ const createWords = (wordData, level) => {
       const relationText = relations[relation];
       if (relationText.length > 0) {
         relationIndex += 1;
-        cyperCode += `
+        cypherCode += `
           CREATE (relation${relationIndex}:RelatedWords {
               text: "${relationText}"
           }),
@@ -152,7 +149,7 @@ const createWords = (wordData, level) => {
     });
   });
 
-  return cyperCode;
+  return cypherCode;
 };
 
 
@@ -162,7 +159,7 @@ let userWordIndex = 0;
 const createGraphUsers = pgUsers => {
 
   const createUserPromiseArr = pgUsers.map(pgUser => {
-    const { id, name, email, phone, gender, image, level } = pgUser;
+    const { id, name, email, phone, gender, image } = pgUser;
 
     let cypherCode = `
     CREATE (user${id}:User {
@@ -171,8 +168,7 @@ const createGraphUsers = pgUsers => {
       email:'${email}',
       phone:'${phone}',
       gender:'${gender}',
-      image:'${image}',
-      level:${level}
+      image:'${image}'
     })`;
     const numWordsUsed = chance.integer({ min: 10, max: 30 });
     const randWordIds = chance.unique(chance.integer, numWordsUsed, { min: 1, max: numWords });

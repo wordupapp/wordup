@@ -1,5 +1,6 @@
 import axios from 'axios';
 // import history from '../history';
+import { setUserLevel } from './userLevel';
 
 /**
  * ACTION TYPES
@@ -20,7 +21,23 @@ export const addUserWords = newWords => ({ type: ADD_USER_WORDS, newWords });
 /**
  * THUNK CREATORS
  */
-export const getWords = (userId) => dispatch => {
+
+const calcUserLevel = wordsObj => {
+  let levelSum = 0;
+  let wordCount = 0;
+
+  Object.keys(wordsObj).forEach(word => {
+    const wordLevel = wordsObj[word].level;
+    if (wordLevel > 0) {
+      levelSum += wordLevel;
+      wordCount += 1;
+    }
+  });
+
+  return Math.floor(levelSum / wordCount);
+};
+
+export const getWords = userId => dispatch => {
   axios.get(`/api/users/${userId}/words`)
     .then(res => res.data)
     .then(userWords => {
@@ -32,6 +49,7 @@ export const getWords = (userId) => dispatch => {
         };
       });
       dispatch(getUserWords(finalWords));
+      dispatch(setUserLevel(calcUserLevel(finalWords)));
     })
     .catch(console.error);
 };
@@ -48,6 +66,7 @@ export const sendWords = (words, userId) => dispatch => {
         };
       });
       dispatch(addUserWords(finalWords));
+      dispatch(setUserLevel(calcUserLevel(finalWords)));
     })
     .catch(console.error);
 };

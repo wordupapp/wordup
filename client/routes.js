@@ -14,6 +14,8 @@ import {Main,
         UserHome,
         Landing,
         Record,
+        SynonymGame,
+        Definitions,
         DataVisPanel,
       } from './components';
 import {me} from './store';
@@ -36,6 +38,8 @@ class Routes extends Component {
                   {/* Routes placed here are only available after logging in */}
                   <Route path="/home" component={UserHome} />
                   <Route path="/record" component={Record} />
+                  <Route path="/games/synonyms" component={SynonymGame} />
+                  <Route path="/definitions" component={Definitions} />
                   <Route path="/data" component={DataVisPanel} />
                   <Route path="*" component={UserHome} />
                 </Switch>
