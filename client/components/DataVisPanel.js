@@ -27,7 +27,7 @@ class DataVisPanel extends Component {
   render() {
     return (
       <Grid>
-        <Grid.Column width={4}>
+        <Grid.Column width={3}>
           {
             <Menu fluid vertical pointing>
               {this.links.map((link) => (
@@ -46,10 +46,10 @@ class DataVisPanel extends Component {
           }
         </Grid.Column>
          <Grid.Column stretched width={12}>
-          {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
+           {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
           {/* {this.props.location.pathname === '/data/2' && <DataVisLevelCloud />}
           {this.props.location.pathname === '/data/3' && <DataVisUsageTrends />} */}
-        </Grid.Column> 
+        </Grid.Column>
       </Grid>
     );
   }
