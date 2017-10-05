@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
-import { Layer, Rect, Stage, Group, Text } from 'react-konva';
+import { Layer, Stage, Text } from 'react-konva';
+import { fetchRandWordAndRelatedWords } from '../store/words';
 
 class SynonymGame extends Component {
   constructor(props) {
@@ -9,18 +10,28 @@ class SynonymGame extends Component {
     this.state = {
       userScore: 0,
       opponentScore: 0,
-      currentWord: 'Test',
-      correctSynonyms: ['Correct'],
-      level: 6,
+      gameWords: [],
+      currentWord: '',
+      level: 7,
+      questionNum: 0,
     };
-    // this.startGame = this.startGame.bind(this);
+    this.startGame = this.startGame.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.renderNewWord = this.renderNewWord.bind(this);
+    this.randomNumber = this.randomNumber.bind(this);
+  }
+
+  componentWillMount() {
+    for (let i = 0; i <= 5; i += 1) {
+      this.props.dispatchGetRelatedWords(this.state.level);
+    }
   }
 
   handleClick(event) {
     const clickedWord = event.target.attrs.text;
+    const currentWordSynonyms = this.props.gameWords[this.state.currentWord];
     let newScore;
-    if (this.state.correctSynonyms.indexOf(clickedWord) === -1) {
+    if (currentWordSynonyms.indexOf(clickedWord) === -1) {
       newScore = this.state.userScore - 1;
     } else {
       newScore = this.state.userScore + 1;
@@ -28,6 +39,24 @@ class SynonymGame extends Component {
     this.setState({
       userScore: newScore,
     });
+  }
+
+  startGame() {
+    const wordArr = Object.keys(this.props.gameWords);
+    this.setState({
+      gameWords: wordArr,
+      currentWord: wordArr[0],
+    });
+  }
+
+  renderNewWord() {
+    this.setState({
+      currentWord: this.state.gameWords[this.state.questionNum],
+    });
+  }
+
+  randomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 
   render() {
@@ -44,48 +73,43 @@ class SynonymGame extends Component {
 
     const mainWord = (
       <Text
-        text="Test"
-        fontSize={16}
-        x={10} y={10} width={100} height={100}
+        text={this.state.currentWord}
+        fontSize={50}
+        x={500} y={250}
       />
     );
 
-    const synonym = (
-      <Text
-        text="Correct"
-        fontSize={16}
-        x={100} y={100} width={100} height={100}
-        onClick={this.handleClick}
-      />
-    );
-
-    const antonym = (
-      <Text
-        text="Incorrect"
-        fontSize={16}
-        x={200} y={100} width={100} height={100}
-        onClick={this.handleClick}
-      />
-    );
-
-    console.log(this.state)
+    const synonyms = this.props.gameWords[this.state.currentWord];
+    console.log('this.state', this.state)
     return (
       <div>
         <div style={styles.title}>
           <h1>Synonym Matching</h1>
         </div>
         <div>
-          <Stage width={500} height={500}>
+          <Stage width={1000} height={500}>
             <Layer>
               {mainWord}
-              {synonym}
-              {antonym}
+              {
+                synonyms && synonyms.map((word, index) => {
+                  return (
+                    <Text
+                      key={index}
+                      text={word}
+                      fontSize={16}
+                      x={this.randomNumber(0, 950)} y={this.randomNumber(0, 450)}
+                      onClick={this.handleClick}
+                    />
+                  );
+                })
+              }
             </Layer>
           </Stage>
         </div>
         <div>
           <Button
-            style={styles.button}>
+            style={styles.button}
+            onClick={this.startGame}>
             Start Game
           </Button>
         </div>
@@ -100,15 +124,12 @@ class SynonymGame extends Component {
   }
 }
 
+const mapState = (state, ownProps) => ({
+  gameWords: state.words.relatedWords || {},
+});
 
-const mapState = null;
-const mapDispatch = null;
-// const mapState = (state, ownProps) => ({
-
-// });
-
-// const mapDispatch = dispatch => ({
-//   // dispatchSendWords: (newWords, userId) => dispatch(sendWords(newWords, userId)),
-// });
+const mapDispatch = dispatch => ({
+  dispatchGetRelatedWords: level => dispatch(fetchRandWordAndRelatedWords(level)),
+});
 
 export default connect(mapState, mapDispatch)(SynonymGame);
