@@ -6,15 +6,22 @@ if (process.env.NODE_ENV === 'production') {
     process.env.GRAPHENEDB_BOLT_URL,
     neo4j.auth.basic(process.env.GRAPHENEDB_BOLT_USER, process.env.GRAPHENEDB_BOLT_PASSWORD)
   );
+
+  process.on('exit', () => {
+    graphDb.close();
+  });
+
+  module.exports = graphDb;
 } else {
   const graphDb = neo4j.driver(
     process.env.NEO4j_BOLT_URL,
     neo4j.auth.basic(process.env.NEO4j_BOLT_USER, process.env.NEO4j_BOLT_PASSWORD)
   );
+
+  process.on('exit', () => {
+    graphDb.close();
+  });
+
+  module.exports = graphDb;
 }
 
-process.on('exit', () => {
-  graphDb.close();
-});
-
-module.exports = graphDb;
