@@ -12,7 +12,7 @@ const style = {
 /**
  * COMPONENT
  */
-export const UserHome = props => {
+export const WordInfoCard = props => {
   const { word } = props;
   const { name, definitions, examples } = word;
   let contentKey = 0;
@@ -64,4 +64,4 @@ export const UserHome = props => {
   );
 };
 
-export default UserHome;
+export default WordInfoCard;
