@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
-import { Card, Icon, List, Header } from 'semantic-ui-react';
+import { Card, List, Header } from 'semantic-ui-react';
 
 /**
  * COMPONENT STYLE
@@ -65,12 +64,4 @@ export const UserHome = props => {
   );
 };
 
-/**
- * CONTAINER
- */
-const mapState = state => {
-  return {
-  };
-};
-
-export default connect(mapState)(UserHome);
+export default UserHome;
