@@ -15,28 +15,30 @@ class Navbar extends Component {
 
     };
     this.links = [
-      { url: '/record', name: 'Record' },
-      { url: '/data/1', name: 'Data' },
-      { url: '/games', name: 'Games' },
+      { url: '/record', name: 'Speak' },
+      { url: '/data/1', name: 'Cloud' },
+      { url: '/games', name: 'Play' },
     ];
     this.styles = {
       navbar: {
         height: `90px`,
-        background: '#6200ea',
+        background: '#B413EC',
       },
       title: {
-        fontSize: '30px',
+        fontSize: '40px',
+        fontWeight: 800,
+        color: '#ffffff',
+      },
+      menuItem: {
+        color: '#ffffff',
+        fontWeight: 'bold',
       },
       menuMenu: {
         fontSize: '20px',
-        fontWeight: '500',
         color: '#ffffff',
-        fontFamily: 'museo-sans-rounded,sans-serif!important',
       },
       rightMenu: {
         fontSize: '20px',
-        fontWeight: '500',
-        color: '#ffffff',
         marginRight: 30,
       },
     };
@@ -52,50 +54,12 @@ class Navbar extends Component {
           key={link.name}
           name={link.name}
           as={Link}
-          to={link.url}>
+          to={link.url}
+          style={this.styles.menuItem}>
           {link.name}
         </Menu.Item>
       );
     });
-
-    // const dropOptions = [
-    //   <Dropdown.item
-    //     key={1}
-    //     active={location.pathname === '/home'}
-    //     as={Link}
-    //     to={'/home'}
-    //     text="Your profile"
-    //   />,
-    //   <Dropdown.item
-    //     key={2}
-    //     active={location.pathname === '/home'}
-    //     as={Link}
-    //     to={'/home'}
-    //     text="Settings"
-    //   />,
-    //   <Dropdown.item
-    //     key={3}
-    //     active={location.pathname === '/home'}
-    //     as={Link}
-    //     to={'/home'}
-    //     text="Help"
-    //   />,
-    //   <Dropdown.item
-    //     key={4}
-    //     active={location.pathname === '/home'}
-    //     as={Link}
-    //     to={'/home'}
-    //     text="Settings"
-    //     onClick={handleLogout}
-    //   />,
-    // ];
-
-    const dropOptions = [
-      { key: 1, text: 'Your profile', value: 1 },
-      { key: 2, text: 'Settings', value: 2 },
-      { key: 3, text: 'Help', value: 3 },
-      { key: 4, text: 'Logout', value: 4 },
-    ]
 
     const firstName = user.name ? user.name.split(' ')[0] : '';
     const dropTrigger = (
@@ -105,14 +69,13 @@ class Navbar extends Component {
     )
 
     return (
-      <Menu floated fixed="top" secondary inverted style={this.styles.navbar}>
+      <Menu floated fixed="top" secondary style={this.styles.navbar}>
         <Menu.Menu style={this.styles.menuMenu} >
           <Menu.Item
-            active={location.pathname === '/'}
+            header
             as={Link}
-            to={'/'}
-            style={this.styles.title}>
-            WORDUP
+            to={'/'}>
+            <span style={this.styles.title}>WORDUP</span>
           </Menu.Item>
           {isLoggedIn ?
             loggedInMenuOptions :
@@ -121,41 +84,26 @@ class Navbar extends Component {
         </Menu.Menu>
         {isLoggedIn ? (
           <Menu.Menu position="right" style={this.styles.rightMenu}>
-            <Menu.Item
-              active={location.pathname === '/home'}
-              as={Link}
-              to={'/home'}>
-              <Icon name="user" size="big" />
-            </Menu.Item>
-            <Dropdown trigger={dropTrigger} >
+            <Dropdown trigger={dropTrigger} item style={this.styles.menuItem}>
               <Dropdown.Menu>
-                <Dropdown.item
-                  key={1}
-                  active={location.pathname === '/home'}
-                  as={Link}
-                  to={'/home'}
-                  text="Your profile"
-                />
-                <Dropdown.item
-                  key={2}
-                  as={Link}
-                  to={'/home'}
-                  text="Settings"
-                />
-                <Dropdown.item
-                  key={3}
-                  as={Link}
-                  to={'/home'}
-                  text="Help"
-                />
-                <Dropdown.item
-                  key={4}
-                  text="Logout"
-                  onClick={handleLogout}
-                />
+                <Dropdown.Item as={Link} to={'/home'}>
+                  <Icon name='user' />
+                  Your profile
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={'/home'}>
+                  <Icon name='setting' />
+                  Settings
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={'/home'}>
+                  <Icon name='help circle' />
+                  Help
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>
+                  <Icon name='log out' />
+                  Log out
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            <Menu.Item name={`Logout`} onClick={handleLogout} />
           </Menu.Menu>
         ) : (
           <Menu.Item name="Login" as={Link} to={`/login`} position="right" style={this.styles.rightMenu} />
