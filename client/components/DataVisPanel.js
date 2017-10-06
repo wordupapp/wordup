@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Grid, Menu } from 'semantic-ui-react';
 // import history from '../history';
-// import { DataVisWordCloud, DataVisLevelCloud, DataVisUsageTrends } from '../components';
+import { DataVisWordCloud, DataVisUsageTrends } from '../components';
 
 /**
  * COMPONENT
@@ -19,15 +19,14 @@ class DataVisPanel extends Component {
     this.state = {};
     this.links = [
       { url: '/data/1', name: 'Your Word Cloud' },
-      { url: '/data/2', name: 'Your Level Cloud' },
-      { url: '/data/3', name: 'Top Word Usage Trends' },
+      { url: '/data/2', name: 'Top Word Usage Trends' },
     ];
   }
 
   render() {
     return (
       <Grid>
-        <Grid.Column width={4}>
+        <Grid.Column width={3}>
           {
             <Menu fluid vertical pointing>
               {this.links.map((link) => (
@@ -45,11 +44,10 @@ class DataVisPanel extends Component {
             </Menu>
           }
         </Grid.Column>
-        {/* <Grid.Column stretched width={12}>
-          {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
-          {this.props.location.pathname === '/data/2' && <DataVisLevelCloud />}
-          {this.props.location.pathname === '/data/3' && <DataVisUsageTrends />}
-        </Grid.Column> */}
+         <Grid.Column stretched width={12}>
+           {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
+           {/* {this.props.location.pathname === '/data/2' && <DataVisUsageTrends />} */}
+        </Grid.Column>
       </Grid>
     );
   }
