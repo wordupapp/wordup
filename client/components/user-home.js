@@ -115,7 +115,7 @@ export const UserHome = props => {
         <Header as='h2' style={{ fontSize: '4em', padding: '1em', textAlign: 'center' }}>
           Try learning these new words!
         </Header>
-        <Card.Group itemsPerRow={2} stackable>
+        <Card.Group itemsPerRow={3} stackable>
           {suggestionCards}
         </Card.Group>
       </Segment>
