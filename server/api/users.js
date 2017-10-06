@@ -81,10 +81,9 @@ router.get('/:id/words/suggest/:level', (req, res, next) => {
       })
       const getDefPromiseArr = wordNameArr.map(wordName =>
        {
-        //TODO: DEFINITON -> DEFINITION
         const cypherCode = `
           MATCH (word:Word {name: "${wordName}"})
-          MATCH (word)-[r:DEFINITON]
+          MATCH (word)-[r:DEFINITION]
             ->(def:Definition)
           RETURN r.partOfSpeech, def.text
         `;
@@ -105,10 +104,9 @@ router.get('/:id/words/suggest/:level', (req, res, next) => {
 
       const getExamplePromiseArr = wordNameArr.map(wordName =>
        {
-        //TODO: Example -> EXAMPLE
         const cypherCode = `
           MATCH (word:Word {name: "${wordName}"})
-          MATCH (word)-[:Example]
+          MATCH (word)-[:EXAMPLE]
             ->(ex:Example)
           RETURN ex.text
         `;

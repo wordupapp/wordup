@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Button, Container, Header, Icon, Image, Segment, Grid, List, Table } from 'semantic-ui-react';
+import { Button, Container, Header, Icon, Image, Segment, Grid, List, Table, Card } from 'semantic-ui-react';
 
 import WordInfoCard from './WordInfoCard';
 
@@ -112,7 +112,12 @@ export const UserHome = props => {
         </Table>
       </Segment>
       <Segment style={{ padding: '6em 8em' }} vertical>
-        {suggestionCards}
+        <Header as='h2' style={{ fontSize: '4em', padding: '1em', textAlign: 'center' }}>
+          Try learning these new words!
+        </Header>
+        <Card.Group itemsPerRow={2} stackable>
+          {suggestionCards}
+        </Card.Group>
       </Segment>
     </div>
   );

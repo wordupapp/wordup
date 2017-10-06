@@ -124,7 +124,7 @@ const createWords = (wordData, level) => {
       if (example.length > 0) {
         exampleIndex += 1;
         cypherCode += `
-          CREATE (example${exampleIndex}:EXAMPLE {
+          CREATE (example${exampleIndex}:Example {
             text: "${example}"
           }),
           (word${wordIndex})
