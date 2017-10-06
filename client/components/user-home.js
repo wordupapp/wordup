@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Button, Container, Divider, Header, Icon, Image, Segment, Grid, List, Table } from 'semantic-ui-react';
+import { Button, Container, Header, Icon, Image, Segment, Grid, List, Table, Card } from 'semantic-ui-react';
+
+import WordInfoCard from './WordInfoCard';
 
 /**
  * COMPONENT STYLE
@@ -20,8 +22,13 @@ const style = {
  * COMPONENT
  */
 export const UserHome = props => {
-  const { email, name, phone, image, level } = props;
+  const { email, name, phone, image, level, suggestedWords } = props;
   const firstName = name.split(' ')[0];
+  let cardKey = 0;
+  const suggestionCards = suggestedWords ? suggestedWords.map((word, index) => {
+    cardKey += 1;
+    return <WordInfoCard key={cardKey} word={word} />;
+  }) : null;
 
   return (
     <div>
@@ -31,7 +38,6 @@ export const UserHome = props => {
             <Grid.Column width={6}>
               <Image
                 bordered
-                rounded
                 size='large'
                 src={image}
               />
@@ -77,7 +83,7 @@ export const UserHome = props => {
             <span style={style.level} >{level}</span>
           </Header>
           <p style={{ fontSize: '1.2em' }}>
-            {`Based on words you have used, we calcualte that your level is ${level}!`}
+            {`Based on words you have spoken, we calculate that your vocabulary level is ${level}!`}
           </p>
         </Container>
       </Segment>
@@ -106,7 +112,12 @@ export const UserHome = props => {
         </Table>
       </Segment>
       <Segment style={{ padding: '6em 8em' }} vertical>
-        List of word cards to go in here!
+        <Header as='h2' style={{ fontSize: '4em', padding: '1em', textAlign: 'center' }}>
+          Try learning these new words!
+        </Header>
+        <Card.Group itemsPerRow={3} stackable>
+          {suggestionCards}
+        </Card.Group>
       </Segment>
     </div>
   );
@@ -122,6 +133,7 @@ const mapState = state => {
     phone: state.user.phone,
     image: state.user.image,
     level: state.userLevel,
+    suggestedWords: [...state.userSuggestedWords],
   };
 };
 
