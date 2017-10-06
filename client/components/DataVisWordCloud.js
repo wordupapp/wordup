@@ -27,7 +27,7 @@ class DataVisWordCloud extends Component {
   }
 
   componentDidMount() {
-    this.createBubbles(this.state);
+    this.createBubbles(this.createBubbleStructure(this.props));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -209,7 +209,7 @@ class DataVisWordCloud extends Component {
   }
 
   render() {
-    console.log(this.props.userWords)
+    console.log(this.props.userWords);
     return (
       <svg
         width="910"
