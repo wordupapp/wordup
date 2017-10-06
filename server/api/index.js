@@ -4,6 +4,7 @@ module.exports = router;
 
 router.use('/users', require('./users'));
 router.use('/words', require('./words'));
+router.use('/scores', require('./scores'));
 
 
 router.use((req, res, next) => {

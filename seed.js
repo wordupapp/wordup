@@ -114,7 +114,7 @@ const createWords = (wordData, level) => {
             text: "${defText}"
           }),
           (word${wordIndex})
-          -[:DEFINITON {partOfSpeech: "${pos}"}]
+          -[:DEFINITION {partOfSpeech: "${pos}"}]
           ->(def${definitionIndex})`;
       }
     });
@@ -128,7 +128,7 @@ const createWords = (wordData, level) => {
             text: "${example}"
           }),
           (word${wordIndex})
-          -[:Example]
+          -[:EXAMPLE]
           ->(example${exampleIndex})`;
       }
     });
