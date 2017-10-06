@@ -17,10 +17,11 @@ class SynonymGame extends Component {
       questionNum: 0,
     };
     this.startGame = this.startGame.bind(this);
-    this.renderWordsForQuestion = this.renderWordsForQuestion.bind(this);
+    this.renderWordsForLevel = this.renderWordsForLevel.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    // this.renderNewWord = this.renderNewWord.bind(this);
-    this.randomNumber = this.randomNumber.bind(this);
+    this.randomPosition = this.randomPosition.bind(this);
+    this.nextQuestion = this.nextQuestion.bind(this);
+    this.generateWords = this.generateWords.bind(this);
   }
 
   componentWillMount() {
@@ -29,8 +30,45 @@ class SynonymGame extends Component {
     }
   }
 
-  randomNumber(min, max) {
+  randomPosition(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  startGame() {
+    const wordArr = Object.keys(this.props.gameWords);
+    this.setState({
+      gameWords: wordArr,
+      currentWord: wordArr[0],
+    });
+    const wordsForLevel = this.generateWords();
+    this.renderWordsForLevel(wordsForLevel);
+  }
+
+  generateWords () {
+    const gameWords = this.props.gameWords;
+    let renderWords = [];
+    for (let word in gameWords) {
+      if (word !== this.state.currentWord) {
+        gameWords[word].forEach(word => renderWords.push(word));
+      }
+    }
+    renderWords = _.sampleSize(renderWords, 10);
+    const currentWord = Object.keys(this.props.gameWords)[this.state.questionNum];
+    renderWords = renderWords.concat(this.props.gameWords[currentWord]);
+    renderWords = renderWords.map(word => {
+      return {
+        word,
+        x: this.randomPosition(50, 900),
+        y: this.randomPosition(50, 450),
+      };
+    });
+    return renderWords;
+  }
+
+  renderWordsForLevel(words) {
+    this.setState({
+      gameWords: words,
+    });
   }
 
   handleClick(event) {
@@ -41,44 +79,28 @@ class SynonymGame extends Component {
       newScore = this.state.userScore - 1;
     } else {
       newScore = this.state.userScore + 1;
-      this.props.dispatchRemoveRelatedWord(this.state.currentWord, clickedWord);
+      if (this.state.gameWords.length === 11) {
+        this.nextQuestion();
+      } else {
+        const updatedWords = this.state.gameWords.filter(wordObj => wordObj.word !== clickedWord);
+        this.setState({ gameWords: updatedWords });
+      }
     }
     this.setState({
       userScore: newScore,
     });
-    this.renderWordsForQuestion();
   }
 
-  startGame() {
+  nextQuestion() {
     const wordArr = Object.keys(this.props.gameWords);
+    const newQuestNum = this.state.questionNum + 1;
     this.setState({
-      gameWords: wordArr,
-      currentWord: wordArr[0],
+      questionNum: newQuestNum,
+      currentWord: wordArr[newQuestNum],
     });
-    this.renderWordsForQuestion();
+    const wordsForLevel = this.generateWords();
+    this.renderWordsForLevel(wordsForLevel);
   }
-
-  renderWordsForQuestion() {
-    const gameWords = this.props.gameWords;
-    let renderWords = [];
-    for (let word in gameWords) {
-      if (word !== this.state.currentWord) {
-        gameWords[word].forEach(word => renderWords.push(word));
-      }
-    }
-    renderWords = _.sampleSize(renderWords, 10);
-    const currentWord = Object.keys(this.props.gameWords)[0];
-    renderWords = renderWords.concat(this.props.gameWords[currentWord]);
-    this.setState({
-      gameWords: renderWords,
-    });
-  }
-
-  // renderNewWord() {
-  //   this.setState({
-  //     currentWord: this.state.gameWords[this.state.questionNum],
-  //   });
-  // }
 
   render() {
     const styles = {
@@ -106,6 +128,8 @@ class SynonymGame extends Component {
       <div>
         <div style={styles.title}>
           <h1>Synonym Matching</h1>
+          <h3>Your Score: {this.state.userScore}</h3>
+          <h3>Opponent Score: {this.state.opponentScore}</h3>
         </div>
         <div>
           <Stage ref="stage" width={1000} height={500}>
@@ -116,9 +140,9 @@ class SynonymGame extends Component {
                   return (
                     <Text
                       key={index}
-                      text={word}
+                      text={word.word}
                       fontSize={16}
-                      x={this.randomNumber(50, 900)} y={this.randomNumber(50, 450)}
+                      x={word.x} y={word.y}
                       onClick={this.handleClick}
                       onMouseEnter={() => {
                         const stage = this.refs.stage.getStage().container();
