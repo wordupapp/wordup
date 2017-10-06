@@ -17,7 +17,6 @@ class SynonymGame extends Component {
       questionNum: 0,
     };
     this.startGame = this.startGame.bind(this);
-    this.renderWordsForLevel = this.renderWordsForLevel.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.randomPosition = this.randomPosition.bind(this);
     this.nextQuestion = this.nextQuestion.bind(this);
@@ -38,10 +37,12 @@ class SynonymGame extends Component {
     const wordArr = Object.keys(this.props.gameWords);
     this.setState({
       gameWords: wordArr,
-      currentWord: wordArr[0],
+      currentWord: wordArr[this.state.questionNum],
     });
     const wordsForLevel = this.generateWords();
-    this.renderWordsForLevel(wordsForLevel);
+    this.setState({
+      gameWords: wordsForLevel,
+    });
   }
 
   generateWords () {
@@ -99,7 +100,9 @@ class SynonymGame extends Component {
       currentWord: wordArr[newQuestNum],
     });
     const wordsForLevel = this.generateWords();
-    this.renderWordsForLevel(wordsForLevel);
+    this.setState({
+      gameWords: wordsForLevel,
+    });
   }
 
   render() {
