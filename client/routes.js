@@ -17,6 +17,7 @@ import {Main,
         SynonymGame,
         Definitions,
         DataVisPanel,
+        Games,
       } from './components';
 import {me} from './store';
 
@@ -38,6 +39,7 @@ class Routes extends Component {
                   {/* Routes placed here are only available after logging in */}
                   <Route path="/home" component={UserHome} />
                   <Route path="/record" component={Record} />
+                  <Route exact path="/games" component={Games} />
                   <Route path="/games/synonyms" component={SynonymGame} />
                   <Route path="games/definitions/:seed" component={Definitions} />
                   <Route path="/data" component={DataVisPanel} />
