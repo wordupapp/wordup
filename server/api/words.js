@@ -46,10 +46,10 @@ router.get('/related/:level/', (req, res, next) => {
       }
     })
     .catch(next);
-})
+});
 
 // GET all definitions for a specific level
-.get('/definitions/:level', (req, res, next) => {
+router.get('/definitions/:level', (req, res, next) => {
   const level = +req.params.level;
   const cypherQuery = `
     MATCH (n:Word)-[:DEFINITON]->(m:Definition)
@@ -59,16 +59,16 @@ router.get('/related/:level/', (req, res, next) => {
   session.run(cypherQuery)
     .then(data => data.records)
     .then(records => {
-      const wordsAndDefinitions = records.map( record => {
-        let id = record._fields[0].low;
-        let word = record._fields[1];
-        let meaning = record._fields[2];
+      const wordsAndDefinitions = records.map(record => {
+        const id = record._fields[0].low;
+        const word = record._fields[1];
+        const meaning = record._fields[2];
 
-        return {id, word, meaning};
-      })
+        return { id, word, meaning };
+      });
       res.send(wordsAndDefinitions);
     })
     .catch(next);
-})
+});
 
 module.exports = router;
