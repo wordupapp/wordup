@@ -18,4 +18,10 @@ body {
   //   margin: 1em;
   //   display: inline-block;
   // }
+
+  @media (min-width: 767px)  {
+    .definitions-container {
+      width: min-content!important;
+    }
+  }
 }
