@@ -43,7 +43,7 @@ class Routes extends Component {
                   <Route path="/games/synonyms" component={SynonymGame} />
                   <Route path="games/definitions/:seed" component={Definitions} />
                   <Route path="/data" component={DataVisPanel} />
-                  <Route path="*" component={UserHome} />
+                  <Route path="*" component={Landing} />
                 </Switch>
             }
             {/* Routes placed here are available to all visitors */}

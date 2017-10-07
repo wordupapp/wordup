@@ -115,7 +115,7 @@ class Record extends Component {
       outerDiv: {
         width: "100%",
         height: "100%",
-        margin: "auto",
+        margin: "25em auto 0 auto",
       },
       button: {
         backgroundColor: "#0a00b6",
