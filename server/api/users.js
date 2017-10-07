@@ -30,7 +30,7 @@ router.get('/:id/words', (req, res, next) => {
     MATCH (user:User {pgId: ${userId}})
       -[r:USED]
       ->(words:Word)
-    RETURN words.name,words.level,r.times
+    RETURN words.name,words.level,r.times,r.dates
   `;
   session.run(cypherCode)
     .then(data => data.records)
@@ -256,6 +256,8 @@ const cypherCodeForNewWord = (userId, wordData) => {
   let exampleIndex = 0;
   let relationIndex = 0;
 
+  const dateStr = new Date().toLocaleDateString('en-US');
+
   // Merge for User & Word
   let cypherCode = `
     MATCH (user:User {pgId: ${userId}})
@@ -263,8 +265,8 @@ const cypherCodeForNewWord = (userId, wordData) => {
       ON CREATE SET word.level = ${level}
       ON MATCH SET word.level = ${level}
     MERGE (user)-[r:USED]->(word)
-      ON CREATE SET r.times = 1
-      ON MATCH SET r.times = r.times + 1
+      ON CREATE SET r.dates='${dateStr}', r.times = 1
+      ON MATCH SET r.dates='${dateStr}', r.times = r.times + 1
   `;
 
   // Create relationships to definitions
@@ -316,7 +318,7 @@ const cypherCodeForNewWord = (userId, wordData) => {
   }
 
   cypherCode += `
-    RETURN word.name,word.level,r.times
+    RETURN word.name,word.level,r.times,r.dates
     `;
 
   return cypherCode;
