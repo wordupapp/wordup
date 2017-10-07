@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { Button, Container, Header, Icon, Image, Segment, Grid, List, Table, Card } from 'semantic-ui-react';
 
-import WordInfoCard from './WordInfoCard';
+import WordCard from './WordInfoCard';
 
 /**
  * COMPONENT STYLE
@@ -22,13 +22,17 @@ const style = {
  * COMPONENT
  */
 export const UserHome = props => {
-  const { email, name, phone, image, level, suggestedWords } = props;
+  const { email, name, phone, level, suggestedWords } = props;
+  let { image } = props;
   const firstName = name.split(' ')[0];
   let cardKey = 0;
   const suggestionCards = suggestedWords ? suggestedWords.map((word, index) => {
     cardKey += 1;
-    return <WordInfoCard key={cardKey} word={word} />;
+    return <WordCard key={cardKey} word={word} />;
   }) : null;
+
+  // default image
+  if (!image) image = 'http://www.answerspoint.com/user/uploads/users/default_user.png';
 
   return (
     <div>
@@ -63,12 +67,16 @@ export const UserHome = props => {
                     </a>
                   </List.Content>
                 </List.Item>
-                <List.Item>
-                  <List.Icon name='phone' />
-                  <List.Content>
-                    {phone}
-                  </List.Content>
-                </List.Item>
+                {
+                  phone ?
+                    <List.Item>
+                      <List.Icon name='phone' />
+                      <List.Content>
+                        {phone}
+                      </List.Content>
+                    </List.Item> :
+                    null
+                }
               </List>
               <Button size='huge'>Edit your profile</Button>
             </Grid.Column>
