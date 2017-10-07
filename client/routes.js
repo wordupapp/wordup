@@ -39,7 +39,7 @@ class Routes extends Component {
                   <Route path="/record" component={Record} />
                   <Route exact path="/games" component={Games} />
                   <Route path="/games/synonyms" component={SynonymGame} />
-                  <Route path="games/definitions/:seed" component={Definitions} />
+                  <Route path="/games/definitions/:seed" component={Definitions} />
                   <Route path="/data" component={DataVisPanel} />
                   <Route path="*" component={UserHome} />
                 </Switch>
