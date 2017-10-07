@@ -9,8 +9,6 @@ import {Route, Switch} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import history from './history';
 import {Main,
-        Login,
-        Signup,
         UserHome,
         Landing,
         Record,
