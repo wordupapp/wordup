@@ -52,7 +52,7 @@ router.get('/related/:level/', (req, res, next) => {
 .get('/definitions/:level', (req, res, next) => {
   const level = +req.params.level;
   const cypherQuery = `
-    MATCH (n:Word)-[:DEFINITON]->(m:Definition)
+    MATCH (n:Word)-[:DEFINITION]->(m:Definition)
     WHERE n.level = ${level}
     RETURN n.intId, n.name, m.text;
   `;
