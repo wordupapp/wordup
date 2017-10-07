@@ -40,6 +40,8 @@ class Navbar extends Component {
       rightMenu: {
         fontSize: '20px',
         marginRight: 30,
+        color: '#ffffff',
+        fontWeight: 'bold',
       },
     };
   }
@@ -62,9 +64,10 @@ class Navbar extends Component {
     });
 
     const firstName = user.name ? user.name.split(' ')[0] : '';
+    const userImage = user.image ? user.image : 'http://www.answerspoint.com/user/uploads/users/default_user.png';
     const dropTrigger = (
       <span>
-        <Image avatar src={user.image} /> {firstName}
+        <Image avatar src={userImage} /> {firstName}
       </span>
     )
 
