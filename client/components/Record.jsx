@@ -43,7 +43,7 @@ class Record extends Component {
         // const newResult = [speechResult, confidence];
         // const newWords = home.getFormattedWords(newResult);
         console.log('speechResult: ', speechResult);
-        // dispatchSendWords(speechResult, user.id);
+        dispatchSendWords(speechResult, user.id);
       }
     };
 

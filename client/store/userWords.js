@@ -58,7 +58,7 @@ export const getWords = userId => dispatch => {
 };
 
 export const sendWords = (speech, userId) => dispatch => {
-  axios.post(`/api/users/${userId}/words`, speech)
+  axios.post(`/api/users/${userId}/words`, { speech })
     .then(res => res.data)
     .then(userWords => {
       const finalWords = {};

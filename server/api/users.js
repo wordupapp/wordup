@@ -46,7 +46,12 @@ router.get('/:id/words', (req, res, next) => {
 router.get('/:id/words/suggest/:level', (req, res, next) => {
   const userId = req.params.id;
   const userLevel = +req.params.level;
-  const level = userLevel === 10 ? userLevel : userLevel+1;
+
+  // TODO: this logic is subject to change as our db grows larger
+  if (userLevel < 7) level = 7;
+  else if (userLevel > 8) level =9;
+  else level = userLevel+1;
+
   const cypherCodeForCount = `
     MATCH (n:Word {level: ${level}})
     RETURN count(*)
@@ -253,12 +258,15 @@ const getWordDetailFromApi = async (wordName) => {
 
 const cypherCodeForNewWord = (userId, wordData) => {
 
-  const { name, level, definitions, examples, relations } = wordData;
+  const { name, definitions, examples, relations } = wordData;
+  let { level } = wordData;
   let definitionIndex = 0;
   let exampleIndex = 0;
   let relationIndex = 0;
+  if (!level) level = 0;
 
   const dateStr = new Date().toLocaleDateString('en-US');
+
 
   // Merge for User & Word
   let cypherCode = `
@@ -336,9 +344,10 @@ const rosetteAnalysis = async (speech) => {
     addHelp: true,
     description: "Get the complete morphological analysis of a piece of text"
   });
-  parser.addArgument(["--key", process.env.ROSETTEAPI_KEY], {help: "Rosette API key", required: true});
+  parser.addArgument(["--key"], {help: "Rosette API key", required: true});
   parser.addArgument(["--url"], {help: "Rosette API alt-url", required: false});
-  const args = parser.parseArgs();
+  const args = parser.parseArgs(['--key', process.env.ROSETTEAPI_KEY]);
+
   const api = new Api(args.key, args.url);
   const endpoint = "morphology";
 
@@ -346,22 +355,37 @@ const rosetteAnalysis = async (speech) => {
   api.parameters.language = "eng";
   api.parameters.morphology = "complete";
 
-  api.rosette(endpoint, function(err, res){
-    if(err){
-        console.log(err);
-    } else {
-        console.log(JSON.stringify(res, null, 2));
-    }
-});
+  return new Promise ((resolve, reject) => {
+    api.rosette(endpoint, function(err, res){
+      if(err){
+          console.log(err);
+          reject (`Rosette analysis failed for: ${speech}`);
+      } else {
+          // console.log(JSON.stringify(res, null, 2));
+          const retWordArr = [];
+          const excludePOS = ["NUM", "PRON", "PROPN", "PUNCT", "SYM", "X"];
+          if (res) {
+            const { posTags, lemmas } = res;
+            for (let i = 0; i < posTags.length; i++){
+              if (excludePOS.indexOf(posTags[i]) === -1) {
+                retWordArr.push(lemmas[i])
+              }
+            }
+          }
+          resolve(retWordArr);
+      }
+    });
+  })
 }
 
 /* ---------------------------------------------------------------------------------- */
 
-router.post('/:id/words', (req, res, next) => {
+router.post('/:id/words', async (req, res, next) => {
   const userId = req.params.id;
-  const speech = req.body;
+  const { speech } = req.body;
 
-  const newWords = rosetteAnalysis(speech);
+  const newWords = await rosetteAnalysis(speech);
+  console.log('new words!!!', newWords)
 
   const newWordPromiseArr = newWords.map(async newWord => {
 
