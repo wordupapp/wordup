@@ -57,8 +57,8 @@ export const getWords = userId => dispatch => {
     .catch(console.error);
 };
 
-export const sendWords = (words, userId) => dispatch => {
-  axios.post(`/api/users/${userId}/words`, words)
+export const sendWords = (speech, userId) => dispatch => {
+  axios.post(`/api/users/${userId}/words`, speech)
     .then(res => res.data)
     .then(userWords => {
       const finalWords = {};

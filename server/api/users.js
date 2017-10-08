@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const unirest = require('unirest');
 const promiseRetry = require('promise-retry');
+const Api = require('rosette-api');
+const ArgumentParser = require('argparse').ArgumentParser;
 
 const { User } = require('../db/models');
 const { graphDb } = require('../db');
@@ -324,11 +326,42 @@ const cypherCodeForNewWord = (userId, wordData) => {
   return cypherCode;
 }
 
-/* --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------- */
+
+/* -----------  Helper functions for Rosette's morphological analysis ----------- */
+
+const rosetteAnalysis = async (speech) => {
+
+  const parser = new ArgumentParser({
+    addHelp: true,
+    description: "Get the complete morphological analysis of a piece of text"
+  });
+  parser.addArgument(["--key", process.env.ROSETTEAPI_KEY], {help: "Rosette API key", required: true});
+  parser.addArgument(["--url"], {help: "Rosette API alt-url", required: false});
+  const args = parser.parseArgs();
+  const api = new Api(args.key, args.url);
+  const endpoint = "morphology";
+
+  api.parameters.content = speech;
+  api.parameters.language = "eng";
+  api.parameters.morphology = "complete";
+
+  api.rosette(endpoint, function(err, res){
+    if(err){
+        console.log(err);
+    } else {
+        console.log(JSON.stringify(res, null, 2));
+    }
+});
+}
+
+/* ---------------------------------------------------------------------------------- */
 
 router.post('/:id/words', (req, res, next) => {
   const userId = req.params.id;
-  const newWords = req.body;
+  const speech = req.body;
+
+  const newWords = rosetteAnalysis(speech);
 
   const newWordPromiseArr = newWords.map(async newWord => {
 
