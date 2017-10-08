@@ -12,7 +12,7 @@ const GET_DEFINITIONS_FOR_LEVEL = 'GET_DEFINITIONS_FOR_LEVEL';
  */
 const state = {
   relatedWords: {},
-  definitions: {},
+  definitions: [],
 };
 
 /**
