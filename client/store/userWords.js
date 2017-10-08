@@ -46,6 +46,7 @@ export const getWords = userId => dispatch => {
         finalWords[word[0]] = {
           level: word[1] ? word[1].low : null,
           numUsed: word[2] ? word[2].low : null,
+          dates: word[3] ? word[3] : '',
         };
       });
       dispatch(getUserWords(finalWords));
@@ -65,6 +66,7 @@ export const sendWords = (words, userId) => dispatch => {
         finalWords[word[0]] = {
           level: word[1] ? word[1].low : null,
           numUsed: word[2] ? word[2].low : null,
+          dates: word[3] ? word[3] : '',
         };
       });
       dispatch(addUserWords(finalWords));

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Icon, Dropdown, Image } from 'semantic-ui-react';
 import { logout } from '../store';
 
 /* eslint-disable arrow-parens */
@@ -15,57 +15,98 @@ class Navbar extends Component {
 
     };
     this.links = [
-      { url: '/data/1', name: 'Data' },
-      { url: '/games', name: 'Games' },
+      { url: '/record', name: 'Speak' },
+      { url: '/data/1', name: 'Cloud' },
+      { url: '/games', name: 'Play' },
     ];
     this.styles = {
       navbar: {
-        minHeight: `3.5em`,
-        height: `3.8em`,
-        background: '#0a00b6',
+        height: `90px`,
+        background: '#B413EC',
       },
       title: {
-        fontSize: '1.2em',
-        background: '#6200ea',
+        fontSize: '40px',
+        fontWeight: 800,
+        color: '#ffffff',
+      },
+      menuItem: {
+        color: '#ffffff',
+        fontWeight: 'bold',
+      },
+      menuMenu: {
+        fontSize: '20px',
+        color: '#ffffff',
       },
       rightMenu: {
+        fontSize: '20px',
         marginRight: 30,
+        color: '#ffffff',
+        fontWeight: 'bold',
       },
     };
   }
 
   render() {
-    const { isLoggedIn, handleLogout } = this.props;
+    const { isLoggedIn, handleLogout, location, user } = this.props;
+
     const loggedInMenuOptions = this.links.map((link) => {
       return (
         <Menu.Item
-          active={this.props.location.pathname === link.url}
+          active={location.pathname === link.url}
           key={link.name}
           name={link.name}
           as={Link}
-          to={link.url}>
+          to={link.url}
+          style={this.styles.menuItem}>
           {link.name}
         </Menu.Item>
       );
     });
+
+    const firstName = user.name ? user.name.split(' ')[0] : '';
+    const userImage = user.image ? user.image : 'http://www.answerspoint.com/user/uploads/users/default_user.png';
+    const dropTrigger = (
+      <span>
+        <Image avatar src={userImage} /> {firstName}
+      </span>
+    )
+
     return (
-      <Menu inverted floated fixed="top" stackable style={this.styles.navbar}>
-        <Menu.Menu>
+      <Menu floated fixed="top" secondary style={this.styles.navbar}>
+        <Menu.Menu style={this.styles.menuMenu} >
           <Menu.Item
-            active={this.props.location.pathname === '/'}
+            header
             as={Link}
-            to={'/'}
-            style={this.styles.title}>
-            wordUp
+            to={'/'}>
+            <span style={this.styles.title}>WORDUP</span>
           </Menu.Item>
+          {isLoggedIn ?
+            loggedInMenuOptions :
+            null
+          }
         </Menu.Menu>
         {isLoggedIn ? (
           <Menu.Menu position="right" style={this.styles.rightMenu}>
-            {loggedInMenuOptions}
-            <Menu.Item active={this.props.location.pathname === '/home'} as={Link} to={'/home'}>
-              <Icon name="user" size="big" />
-            </Menu.Item>
-            <Menu.Item name={`Logout`} onClick={handleLogout} />
+            <Dropdown trigger={dropTrigger} item style={this.styles.menuItem}>
+              <Dropdown.Menu>
+                <Dropdown.Item as={Link} to={'/home'}>
+                  <Icon name='user' />
+                  Your profile
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={'/home'}>
+                  <Icon name='setting' />
+                  Settings
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={'/home'}>
+                  <Icon name='help circle' />
+                  Help
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>
+                  <Icon name='log out' />
+                  Log out
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </Menu.Menu>
         ) : (
           <Menu.Item name="Login" as={Link} to={`/login`} position="right" style={this.styles.rightMenu} />

@@ -76,7 +76,9 @@ class Record extends Component {
     const formattedWords = new Set();
     if (result[1] > 0.5) {
       const tempArr = result[0].split(' ');
+      const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
       tempArr.forEach(word => {
+        if (pattern.test(word)) return; // don't process words with special characters
         if (word) formattedWords.add(word.toLowerCase());
       });
     }
@@ -113,7 +115,7 @@ class Record extends Component {
       outerDiv: {
         width: "100%",
         height: "100%",
-        margin: "auto",
+        margin: "25em auto 0 auto",
       },
       button: {
         backgroundColor: "#0a00b6",
