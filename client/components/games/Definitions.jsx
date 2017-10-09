@@ -11,7 +11,7 @@ import Chance from 'chance';
 import { Checkbox, Container, Dimmer, Form, Header, Loader, Progress } from 'semantic-ui-react';
 
 // LOCAL MODULES
-import { NextQuestion, SkipOrSubmit } from './DefinitionsControls';
+import { NextQuestion, Skip, Submit } from './DefinitionsControls';
 import { fetchDefinitionsForLevelThunk } from '../../store/words';
 
 
@@ -60,10 +60,13 @@ class Definitions extends Component {
       lives: 3,
       choice: '',
       response: '',
+      quiz: [],
+      submissions: [],
     };
 
     this.handleChangeOption = this.handleChangeOption.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSkipOrNext = this.handleSkipOrNext.bind(this);
   }
 
   componentDidMount() {
@@ -71,26 +74,46 @@ class Definitions extends Component {
     this.props.fetchDefinitionsForLevel(level);
   }
 
+  componentWillReceiveProps(nextProps) {
+    // console.log('nextProps.definitions.length = ', nextProps.definitions.length)
+    let seed = this.props.match.params.seed;
+    // let length = nextProps.definitions.length - 1;
+
+    // if(!this.chance) this.chance = new Chance(+seed);
+    if(!this.state.quiz.length) this.setState({quiz: [+seed]});
+  }
+
   handleChangeOption(e, option){
     this.setState({ choice: option.value });
   }
 
-  handleSubmit(e, form){    
+  handleSubmit(e, form){
+    let currentQuiz;
+    if(this.state.quiz.length) currentQuiz = this.state.quiz[this.state.quiz.length - 1];
+
+    const updatedSubmissions = this.state.submissions.concat([currentQuiz])
+
     if(this.state.choice === form["data-word"]) {
-      this.setState({response: 'correct'});
+      this.setState({response: 'correct', submissions: updatedSubmissions});
     } else{
-      this.setState({response: 'incorrect'});
+      this.setState({response: 'incorrect', submissions: updatedSubmissions});
     }
   }
 
-  render() {
-    const seed = this.props.match.params.seed;
-    const chance = new Chance(seed);
+  handleSkipOrNext() {
+    console.log('HERE!!!!')
+  }
 
+  render() {
     const { definitions } = this.props;
-    let { correct, total } = this.state;
+    const quizIndex = this.state.quiz.length - 1;
+    const seed = this.state.quiz[quizIndex];
     
-    if(Object.keys(definitions).length) {
+    if(definitions.length) {
+      // let chance = this.state.quiz.length ? new Chance() : new Chance(seed)
+      let chance = new Chance(seed)
+
+      let { correct, total } = this.state;
 
       let index = chance.natural({ min: 0, max: definitions.length - 1 });
       let selected = definitions[index];
@@ -108,21 +131,6 @@ class Definitions extends Component {
       /** Now we place the correct word in a random index in our options array **/ 
       let randomIndex = chance.natural({ min: 0, max: options.length - 1 });
       options[randomIndex] = selected.word;
-  
-      let quiz = [];
-
-      // while(quiz.length < 10) {
-      //   let index = chance.natural({ min: 0, max: definitions.length - 1 });
-      //   let selected = definitions[index];
-
-      //   let questionIncluded = quiz.filter( question => question.word === selected.word)
-        
-      //   if(!questionIncluded) {
-      //     let newQuestion = createQuestion(selected);
-      //     quiz.push(newQuestion);
-      //   }
-      // }
-      console.log( this.state.response )
       
       return (
         <Container className="definitions-container" style={styles.container}>
@@ -147,9 +155,12 @@ class Definitions extends Component {
                 )
               })
             }
-            { SkipOrSubmit(this.state.response, this.state.choice) }
-            { NextQuestion(this.state.response) }
+            <div style={styles.navContainer}>
+              <Skip response={this.state.response} next={this.handleSkipOrNext} />
+              <Submit response={this.state.response} choice={this.state.choice} />
+            </div>
           </Form>
+          <NextQuestion response={this.state.response} next={this.handleSkipOrNext} />
         </Container>
       );
     } else {
@@ -174,7 +185,7 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchDefinitionsForLevel(userLevel) {
       dispatch(fetchDefinitionsForLevelThunk(userLevel));
-    }, 
+    },
   }
 }
 

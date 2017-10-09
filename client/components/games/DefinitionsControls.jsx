@@ -31,36 +31,65 @@ const styles = {
   },
 }
 
-export const SkipOrSubmit = (state, choice) => {
-  if(!state) {
+// export const SkipOrSubmit = ({ choice, next, response } = props) => {
+//   if(!response) {
+//     return (
+//       <div style={styles.navContainer}>
+//         <Button style={styles.nav} onClick={next}>Skip</Button>
+//         <Form.Button
+//           disabled={!choice ? true : false}
+//           color={choice ? "green" : "grey"}
+//           style={styles.nav}
+//           >Submit
+//         </Form.Button>
+//       </div>
+//     )
+//   } else {
+//     return null;
+//   }
+// }
+
+export const Skip = ({ next, response } = props) => {
+  if(!response) {
     return (
-      <div style={styles.navContainer}>
-        <Form.Button style={styles.nav}>Skip</Form.Button>
-        <Form.Button
-          disabled={!choice ? true : false}
-          color={choice ? "green" : "grey"}
-          style={styles.nav}
-          >Submit
-        </Form.Button>
-      </div>
+      <Button style={styles.nav} onClick={next}>Skip</Button>
     )
+  } else {
+    return null;
   }
 }
 
-export const NextQuestion = (state) => {
-  if(state === 'correct') {
+export const Submit = ({ choice, response } = props) => {
+  if(!response) {
+    return (
+      <Form.Button
+        disabled={!choice ? true : false}
+        color={choice ? "green" : "grey"}
+        style={styles.nav}
+        >Submit
+      </Form.Button>
+    )
+  } else {
+    return null;
+  }
+}
+
+export const NextQuestion = ({ next, response } = props) => {
+  if(response === 'correct') {
     return(
     <div style={styles.correct}>
       <h3> Correct! <Icon name="thumbs up" /> </h3>
-      <Button style={styles.nav}>Next</Button>
+      <Button style={styles.nav} onClick={next}>Next</Button>
     </div>
     )
-  } else if(state === 'incorrect') {
+  } else if(response === 'incorrect') {
     return(
     <div style={styles.incorrect}>
       <h3> Incorrect! <Icon name="frown" /> </h3>      
-      <Button style={styles.nav}>Next</Button>
+      <Button style={styles.nav} onClick={next}>Next</Button>
     </div>
     )
+  } else {
+    return null;
   }
 }
