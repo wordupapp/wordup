@@ -35,6 +35,15 @@ class DataVisWordCloud extends Component {
   }
 
   createBubbleStructure(data) {
+    // REVIEW
+    //
+    // could this be:
+    // levelWords = {
+    //   1: [],
+    //   2: [],
+    //   3: [],
+    //   ... and so on
+    // }
     let level1Words = [];
     let level2Words = [];
     let level3Words = [];

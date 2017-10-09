@@ -68,6 +68,7 @@ class OtherUserWords extends React.Component {
           this.state.activeItem === '' ?
             (
               <Container>
+                {/* REVIEW does this need to be backticks? */}
                 <Header as="h1">{`These are words you haven't tried`}</Header>
                 <Grid columns={3} stackable style={styles.buttonGroup}>
                   {suggestionButtons}

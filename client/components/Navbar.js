@@ -77,6 +77,8 @@ class Navbar extends Component {
           <Menu.Item
             header
             as={Link}
+            {/* REVIEW: this could be */}
+            {/* to="/" */}
             to={'/'}>
             <span style={this.styles.title}>WORDUP</span>
           </Menu.Item>
