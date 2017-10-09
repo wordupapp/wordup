@@ -39,10 +39,12 @@ class Record extends Component {
       const { dispatchSendWords, user } = home.props;
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
-      const newResult = [speechResult, confidence];
-      const newWords = home.getFormattedWords(newResult);
-      console.log('newWords: ', newWords)
-      dispatchSendWords(newWords, user.id);
+      if (confidence > 0.5) {
+        // const newResult = [speechResult, confidence];
+        // const newWords = home.getFormattedWords(newResult);
+        console.log('speechResult: ', speechResult);
+        dispatchSendWords(speechResult, user.id);
+      }
     };
 
     recognition.onerror = function (event) {
@@ -51,6 +53,7 @@ class Record extends Component {
       });
       console.log('Error occured: ', event.error);
     };
+    recognition.onerror = recognition.onerror.bind(home);
 
     this.setState({
       recognition,
@@ -72,18 +75,18 @@ class Record extends Component {
     });
   }
 
-  getFormattedWords(result) {
-    const formattedWords = new Set();
-    if (result[1] > 0.5) {
-      const tempArr = result[0].split(' ');
-      const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
-      tempArr.forEach(word => {
-        if (pattern.test(word)) return; // don't process words with special characters
-        if (word) formattedWords.add(word.toLowerCase());
-      });
-    }
-    return [...formattedWords];
-  }
+  // getFormattedWords(result) {
+  //   const formattedWords = new Set();
+  //   if (result[1] > 0.5) {
+  //     const tempArr = result[0].split(' ');
+  //     const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
+  //     tempArr.forEach(word => {
+  //       if (pattern.test(word)) return; // don't process words with special characters
+  //       if (word) formattedWords.add(word.toLowerCase());
+  //     });
+  //   }
+  //   return [...formattedWords];
+  // }
 
   randomPrompt() {
     const randomIndex = Math.floor(Math.random() * this.props.prompts.length);
@@ -172,7 +175,7 @@ const mapState = (state, ownProps) => ({
 });
 
 const mapDispatch = dispatch => ({
-  dispatchSendWords: (newWords, userId) => dispatch(sendWords(newWords, userId)),
+  dispatchSendWords: (speech, userId) => dispatch(sendWords(speech, userId)),
 });
 
 export default connect(mapState, mapDispatch)(Record);
