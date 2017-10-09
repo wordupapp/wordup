@@ -8,6 +8,7 @@ export { default as Landing } from './landing';
 export { default as Splash } from './Splash';
 export { default as DataVisPanel } from './DataVisPanel';
 export { default as DataVisWordCloud } from './DataVisWordCloud';
+export { default as DataVisUsageTrends } from './DataVisUsageTrends';
 export { default as UserHome } from './user-home';
 export { default as Record } from './Record';
 export { default as Navbar } from './Navbar';
