@@ -50,7 +50,93 @@ router.get('/:id/words', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/:id/words/suggest/:level', (req, res, next) => {
+/* -----------  Helper functions to get word details from graph DB ----------- */
+
+const getWordDefinitions = wordArr => {
+
+  const wordNameArr = wordArr.map(wordData => {
+    return wordData._fields[0].properties.name;
+  })
+  const getDefPromiseArr = wordNameArr.map(wordName =>
+    {
+    const cypherCode = `
+      MATCH (word:Word {name: "${wordName}"})
+      MATCH (word)-[r:DEFINITION]
+        ->(def:Definition)
+      RETURN r.partOfSpeech, def.text
+    `;
+    return session.run(cypherCode)
+  })
+  return Promise.all([wordNameArr, Promise.all(getDefPromiseArr)]);
+}
+
+const getWordExamples = ([wordNameArr, wordDefDataArr]) => {
+
+  const wordDefArr = wordDefDataArr.map(wordData => {
+    return wordData.records.map(record => ({
+      pos: record._fields[0],
+      text: record._fields[1]
+    }));
+  })
+
+  const getExamplePromiseArr = wordNameArr.map(wordName =>
+    {
+    const cypherCode = `
+      MATCH (word:Word {name: "${wordName}"})
+      MATCH (word)-[:EXAMPLE]
+        ->(ex:Example)
+      RETURN ex.text
+    `;
+    return session.run(cypherCode)
+  })
+
+  return Promise.all([wordNameArr, wordDefArr, Promise.all(getExamplePromiseArr)]);
+}
+
+const getWordRelations = ([wordNameArr, wordDefArr, wordExampleDataArr]) => {
+
+  const wordExampleArr = wordExampleDataArr.map(wordData => {
+    return wordData.records.map(record => record._fields[0]);
+  })
+
+  const getRelationPromiseArr = wordNameArr.map(wordName =>
+    {
+    const cypherCode = `
+      MATCH (word:Word {name: "${wordName}"})
+      MATCH (word)-[r:RELATEDTO]
+        ->(relWords:RelatedWords)
+      RETURN r.relation, relWords.text
+      `;
+    return session.run(cypherCode)
+  })
+
+  return Promise.all([wordNameArr, wordDefArr,wordExampleArr, Promise.all(getRelationPromiseArr)]);
+}
+
+const combineAllWordDetails = ([wordNameArr, wordDefArr, wordExampleArr, wordRelationDataArr]) => {
+
+  const wordRelationArr = wordRelationDataArr.map(wordData => {
+    return wordData.records.map(record => ({
+      type: record._fields[0],
+      text: record._fields[1]
+    }));
+  });
+
+  const retArr = [];
+  for (let i = 0; i < wordNameArr.length; i++) {
+    retArr.push({
+      name: wordNameArr[i],
+      definitions: wordDefArr[i],
+      examples: wordExampleArr[i],
+      realtions: wordRelationArr[i],
+    })
+  }
+  return retArr;
+}
+
+/* ------------------------------------------------------------------------------ */
+
+router.get('/:id/words/suggest/level/:level', (req, res, next) => {
   const userId = req.params.id;
   const userLevel = +req.params.level;
 
@@ -86,92 +172,46 @@ router.get('/:id/words/suggest/:level', (req, res, next) => {
       return session.run(cypherCodeForWord);
     })
     .then(data => data.records)
-    .then(randWordArr => {
+    .then(getWordDefinitions)
+    .then(getWordExamples)
+    .then(getWordRelations)
+    .then(combineAllWordDetails)
+    .then(data => res.json(data))
+    .catch(next);
 
-      // Get random words' definitions
+});
 
-      const wordNameArr = randWordArr.map(wordData => {
-        return wordData._fields[0].properties.name;
-      })
-      const getDefPromiseArr = wordNameArr.map(wordName =>
-       {
-        const cypherCode = `
-          MATCH (word:Word {name: "${wordName}"})
-          MATCH (word)-[r:DEFINITION]
-            ->(def:Definition)
-          RETURN r.partOfSpeech, def.text
-        `;
-        return session.run(cypherCode)
-      })
-      return Promise.all([wordNameArr, Promise.all(getDefPromiseArr)]);
-    })
-    .then(([wordNameArr, wordDefDataArr]) => {
+router.get('/:id/words/suggest/other/:level', (req, res, next) => {
+  const userId = req.params.id;
+  const userLevel = +req.params.level;
 
-      // Get random words' examples
+  // TODO: this logic is subject to change as our db grows larger
+  if (userLevel < 7) level = 7;
+  else if (userLevel > 8) level =9;
+  else level = userLevel+1;
 
-      const wordDefArr = wordDefDataArr.map(wordData => {
-        return wordData.records.map(record => ({
-          pos: record._fields[0],
-          text: record._fields[1]
-        }));
-      })
+  const cypherCode = `
+    MATCH (user:User {pgId: ${userId}})
+      -[:USED]->
+      (sharedWord:Word)
+      <-[:USED]-
+      (otherUser:User),
+      (otherUser)-[:USED]->(otherWord:Word)
+    WITH
+      user, otherUser, otherWord,
+      COUNT(sharedWord) AS sharedWordCount
+    WHERE NOT (user)-[:USED]->(otherWord) AND
+      otherWord.level >= ${level} AND
+      sharedWordCount >= 3
+    RETURN otherWord
+  `;
 
-      const getExamplePromiseArr = wordNameArr.map(wordName =>
-       {
-        const cypherCode = `
-          MATCH (word:Word {name: "${wordName}"})
-          MATCH (word)-[:EXAMPLE]
-            ->(ex:Example)
-          RETURN ex.text
-        `;
-        return session.run(cypherCode)
-      })
-
-      return Promise.all([wordNameArr, wordDefArr, Promise.all(getExamplePromiseArr)]);
-    })
-    .then(([wordNameArr, wordDefArr, wordExampleDataArr]) => {
-
-      // Get random words' realtions
-
-      const wordExampleArr = wordExampleDataArr.map(wordData => {
-        return wordData.records.map(record => record._fields[0]);
-      })
-
-      const getRelationPromiseArr = wordNameArr.map(wordName =>
-       {
-        const cypherCode = `
-          MATCH (word:Word {name: "${wordName}"})
-          MATCH (word)-[r:RELATEDTO]
-            ->(relWords:RelatedWords)
-          RETURN r.relation, relWords.text
-         `;
-        return session.run(cypherCode)
-      })
-
-      return Promise.all([wordNameArr, wordDefArr,wordExampleArr, Promise.all(getRelationPromiseArr)]);
-    })
-    .then(([wordNameArr, wordDefArr, wordExampleArr, wordRelationDataArr]) => {
-
-      // Combine word detail arrays into a single array
-
-      const wordRelationArr = wordRelationDataArr.map(wordData => {
-        return wordData.records.map(record => ({
-          type: record._fields[0],
-          text: record._fields[1]
-        }));
-      });
-
-      const retArr = [];
-      for (let i = 0; i < wordNameArr.length; i++) {
-        retArr.push({
-          name: wordNameArr[i],
-          definitions: wordDefArr[i],
-          examples: wordExampleArr[i],
-          realtions: wordRelationArr[i],
-        })
-      }
-      return retArr;
-    })
+  session.run(cypherCode)
+    .then(data => data.records)
+    .then(getWordDefinitions)
+    .then(getWordExamples)
+    .then(getWordRelations)
+    .then(combineAllWordDetails)
     .then(data => res.json(data))
     .catch(next);
 
@@ -338,7 +378,7 @@ const cypherCodeForNewWord = (userId, wordData) => {
   return cypherCode;
 }
 
-/* ---------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------ */
 
 /* -----------  Helper functions for Rosette's morphological analysis ----------- */
 
