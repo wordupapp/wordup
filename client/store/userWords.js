@@ -42,17 +42,19 @@ export const getWords = userId => dispatch => {
     .then(res => res.data)
     .then(userWords => {
       const finalWords = {};
-      userWords.forEach(word => {
-        finalWords[word[0]] = {
-          level: word[1] ? word[1].low : null,
-          numUsed: word[2] ? word[2].low : null,
-          dates: word[3] ? word[3] : '',
-        };
-      });
-      dispatch(getUserWords(finalWords));
-      const level = calcUserLevel(finalWords);
-      dispatch(setUserLevel(level));
-      dispatch(getSuggestedWords(userId, level));
+      if (userWords) {
+        userWords.forEach(word => {
+          finalWords[word[0]] = {
+            level: word[1] ? word[1].low : null,
+            numUsed: word[2] ? word[2].low : null,
+            dates: word[3] ? word[3] : '',
+          };
+        });
+        dispatch(getUserWords(finalWords));
+        const level = calcUserLevel(finalWords);
+        dispatch(setUserLevel(level));
+        dispatch(getSuggestedWords(userId, level));
+      }
     })
     .catch(console.error);
 };
