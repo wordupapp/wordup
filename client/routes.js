@@ -16,6 +16,7 @@ import {Main,
         Definitions,
         DataVisPanel,
         Games,
+        NewWordsPanel,
       } from './components';
 import {me} from './store';
 
@@ -41,6 +42,7 @@ class Routes extends Component {
                   <Route path="/games/synonyms" component={SynonymGame} />
                   <Route path="/games/definitions/:seed" component={Definitions} />
                   <Route path="/data" component={DataVisPanel} />
+                  <Route path="/newwords" component={NewWordsPanel} />
                   <Route path="*" component={Landing} />
                 </Switch>
             }
