@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
-import { Container, Card, Header, Button } from 'semantic-ui-react';
+import { Container, Grid, Header, Button } from 'semantic-ui-react';
 
 import WordDetailPage from './WordDetail';
 
@@ -10,7 +9,7 @@ import WordDetailPage from './WordDetail';
  * COMPONENT STYLE
  */
 const styles = {
-  cardGroup: {
+  buttonGroup: {
     padding: '2em 5em',
   },
 };
@@ -18,7 +17,6 @@ const styles = {
 /**
  * COMPONENT
  */
-
 class LevelWords extends React.Component {
   constructor(props) {
     super(props);
@@ -26,33 +24,43 @@ class LevelWords extends React.Component {
       activeItem: '',
     };
     this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.handleBackClick = this.handleBackClick.bind(this);
   }
 
   handleMenuClick(e) {
     this.setState({ activeItem: e.target.value });
   }
 
+  handleBackClick(e) {
+    this.setState({ activeItem: '' });
+  }
+
   render() {
     const { suggestedWords } = this.props;
-
-    let cardKey = 0;
-    const suggestionCards = suggestedWords ? suggestedWords.map((word, index) => {
-      cardKey += 1;
-      return (
-        <Card
-          key={cardKey}
-          as={Button}
-          value={word.name}
-          onClick={this.handleMenuClick} >
-          <Card.Content header={word.name} />
-        </Card>);
-    }) : null;
 
     const selectedWord = this.state.activeItem === '' ?
       null :
       (
         suggestedWords.find(word => word.name === this.state.activeItem)
       );
+
+    let cardKey = 0;
+    const suggestionButtons = suggestedWords ?
+      suggestedWords.map((word, index) => {
+        cardKey += 1;
+        return (
+          <Grid.Column key={cardKey}>
+            <Button
+              primary
+              value={word.name}
+              onClick={this.handleMenuClick}
+              size="massive">
+              {word.name}
+            </Button>
+          </Grid.Column>
+        );
+      }) :
+      null;
 
     return (
       <Container>
@@ -61,14 +69,18 @@ class LevelWords extends React.Component {
             (
               <Container>
                 <Header as="h1">{`These are words you haven't tried`}</Header>
-                <Card.Group itemsPerRow={2} stackable style={styles.cardGroup}>
-                  {suggestionCards}
-                </Card.Group>
+                <Grid columns={3} stackable style={styles.buttonGroup}>
+                  {suggestionButtons}
+                </Grid>
               </Container>
             ) :
             (
               <Container>
-                <Button as={Link} to="/newords/level" label="Back" />
+                <Button
+                  secondary
+                  onClick={this.handleBackClick}>
+                  Back
+                </Button>
                 <WordDetailPage word={selectedWord} />
               </Container>
             )
