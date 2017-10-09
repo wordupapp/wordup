@@ -20,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "argparse": "^1.0.9",
     "axios": "^0.15.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.16.1",
@@ -50,6 +51,7 @@
     "redux": "^3.6.0",
     "redux-logger": "^2.8.1",
     "redux-thunk": "^2.2.0",
+    "rosette-api": "^1.7.0",
     "semantic-ui-react": "^0.74.2",
     "sequelize": "^4.3.1",
     "socket.io": "^2.0.3",

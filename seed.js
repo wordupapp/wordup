@@ -91,9 +91,10 @@ let exampleIndex = 0;
 let relationIndex = 0;
 
 const createWords = (wordData, level) => {
-  let cypherCode = '';
-  wordData.forEach(datum => {
+
+  wordCreatePromiseArr = wordData.map(datum => {
     const { name, definitions, examples, relations } = datum;
+    let cypherCode = '';
     wordIndex += 1;
 
     // Create node for word
@@ -147,9 +148,13 @@ const createWords = (wordData, level) => {
           ->(relation${relationIndex})`;
       }
     });
+
+    // Run cypher query for creating individual word
+    return session.run(cypherCode)
+
   });
 
-  return cypherCode;
+  return wordCreatePromiseArr;
 };
 
 
@@ -176,12 +181,20 @@ const createGraphUsers = pgUsers => {
     for (let i = 0; i < numWordsUsed; i += 1) {
       const timesUsed = chance.integer({ min: 1, max: 10 });
 
-      const randYear = chance.integer({ min: 2015, max: 2016 });
-      let randMoth;
-      if (randYear === 2017) randMonth = chance.integer({ min: 1, max: 9 });
-      else randMonth = chance.integer({ min: 1, max: 31 });
+      let timesUsedArr = [];
 
-      const dateUsed = chance.date({string: true, year: randYear, month: randMonth});
+      for (let i = 0; i < timesUsed; i++) {
+        const randYear = chance.integer({ min: 2015, max: 2016 });
+        let randMoth;
+        if (randYear === 2017) randMonth = chance.integer({ min: 1, max: 9 });
+        else randMonth = chance.integer({ min: 1, max: 12 });
+
+        const randDate = chance.date({year: randYear, month: randMonth});
+        const randTimeStamp = (new Date(randDate)).getTime();
+        timesUsedArr.push(randTimeStamp);
+      }
+
+      const timesUsedStr = timesUsedArr.join(',')
 
       const randWordId = randWordIds.pop();
       userWordIndex += 1;
@@ -191,7 +204,7 @@ const createGraphUsers = pgUsers => {
         MATCH (word${userWordIndex}:Word)
           WHERE word${userWordIndex}.intId = ${randWordId}
         CREATE (user${id})
-        -[:USED {times: ${timesUsed}, dates: "${dateUsed}"}]
+        -[:USED {times: ${timesUsed}, dates: [${timesUsedStr}]}]
         ->(word${userWordIndex})`;
     }
 
@@ -203,18 +216,18 @@ const createGraphUsers = pgUsers => {
 
 const seedGrapDb = pgUsers => {
 
-  const cyperForMiddle = createWords(middleWordData, 7); // give level 7 for all middle school words
-  const cyperForHigh = createWords(highWordData, 8); // give level 8 for all middle school words
-  const cyperForCollege = createWords(collegeWordData, 9); // give level 9 for all middle school words
+  const cypherForMiddle = createWords(middleWordData, 7); // give level 7 for all middle school words
+  const cypherForHigh = createWords(highWordData, 8); // give level 8 for all middle school words
+  const cypherForCollege = createWords(collegeWordData, 9); // give level 9 for all middle school words
 
-  return session.run(cyperForMiddle)
+  return Promise.all(cypherForMiddle)
     .then(() => {
       console.log('Seeded words for middle school!');
-      return session.run(cyperForHigh);
+      return Promise.all(cypherForHigh);
     })
     .then(() => {
       console.log('Seeded words for high school!');
-      session.run(cyperForCollege);
+      Promise.all(cypherForCollege);
     })
     .then(() => {
       console.log('Seeded words for college!');

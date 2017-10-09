@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, List, Header } from 'semantic-ui-react';
+import { Container, Header, List } from 'semantic-ui-react';
 
 /**
  * COMPONENT STYLE
@@ -12,7 +12,8 @@ const style = {
 /**
  * COMPONENT
  */
-export const WordInfoCard = props => {
+export const WordDetail = props => {
+
   const { word } = props;
   const { name, definitions, examples } = word;
   let contentKey = 0;
@@ -35,7 +36,7 @@ export const WordInfoCard = props => {
     );
   });
 
-  const exampleList = examples.slice(0, 3).map(example => {
+  const exampleList = examples.map(example => {
     contentKey += 1;
     return (
       <List.Item key={contentKey}>
@@ -46,22 +47,12 @@ export const WordInfoCard = props => {
   });
 
   return (
-    <Card style={{ fontSize: 'large' }}>
-      <Card.Content header={name} style={{ fontSize: 'xx-large', textAlign: 'center', maxHeight: '110px' }} />
-      <Card.Content>
-        <List>
-          <Header>Definitions: </Header>
-          {definitionList}
-        </List>
-      </Card.Content>
-      <Card.Content>
-        <List>
-          <Header>Examples: </Header>
-          {exampleList}
-        </List>
-      </Card.Content>
-    </Card>
+    <Container>
+      <Header as="h2">{name}</Header>
+      {definitionList}
+      {exampleList}
+    </Container>
   );
 };
 
-export default WordInfoCard;
+export default WordDetail;
