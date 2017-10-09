@@ -18,8 +18,8 @@ export const getOtherWords = userWords => ({ type: GET_REC_WORDS_FOR_OTHER, user
 /**
  * THUNK CREATORS
  */
-export const getRecWordsForOther = userId => dispatch => {
-  axios.get(`/api/users/${userId}/words/suggest/other/`)
+export const getRecWordsForOther = (userId, level) => dispatch => {
+  axios.get(`/api/users/${userId}/words/suggest/other/${level}`)
     .then(res => res.data)
     .then(suggestedWords => {
       dispatch(getOtherWords(suggestedWords));
