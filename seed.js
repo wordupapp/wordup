@@ -187,7 +187,7 @@ const createGraphUsers = pgUsers => {
         const randYear = chance.integer({ min: 2015, max: 2016 });
         let randMoth;
         if (randYear === 2017) randMonth = chance.integer({ min: 1, max: 9 });
-        else randMonth = chance.integer({ min: 1, max: 31 });
+        else randMonth = chance.integer({ min: 1, max: 12 });
 
         const randDate = chance.date({year: randYear, month: randMonth});
         const randTimeStamp = (new Date(randDate)).getTime();
