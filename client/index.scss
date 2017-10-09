@@ -9,6 +9,14 @@ body {
     display: block;
   }
 
+  .skip:hover {
+    color: red;
+  }
+
+  .ui.purple.tiny.progress {
+    width: 100%;
+  }
+  
   .node {
   cursor: pointer;
   }
@@ -44,4 +52,10 @@ body {
   //   margin: 1em;
   //   display: inline-block;
   // }
+
+  @media (min-width: 767px)  {
+    .definitions-container {
+      width: min-content!important;
+    }
+  }
 }
