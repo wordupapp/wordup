@@ -98,27 +98,33 @@ class Record extends Component {
   render() {
     const styles = {
       mic: {
-        width: 200,
-        height: 200,
-        margin: "auto",
         cursor: "pointer",
       },
       iconOn: {
         width: 200,
-        height: 200,
         color: "#0a00b6",
         margin: "auto",
       },
       iconOff: {
         width: 200,
-        height: 200,
         color: "#d50000",
         margin: "auto",
       },
       outerDiv: {
-        width: "100%",
-        height: "100%",
-        margin: "25em auto 0 auto",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      },
+      promptContainer: {
+        marginTop: "4em",
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+      },
+      prompt: {
+        marginTop: "2em",
       },
       button: {
         backgroundColor: "#0a00b6",
@@ -150,15 +156,15 @@ class Record extends Component {
             ? startRecordingButton
             : stopRecordingButton
         }
-        <div style={styles.outerDiv}>
+        <div style={styles.promptContainer}>
           <h3>Need a prompt?</h3>
           <Button
             onClick={this.randomPrompt}
             style={styles.button}>
             New prompt
           </Button>
-          <p>{this.state.prompt}</p>
         </div>
+        <p style={styles.prompt}>{this.state.prompt}</p>
       </div>
     );
   }
