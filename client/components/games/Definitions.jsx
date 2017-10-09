@@ -26,9 +26,6 @@ const styles = {
     alignItems: "center",
     flexDirection: "column",
   },
-  definitions: {
-    // marginTop: "100px",
-  },
   form: {
     width: "37em",
   },
@@ -56,8 +53,7 @@ class Definitions extends Component {
     super(props);
     this.state = {
       correct: 0,
-      total: 10,
-      lives: 3,
+      total: 0,
       choice: '',
       response: '',
       quiz: [],
@@ -75,11 +71,8 @@ class Definitions extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log('nextProps.definitions.length = ', nextProps.definitions.length)
     let seed = this.props.match.params.seed;
-    // let length = nextProps.definitions.length - 1;
 
-    // if(!this.chance) this.chance = new Chance(+seed);
     if(!this.state.quiz.length) this.setState({quiz: [+seed]});
   }
 
@@ -88,20 +81,38 @@ class Definitions extends Component {
   }
 
   handleSubmit(e, form){
+    const { definitions } = this.props;
+    const { choice, quiz, submissions } = this.state;
+
     let currentQuiz;
-    if(this.state.quiz.length) currentQuiz = this.state.quiz[this.state.quiz.length - 1];
+    if(quiz.length) currentQuiz = quiz[quiz.length - 1];
+    const updatedSubmissions = submissions.concat([currentQuiz]);
 
-    const updatedSubmissions = this.state.submissions.concat([currentQuiz])
+    let updatedCorrect = this.state.correct + 1;
+    let updatedTotal = this.state.total + 1;
 
-    if(this.state.choice === form["data-word"]) {
-      this.setState({response: 'correct', submissions: updatedSubmissions});
+    if(choice === form["data-word"]) {
+      this.setState({correct: updatedCorrect, response: 'correct', submissions: updatedSubmissions, total: updatedTotal});
     } else{
-      this.setState({response: 'incorrect', submissions: updatedSubmissions});
+      this.setState({response: 'incorrect', submissions: updatedSubmissions, total: updatedTotal});
     }
   }
 
   handleSkipOrNext() {
-    console.log('HERE!!!!')
+    const { definitions } = this.props;    
+    const { quiz } = this.state;
+    let currentQuiz;
+    if(quiz.length) currentQuiz = quiz[quiz.length - 1];
+
+    const chance = new Chance(currentQuiz);
+    let nextQuiz = chance.natural({ min: 0, max: definitions.length - 1 });
+
+    while(quiz.indexOf(nextQuiz) > -1) {
+      nextQuiz = chance.natural({ min: 0, max: definitions.length - 1 });
+    }
+
+    let newQuiz = [...quiz, nextQuiz];
+    this.setState({choice: '', response: '', quiz: newQuiz});    
   }
 
   render() {
@@ -110,7 +121,6 @@ class Definitions extends Component {
     const seed = this.state.quiz[quizIndex];
     
     if(definitions.length) {
-      // let chance = this.state.quiz.length ? new Chance() : new Chance(seed)
       let chance = new Chance(seed)
 
       let { correct, total } = this.state;
@@ -135,7 +145,7 @@ class Definitions extends Component {
       return (
         <Container className="definitions-container" style={styles.container}>
           <Header as="h2" style={styles.score}>Score: {correct}/{total} </Header>
-          <Progress percent={40} size='tiny' color="purple" />
+          <Progress percent={this.state.total/.1} size='tiny' color="purple" />
           <Header as="h1">Match the correct word to the definition:</Header>
           <Header as="h3">Definition: {selected.meaning}</Header>
           <Form style={styles.form} data-word={selected.word} onSubmit={this.handleSubmit}>

@@ -48,24 +48,6 @@ const styles = {
   },
 }
 
-// export const SkipOrSubmit = ({ choice, next, response } = props) => {
-//   if(!response) {
-//     return (
-//       <div style={styles.navContainer}>
-//         <Button style={styles.nav} onClick={next}>Skip</Button>
-//         <Form.Button
-//           disabled={!choice ? true : false}
-//           color={choice ? "green" : "grey"}
-//           style={styles.nav}
-//           >Submit
-//         </Form.Button>
-//       </div>
-//     )
-//   } else {
-//     return null;
-//   }
-// }
-
 export const Skip = ({ next, response } = props) => {
   if(!response) {
     return (
