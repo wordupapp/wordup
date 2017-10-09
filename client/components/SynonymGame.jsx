@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { Layer, Stage, Text } from 'react-konva';
-import { TweenLite, Power3, Back } from 'gsap';
+import { TweenLite, Power3, TimelineMax } from 'gsap';
 import _ from 'lodash';
 import { fetchRandWordAndRelatedWords, removeRelatedWord } from '../store/words';
 
@@ -25,6 +25,7 @@ class SynonymGame extends Component {
     this.drawLayer = this.drawLayer.bind(this);
     this.calculateMainWordPosition = this.calculateMainWordPosition.bind(this);
     this.applyAnimationsToWords = this.applyAnimationsToWords.bind(this);
+    this.animationUpdate = this.animationUpdate.bind(this);
   }
 
   componentWillMount() {
@@ -40,29 +41,47 @@ class SynonymGame extends Component {
   startGame() {
     const wordArr = Object.keys(this.props.gameWords);
     this.setState({
-      gameWords: wordArr,
       currentWord: wordArr[this.state.questionNum],
     });
     const wordsForLevel = this.generateWords();
     this.setState({
       gameWords: wordsForLevel,
     });
-    this.applyAnimationsToWords();
-      // console.log(this.refs[i + "-word"])
-      // const randomDelay = _.random(0, 4, true);
-      // TweenLite.to(this.refs[i + "-word"], 0.6, {
-      //   // transparency: ,
-      //   delay: randomDelay,
-      //   ease: Power3.easeIn,
-      //   onUpdate: this.drawLayer,
-      // });
-    // }
+    window.setTimeout(this.applyAnimationsToWords, 100);
   }
 
   applyAnimationsToWords() {
     this.state.gameWords.forEach(word => {
-      console.log(this.refs[word])
-    })
+      const randomDelay = _.random(0, 10, true);
+      const randomDelayMove = _.random(0, 5, true);
+      const currentWord = this.refs[word.word];
+      const tl = new TimelineMax({ repeat: -1 });
+      const tl2 = new TimelineMax({ repeat: -1 });
+      tl
+        .to(currentWord, 5, {
+          opacity: 1,
+          delay: randomDelay,
+        })
+        .to(currentWord, 3, {
+          opacity: 1,
+        })
+        .to(currentWord, 5, {
+          opacity: 0,
+        })
+        .to(currentWord, 5, {
+          opacity: 0,
+        });
+        tl2
+        .to(currentWord, 3, {
+          x: '+= 50',
+          delay: randomDelayMove,
+          ease: Power3.easeInOut,
+        })
+        .to(currentWord, 3, {
+          x: '-=50',
+          ease: Power3.easeInOut,
+        });
+    });
   }
 
   generateWords() {
@@ -100,6 +119,11 @@ class SynonymGame extends Component {
 
   drawLayer() {
     this.refs.layer.draw();
+  }
+
+  animationUpdate () {
+    this.drawLayer();
+    requestAnimationFrame(this.animationUpdate);
   }
 
   updateStateAfterClick(event) {
@@ -179,7 +203,7 @@ class SynonymGame extends Component {
 
     const words = this.state.gameWords;
     console.log('this.state', this.state)
-    // console.log(this.refs.ord)
+    requestAnimationFrame(this.animationUpdate);
     return (
       <div style={styles.div}>
         <div style={styles.title}>
@@ -204,10 +228,11 @@ class SynonymGame extends Component {
                 words && words.map((word, index) => {
                   return (
                     <Text
-                      ref={word}
+                      ref={word.word}
                       key={index}
                       text={word.word}
                       fontFamily="Roboto"
+                      opacity={0}
                       fontSize={16}
                       x={word.x} y={word.y}
                       onClick={this.animateWordAfterClick}
