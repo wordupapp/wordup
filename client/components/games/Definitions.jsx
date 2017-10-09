@@ -8,7 +8,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Chance from 'chance';
-import { Checkbox, 
+// REVIEW
+import {
+  Checkbox,
+  Container,
+  Dimmer,
+  Form,
+  Header,
+  List,
+  Loader,
+  Progress,
+  Segment,
+} from 'semantic-ui-react';
+import { Checkbox,
         Container,
         Dimmer,
         Form,
@@ -130,7 +142,7 @@ class Definitions extends Component {
   }
 
   handleSkipOrNext() {
-    const { definitions } = this.props;    
+    const { definitions } = this.props;
     const { quiz } = this.state;
     let currentQuiz;
     if(quiz.length) currentQuiz = quiz[quiz.length - 1];
@@ -143,14 +155,14 @@ class Definitions extends Component {
     }
 
     let newQuiz = [...quiz, nextQuiz];
-    this.setState({choice: '', response: '', quiz: newQuiz});    
+    this.setState({choice: '', response: '', quiz: newQuiz});
   }
 
   render() {
     const { definitions } = this.props;
     const quizIndex = this.state.quiz.length - 1;
     const seed = this.state.quiz[quizIndex];
-    
+
     if(definitions.length) {
       let chance = new Chance(seed)
 
@@ -158,21 +170,21 @@ class Definitions extends Component {
 
       let index = chance.natural({ min: 0, max: definitions.length - 1 });
       let selected = definitions[index];
-        
-      let options = [];    
+
+      let options = [];
       while(options.length < 4) {
-        let index = chance.natural({ min: 0, max: definitions.length - 1 });      
+        let index = chance.natural({ min: 0, max: definitions.length - 1 });
         let newOption = definitions[index].word;
-          
+
         if(options.indexOf(newOption) === -1  && newOption !== selected.word) {
           options.push(newOption);
         }
       }
-    
-      /** Now we place the correct word in a random index in our options array **/ 
+
+      /** Now we place the correct word in a random index in our options array **/
       let randomIndex = chance.natural({ min: 0, max: options.length - 1 });
       options[randomIndex] = selected.word;
-      
+
       return (
         <div className="fullScreen" style={styles.fullScreen}>
           <Container className="definitions-container" style={styles.container}>

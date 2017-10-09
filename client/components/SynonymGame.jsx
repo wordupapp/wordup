@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { Layer, Stage, Text } from 'react-konva';
 import { TweenLite, Power3, TimelineMax } from 'gsap';
+// REVIEW: get individual lodash methods
 import _ from 'lodash';
 import { fetchRandWordAndRelatedWords, removeRelatedWord } from '../store/words';
 
@@ -261,6 +262,7 @@ class SynonymGame extends Component {
                       fontSize={16}
                       x={word.x} y={word.y}
                       onClick={this.animateWordAfterClick}
+                      {/* REVIEW: hey, maybe make these methods */}
                       onMouseEnter={() => {
                         const stage = this.refs.stage.getStage().container();
                         stage.style.cursor = "pointer";

@@ -67,6 +67,8 @@ const Games = props => {
   const { level, words } = props;
 
   const seed = Math.floor(Math.random() * 100);
+  // REVEW: if you don't have all the games ready to go for demo
+  //        maybe lie and say * unlock these games by building your vocabulary*
   const games = [
     { key: 0, name: 'Synonyms', ref: 'synonyms', icon: 'skyatlas' },
     { key: 1, name: 'Definitions', ref: `definitions/${seed}`, icon: 'telegram' },

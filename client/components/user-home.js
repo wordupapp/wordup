@@ -29,6 +29,7 @@ export const UserHome = props => {
 
   return (
     <div>
+      {/* REVIEW: Hey, put this is your style object */}
       <Segment vertical style={{ padding: '6em 0em' }}>
         <Grid container stackable verticalAlign='middle'>
           <Grid.Row>
