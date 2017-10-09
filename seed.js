@@ -176,12 +176,20 @@ const createGraphUsers = pgUsers => {
     for (let i = 0; i < numWordsUsed; i += 1) {
       const timesUsed = chance.integer({ min: 1, max: 10 });
 
-      const randYear = chance.integer({ min: 2015, max: 2016 });
-      let randMoth;
-      if (randYear === 2017) randMonth = chance.integer({ min: 1, max: 9 });
-      else randMonth = chance.integer({ min: 1, max: 31 });
+      let timesUsedArr = [];
 
-      const dateUsed = chance.date({string: true, year: randYear, month: randMonth});
+      for (let i = 0; i < timesUsed; i++) {
+        const randYear = chance.integer({ min: 2015, max: 2016 });
+        let randMoth;
+        if (randYear === 2017) randMonth = chance.integer({ min: 1, max: 9 });
+        else randMonth = chance.integer({ min: 1, max: 31 });
+
+        const randDate = chance.date({year: randYear, month: randMonth});
+        const randTimeStamp = (new Date(randDate)).getTime();
+        timesUsedArr.push(randTimeStamp);
+      }
+
+      const timesUsedStr = timesUsedArr.join(',')
 
       const randWordId = randWordIds.pop();
       userWordIndex += 1;
@@ -191,7 +199,7 @@ const createGraphUsers = pgUsers => {
         MATCH (word${userWordIndex}:Word)
           WHERE word${userWordIndex}.intId = ${randWordId}
         CREATE (user${id})
-        -[:USED {times: ${timesUsed}, dates: "${dateUsed}"}]
+        -[:USED {times: ${timesUsed}, dates: [${timesUsedStr}]}]
         ->(word${userWordIndex})`;
     }
 

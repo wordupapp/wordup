@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const unirest = require('unirest');
 const promiseRetry = require('promise-retry');
+const neo4j = require('neo4j-driver').v1;
 
 const { User } = require('../db/models');
 const { graphDb } = require('../db');
@@ -35,7 +36,13 @@ router.get('/:id/words', (req, res, next) => {
   session.run(cypherCode)
     .then(data => data.records)
     .then(words => {
-      const wordData = words.map(word => word._fields);
+      let wordData = words.map(word => word._fields);
+      wordData.forEach(word => {
+        word[3] = word[3].map(bitTime => {
+          // conver 64 bit integer to integer
+          return neo4j.int(bitTime).toNumber()
+        })
+      });
       res.json(wordData);
     })
     .catch(next);
@@ -256,8 +263,6 @@ const cypherCodeForNewWord = (userId, wordData) => {
   let exampleIndex = 0;
   let relationIndex = 0;
 
-  const dateStr = new Date().toLocaleDateString('en-US');
-
   // Merge for User & Word
   let cypherCode = `
     MATCH (user:User {pgId: ${userId}})
@@ -265,8 +270,8 @@ const cypherCodeForNewWord = (userId, wordData) => {
       ON CREATE SET word.level = ${level}
       ON MATCH SET word.level = ${level}
     MERGE (user)-[r:USED]->(word)
-      ON CREATE SET r.dates='${dateStr}', r.times = 1
-      ON MATCH SET r.dates='${dateStr}', r.times = r.times + 1
+      ON CREATE SET r.dates=[timestamp()], r.times = 1
+      ON MATCH SET r.dates=r.dates + timestamp(), r.times = r.times + 1
   `;
 
   // Create relationships to definitions
