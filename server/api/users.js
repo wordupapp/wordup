@@ -265,8 +265,8 @@ const cypherCodeForNewWord = (userId, wordData) => {
       ON CREATE SET word.level = ${level}
       ON MATCH SET word.level = ${level}
     MERGE (user)-[r:USED]->(word)
-      ON CREATE SET r.dates='${dateStr}', r.times = 1
-      ON MATCH SET r.dates='${dateStr}', r.times = r.times + 1
+      ON CREATE SET r.dates = [timestamp()], r.times = 1
+      ON MATCH SET r.dates = r.dates + timestamp(), r.times = r.times + 1
   `;
 
   // Create relationships to definitions
