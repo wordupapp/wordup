@@ -1,8 +1,11 @@
 import React from 'react';
+import { Router, Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Table, Header, Grid, Container, Icon, Menu } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
+import { Header, Container, Menu } from 'semantic-ui-react';
+
+import history from '../../history';
 import LevelWordCards from './LevelWords';
 
 const styles = {
@@ -42,7 +45,7 @@ class NewWordsPanel extends React.Component {
     if (activeItem === 'level') {
       wordCards = <LevelWordCards />;
     } else if (activeItem === 'user') {
-      wordCards = null;  //TODO: update
+      wordCards = null; // TODO: update
     }
 
     return (
@@ -51,11 +54,34 @@ class NewWordsPanel extends React.Component {
           <Container style={styles.subContainer}>
             <Header as='h1'>Learn new words</Header>
             <Menu pointing secondary size='massive'>
-              <Menu.Item name='level' active={activeItem === 'level'} onClick={this.handleMenuClick} />
-              <Menu.Item name='user' active={activeItem === 'user'} onClick={this.handleMenuClick} />
-              <Menu.Item name='extra' active={activeItem === 'extra'} onClick={this.handleMenuClick} />
+              <Menu.Item
+                name='level'
+                active={activeItem === 'level'}
+                onClick={this.handleMenuClick}
+                as={Link}
+                to="/newwords/level"
+              />
+              <Menu.Item
+                name='user'
+                active={activeItem === 'user'}
+                onClick={this.handleMenuClick}
+                as={Link}
+                to="/newwords/user"
+              />
+              <Menu.Item
+                name='extra'
+                active={activeItem === 'extra'}
+                onClick={this.handleMenuClick}
+                as={Link}
+                to="/newwords/extra"
+              />
             </Menu>
-            {wordCards}
+            <Router history={history}>
+              <Switch>
+                <Route exact path="/newwords" component={LevelWordCards} />
+                <Route path="/newwords/level" component={LevelWordCards} />
+              </Switch>
+            </Router>
           </Container>
         </Container>
       </Container>
@@ -69,7 +95,7 @@ class NewWordsPanel extends React.Component {
 const mapState = state => {
   return {
     level: state.userLevel,
-    words: state.userWords,
+    words: state.newwords,
   };
 };
 

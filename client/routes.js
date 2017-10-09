@@ -18,7 +18,7 @@ import {Main,
         Definitions,
         DataVisPanel,
         Games,
-        NewWordsPanel
+        NewWordsPanel,
       } from './components';
 import {me} from './store';
 
