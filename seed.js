@@ -91,9 +91,10 @@ let exampleIndex = 0;
 let relationIndex = 0;
 
 const createWords = (wordData, level) => {
-  let cypherCode = '';
-  wordData.forEach(datum => {
+
+  wordCreatePromiseArr = wordData.map(datum => {
     const { name, definitions, examples, relations } = datum;
+    let cypherCode = '';
     wordIndex += 1;
 
     // Create node for word
@@ -147,9 +148,13 @@ const createWords = (wordData, level) => {
           ->(relation${relationIndex})`;
       }
     });
+
+    // Run cypher query for creating individual word
+    return session.run(cypherCode)
+
   });
 
-  return cypherCode;
+  return wordCreatePromiseArr;
 };
 
 
@@ -211,18 +216,18 @@ const createGraphUsers = pgUsers => {
 
 const seedGrapDb = pgUsers => {
 
-  const cyperForMiddle = createWords(middleWordData, 7); // give level 7 for all middle school words
-  const cyperForHigh = createWords(highWordData, 8); // give level 8 for all middle school words
-  const cyperForCollege = createWords(collegeWordData, 9); // give level 9 for all middle school words
+  const cypherForMiddle = createWords(middleWordData, 7); // give level 7 for all middle school words
+  const cypherForHigh = createWords(highWordData, 8); // give level 8 for all middle school words
+  const cypherForCollege = createWords(collegeWordData, 9); // give level 9 for all middle school words
 
-  return session.run(cyperForMiddle)
+  return Promise.all(cypherForMiddle)
     .then(() => {
       console.log('Seeded words for middle school!');
-      return session.run(cyperForHigh);
+      return Promise.all(cypherForHigh);
     })
     .then(() => {
       console.log('Seeded words for high school!');
-      session.run(cyperForCollege);
+      Promise.all(cypherForCollege);
     })
     .then(() => {
       console.log('Seeded words for college!');
