@@ -1,5 +1,5 @@
 import axios from 'axios';
-import _ from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * ACTION TYPES
@@ -60,7 +60,7 @@ export const fetchDefinitionsForLevelThunk = userLevel => dispatch => {
  * REDUCER
  */
 export default function (prevState = state, action) {
-  const nextState = _.cloneDeep(prevState);
+  const nextState = cloneDeep(prevState);
   switch (action.type) {
     case GET_RELATED_WORDS:
       nextState.relatedWords[action.randomWord] = action.relatedWords;
