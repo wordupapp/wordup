@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { Layer, Stage, Text } from 'react-konva';
 import { TweenLite, Power3, TimelineMax } from 'gsap';
-import _ from 'lodash';
+import random from 'lodash.random';
+import sampleSize from 'lodash.samplesize';
 import { fetchRandWordAndRelatedWords, removeRelatedWord } from '../store/words';
 
 class SynonymGame extends Component {
@@ -58,7 +59,7 @@ class SynonymGame extends Component {
 
   applyAnimationsToWords() {
     this.state.gameWords.forEach(word => {
-      const randomDelay = _.random(0, 10, true);
+      const randomDelay = random(0, 10, true);
       const currentWord = this.refs[word.word];
       const tl = new TimelineMax({ repeat: -1 });
       const tl2 = new TimelineMax({ repeat: -1 });
@@ -92,15 +93,16 @@ class SynonymGame extends Component {
         gameWords[word].forEach(word => incorrectWords.push(word));
       }
     }
-    incorrectWords = _.sampleSize(incorrectWords, 10);
+    incorrectWords = sampleSize(incorrectWords, 10);
     const currentWord = Object.keys(this.props.gameWords)[this.state.questionNum];
-    const correctWords = _.sampleSize(this.props.gameWords[currentWord], 10);
+    const correctWords = sampleSize(this.props.gameWords[currentWord], 10);
     let wordsToRender = incorrectWords.concat(correctWords);
     wordsToRender = wordsToRender.map(word => {
       return {
         word,
-        x: _.random(50, (window.innerWidth * 0.9) - 50),
-        y: _.random(200, (window.innerHeight * 0.7) - 50),
+        
+        x: random(50, (window.innerWidth * 0.9) - 50),
+        y: random(200, (window.innerHeight * 0.7) - 50),
       };
     });
     return wordsToRender;
