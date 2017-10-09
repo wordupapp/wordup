@@ -1,12 +1,9 @@
 const router = require('express').Router();
 const unirest = require('unirest');
 const promiseRetry = require('promise-retry');
-<<<<<<< HEAD
 const neo4j = require('neo4j-driver').v1;
-=======
 const Api = require('rosette-api');
 const ArgumentParser = require('argparse').ArgumentParser;
->>>>>>> master
 
 const { User } = require('../db/models');
 const { graphDb } = require('../db');

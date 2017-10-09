@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { Header, Container, Menu } from 'semantic-ui-react';
 
 import history from '../../history';
-import LevelWordCards from './LevelWords';
+import LevelWordView from './LevelWords';
+import OhterUserWordView from './OtherUserWords';
 
 const styles = {
   all: {
@@ -40,13 +41,6 @@ class NewWordsPanel extends React.Component {
 
   render() {
     const { activeItem } = this.state;
-    let wordCards = null;
-
-    if (activeItem === 'level') {
-      wordCards = <LevelWordCards />;
-    } else if (activeItem === 'user') {
-      wordCards = null; // TODO: update
-    }
 
     return (
       <Container style={styles.all}>
@@ -78,8 +72,10 @@ class NewWordsPanel extends React.Component {
             </Menu>
             <Router history={history}>
               <Switch>
-                <Route exact path="/newwords" component={LevelWordCards} />
-                <Route path="/newwords/level" component={LevelWordCards} />
+                <Route exact path="/newwords" component={LevelWordView} />
+                <Route path="/newwords/level" component={LevelWordView} />
+                <Route path="/newwords/user" component={OhterUserWordView} />
+                <Route path="*" component={LevelWordView} />
               </Switch>
             </Router>
           </Container>
