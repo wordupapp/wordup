@@ -13,6 +13,14 @@ body {
     color: red;
   }
 
+  .option:hover {
+    border-style: double;
+    border-color: rgb(180, 19, 236);
+    border-radius: 5px;
+    border-width: thick;
+    padding: 9px;
+  }
+
   .ui.purple.tiny.progress {
     width: 100%;
   }
@@ -55,7 +63,14 @@ body {
 
   @media (min-width: 767px)  {
     .definitions-container {
-      width: min-content!important;
+      width: max-content!important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .fullScreen {
+      height: 100% !important;
+      padding-bottom: 2em;
     }
   }
 }
