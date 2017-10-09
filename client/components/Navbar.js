@@ -93,6 +93,10 @@ class Navbar extends Component {
                   <Icon name='user' />
                   Your profile
                 </Dropdown.Item>
+                <Dropdown.Item as={Link} to={'/newwords'}>
+                  <Icon name='rocket' />
+                  New words
+                </Dropdown.Item>
                 <Dropdown.Item as={Link} to={'/home'}>
                   <Icon name='setting' />
                   Settings

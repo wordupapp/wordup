@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 
 import { Button, Container, Header, Icon, Image, Segment, Grid, List, Table, Card } from 'semantic-ui-react';
 
-import WordCard from './WordInfoCard';
-
 /**
  * COMPONENT STYLE
  */
@@ -25,11 +23,6 @@ export const UserHome = props => {
   const { email, name, phone, level, suggestedWords } = props;
   let { image } = props;
   const firstName = name.split(' ')[0];
-  let cardKey = 0;
-  const suggestionCards = suggestedWords ? suggestedWords.map((word, index) => {
-    cardKey += 1;
-    return <WordCard key={cardKey} word={word} />;
-  }) : null;
 
   // default image
   if (!image) image = 'http://www.answerspoint.com/user/uploads/users/default_user.png';
@@ -119,14 +112,6 @@ export const UserHome = props => {
           </Table.Body>
         </Table>
       </Segment>
-      <Segment style={{ padding: '6em 8em' }} vertical>
-        <Header as='h2' style={{ fontSize: '4em', padding: '1em', textAlign: 'center' }}>
-          Try learning these new words!
-        </Header>
-        <Card.Group itemsPerRow={3} stackable>
-          {suggestionCards}
-        </Card.Group>
-      </Segment>
     </div>
   );
 };
@@ -141,7 +126,6 @@ const mapState = state => {
     phone: state.user.phone,
     image: state.user.image,
     level: state.userLevel,
-    suggestedWords: [...state.userSuggestedWords],
   };
 };
 
