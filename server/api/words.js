@@ -62,8 +62,7 @@ router.get('/definitions/:level', (req, res, next) => {
       const wordsAndDefinitions = records.map(record => {
         const id = record._fields[0].low;
         const word = record._fields[1];
-        const meaning = record._fields[2];
-
+        const meaning = record._fields[2].split('\n');
         return { id, word, meaning };
       });
       res.send(wordsAndDefinitions);
