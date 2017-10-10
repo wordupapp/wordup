@@ -52,7 +52,6 @@ class Record extends Component {
     };
     recognition.onerror = recognition.onerror.bind(home);
     this.setState({ recognition });
-
   }
 
   recordingToggle() {
@@ -144,6 +143,7 @@ class Record extends Component {
       },
       card: {
         backgroundColor: "#ffffff",
+
         height: 200,
         width: 300,
       },
