@@ -21,11 +21,16 @@ class DataVisPanel extends Component {
       { url: '/data/1', name: 'Your Word Cloud' },
       { url: '/data/2', name: 'Top Word Usage Trends' },
     ];
+    this.styles = {
+      all: {
+        backgroundColor: "#e9e9e9",
+      },
+    };
   }
 
   render() {
     return (
-      <Grid>
+      <Grid style={this.styles.all}>
         <Grid.Column width={3}>
           {
             <Menu fluid vertical pointing>

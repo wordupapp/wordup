@@ -7,6 +7,7 @@ const styles = {
   all: {
     width: "100%",
     backgroundColor: "#e9e9e9",
+    flexGrow: 1,
   },
   container: {
     padding: "7em 0em",

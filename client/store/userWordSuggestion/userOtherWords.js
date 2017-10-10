@@ -3,7 +3,7 @@ import axios from 'axios';
 /**
  * ACTION TYPES
  */
-const GET_USER_SUGGESTED_WORDS = 'GET_USER_SUGGESTED_WORDS';
+const GET_REC_WORDS_FOR_OTHER = 'GET_REC_WORDS_FOR_OTHER';
 
 /**
  * INITIAL STATE
@@ -13,16 +13,16 @@ const userWords = {};
 /**
  * ACTION CREATORS
  */
-export const getUserSuggestedWords = userWords => ({ type: GET_USER_SUGGESTED_WORDS, userWords });
+export const getOtherWords = userWords => ({ type: GET_REC_WORDS_FOR_OTHER, userWords });
 
 /**
  * THUNK CREATORS
  */
-export const getSuggestedWords = (userId, level) => dispatch => {
-  axios.get(`/api/users/${userId}/words/suggest/${level}`)
+export const getRecWordsForOther = (userId, level) => dispatch => {
+  axios.get(`/api/users/${userId}/words/suggest/other/${level}`)
     .then(res => res.data)
     .then(suggestedWords => {
-      dispatch(getUserSuggestedWords(suggestedWords));
+      dispatch(getOtherWords(suggestedWords));
     })
     .catch(console.error);
 };
@@ -32,7 +32,7 @@ export const getSuggestedWords = (userId, level) => dispatch => {
  */
 export default function (state = userWords, action) {
   switch (action.type) {
-    case GET_USER_SUGGESTED_WORDS:
+    case GET_REC_WORDS_FOR_OTHER:
       return action.userWords;
     default:
       return state;
