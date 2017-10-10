@@ -5,9 +5,17 @@ import user from './user';
 import userWords from './userWords';
 import words from './words';
 import userLevel from './userLevel';
-import userSuggestedWords from './userSuggestedWords';
+import userLevelWords from './userWordSuggestion/userLevelWords';
+import userOtherWords from './userWordSuggestion/userOtherWords';
 
-const reducer = combineReducers({ user, userLevel, userWords, words, userSuggestedWords });
+const reducer = combineReducers({
+  user,
+  userLevel,
+  userWords,
+  words,
+  userLevelWords,
+  userOtherWords,
+});
 const middleware = [thunkMiddleware, createLogger({ collapsed: true })];
 
 // SETUP w/ REDUX DevTools
@@ -22,4 +30,5 @@ export default store;
 export * from './user';
 export * from './userWords';
 export * from './userLevel';
-export * from './userSuggestedWords';
+export * from './userWordSuggestion/userLevelWords';
+export * from './userWordSuggestion/userOtherWords';

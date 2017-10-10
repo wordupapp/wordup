@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Button } from 'semantic-ui-react';
+import { Icon, Button, Message } from 'semantic-ui-react';
 import { sendWords } from '../store/userWords';
 
 
@@ -14,7 +14,7 @@ class Record extends Component {
     this.state = {
       recognition: {},
       recording: false,
-      results: [],
+      speechResult: '',
       userEnded: false,
       prompt: '',
     };
@@ -39,9 +39,7 @@ class Record extends Component {
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       if (confidence > 0.5) {
-        // const newResult = [speechResult, confidence];
-        // const newWords = home.getFormattedWords(newResult);
-        console.log('speechResult: ', speechResult);
+        home.setState({ speechResult });
         dispatchSendWords(speechResult, user.id);
       }
     };
@@ -53,10 +51,8 @@ class Record extends Component {
       console.log('Error occured: ', event.error);
     };
     recognition.onerror = recognition.onerror.bind(home);
+    this.setState({ recognition });
 
-    this.setState({
-      recognition,
-    });
   }
 
   recordingToggle() {
@@ -65,6 +61,7 @@ class Record extends Component {
       this.setState({
         userEnded: true,
         recording: false,
+        speechResult: '',
       });
     } else {
       this.state.recognition.start();
@@ -73,19 +70,6 @@ class Record extends Component {
       });
     }
   }
-
-  // getFormattedWords(result) {
-  //   const formattedWords = new Set();
-  //   if (result[1] > 0.5) {
-  //     const tempArr = result[0].split(' ');
-  //     const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
-  //     tempArr.forEach(word => {
-  //       if (pattern.test(word)) return; // don't process words with special characters
-  //       if (word) formattedWords.add(word.toLowerCase());
-  //     });
-  //   }
-  //   return [...formattedWords];
-  // }
 
   randomPrompt() {
     const randomIndex = Math.floor(Math.random() * this.props.prompts.length);
@@ -167,7 +151,8 @@ class Record extends Component {
 
     const resultsCard = (
       <div style={styles.card}>
-        <h3>{this.state.results}</h3>
+        <h2>What I'm hearing...</h2>
+        <h3>{this.state.speechResult}</h3>
       </div>
     );
 
@@ -196,7 +181,7 @@ class Record extends Component {
           </div>
         </div>
         {
-          this.state.recordingToggle
+          this.state.recording
             ? resultsCard
             : null
         }
