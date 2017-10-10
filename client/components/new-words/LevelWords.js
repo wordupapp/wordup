@@ -72,7 +72,6 @@ class LevelWords extends React.Component {
           this.state.activeItem === '' ?
             (
               <Container>
-<<<<<<< HEAD
                 <Message
                   icon="android"
                   header="Word suggestions based on your level"
@@ -80,11 +79,6 @@ class LevelWords extends React.Component {
                   positive
                   style={styles.infoMessage}
                 />
-=======
-                <Header as="h2">
-                  {`These are high level words you haven't tried.`}
-                </Header>
->>>>>>> master
                 <Grid columns={3} stackable style={styles.buttonGroup}>
                   {suggestionButtons}
                 </Grid>
