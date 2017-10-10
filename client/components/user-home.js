@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Button, Container, Header, Icon, Image, Segment, Grid, List, Table, Card } from 'semantic-ui-react';
+import { Button, Container, Header, Icon, Image, Grid, List, Table, Label } from 'semantic-ui-react';
 
 /**
  * COMPONENT STYLE
@@ -14,7 +14,7 @@ const style = {
     flexGrow: 1,
   },
   container: {
-    padding: "7em 0em",
+    padding: "4em 0em",
     minWidth: "60%",
   },
   leftContainer: {
@@ -51,9 +51,13 @@ const style = {
   title: {
     fontSize: '3em',
     marginTop: '0.5em',
+    fontFamily: "Fredoka One",
+    fontWeight: 500,
   },
   subTitle: {
     fontSize: '2em',
+    fontFamily: "Fredoka One",
+    fontWeight: 200,
   },
   list: {
     fontSize: '1.5em',
@@ -79,8 +83,8 @@ const style = {
     color: '#ffd600',
   },
   levelNumber: {
-    color: 'red',
-    fontWeight: '700',
+    fontWeight: 100,
+    fontSize: '0.6em',
   },
 };
 
@@ -144,9 +148,12 @@ export const UserHome = props => {
     <Container style={style.rightContainerTop}>
       <Header as="h2" style={style.subTitle}>
         {'Your level: '}
-        <span style={style.levelNumber}>
+        <Label
+          circular
+          color="red"
+          style={style.levelNumber}>
           {level}
-        </span>
+        </Label>
       </Header>
       <Container style={style.levelContainer}>
         <Icon
@@ -194,7 +201,7 @@ export const UserHome = props => {
   );
 
   return (
-    <Container style={style.all}>userTopWordsBlock
+    <Container style={style.all}>
       <Grid
         container
         stackable
