@@ -149,6 +149,7 @@ router.get('/:id/words/suggest/level/:level', (req, res, next) => {
     MATCH (n:Word {level: ${level}})
     RETURN count(*)
   `;
+
   session.run(cypherCodeForCount)
     .then(data => data.records)
     .then(count => {
