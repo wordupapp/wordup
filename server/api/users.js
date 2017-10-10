@@ -389,7 +389,6 @@ router.post('/:id/words', async (req, res, next) => {
   const { speech } = req.body;
 
   const newWords = await rosetteAnalysis(speech);
-  console.log('new words!!!', newWords)
 
   const newWordPromiseArr = newWords.map(async newWord => {
 
