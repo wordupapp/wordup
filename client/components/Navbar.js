@@ -16,7 +16,7 @@ class Navbar extends Component {
     };
     this.links = [
       { url: '/record', name: 'Speak' },
-      { url: '/data/1', name: 'Cloud' },
+      { url: '/data/1', name: 'Stats' },
       { url: '/games', name: 'Play' },
     ];
     this.styles = {
@@ -25,9 +25,9 @@ class Navbar extends Component {
         background: '#2b282e',
       },
       logo: {
-        paddingTop: 20,
+        paddingTop: 15,
         paddingLeft: 20,
-        paddingBottom: 10,
+        paddingBottom: 5,
         paddingRight: 5,
       },
       menuItem: {
@@ -75,7 +75,14 @@ class Navbar extends Component {
     return (
       <Menu floated fixed="top" secondary style={this.styles.navbar}>
         <Menu.Menu style={this.styles.menuMenu} >
-          <img src="wordUP-logo.png" style={this.styles.logo} height="75" width="180"/>
+          <Link to="/">
+            <img
+              alt="wordUP"
+              src="/logo.svg"
+              height="75"
+              style={this.styles.logo}
+            />
+          </Link>
           {isLoggedIn ?
             loggedInMenuOptions :
             null

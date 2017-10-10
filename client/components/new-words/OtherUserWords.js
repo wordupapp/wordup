@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Container, Grid, Header, Button } from 'semantic-ui-react';
+import { Container, Grid, Message, Button } from 'semantic-ui-react';
 
 import WordDetailPage from './WordDetail';
 
@@ -10,7 +10,13 @@ import WordDetailPage from './WordDetail';
  */
 const styles = {
   buttonGroup: {
-    padding: '2em 5em',
+    padding: '3em 5em 4em 5em',
+  },
+  infoMessage: {
+    maxWidth: '45%',
+    margin: '3em auto 0 auto',
+    background: '#ffd600',
+    color: '#2b282e',
   },
 };
 
@@ -68,9 +74,12 @@ class OtherUserWords extends React.Component {
           this.state.activeItem === '' ?
             (
               <Container>
-                <Header as="h2">
-                  {`Other users who uses same words as you also use these high level words.`}
-                </Header>
+                <Message
+                  icon="commenting"
+                  header="Word suggestions based on other users"
+                  content="Other users who use same words as you also use these high level words."
+                  style={styles.infoMessage}
+                />
                 <Grid columns={3} stackable style={styles.buttonGroup}>
                   {suggestionButtons}
                 </Grid>

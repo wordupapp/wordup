@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon, Button, Message } from 'semantic-ui-react';
 import { sendWords } from '../store/userWords';
-
+import { TweenLite, Power1, TimelineMax } from 'gsap';
 
 const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 const SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
@@ -17,9 +17,13 @@ class Record extends Component {
       speechResult: '',
       userEnded: false,
       prompt: '',
+      interimResults: '',
+      showCard: false,
     };
     this.recordingToggle = this.recordingToggle.bind(this);
     this.randomPrompt = this.randomPrompt.bind(this);
+    this.animationToggle = this.animationToggle.bind(this);
+    this.tl = new TimelineMax({ repeat: -1 });
   }
 
   componentDidMount() {
@@ -30,7 +34,7 @@ class Record extends Component {
     recognition.grammars = speechRecognitionList;
     recognition.continuous = true;
     recognition.lang = 'en-US';
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
     const home = this;
@@ -39,7 +43,7 @@ class Record extends Component {
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       if (confidence > 0.5) {
-        home.setState({ speechResult });
+        home.setState({ speechResult, interimResults: speechResult });
         dispatchSendWords(speechResult, user.id);
       }
     };
@@ -56,16 +60,20 @@ class Record extends Component {
 
   recordingToggle() {
     if (this.state.recording) {
+      this.animationToggle(false);
       this.state.recognition.stop();
       this.setState({
         userEnded: true,
         recording: false,
         speechResult: '',
+        interimResults: '',
       });
     } else {
       this.state.recognition.start();
+      this.animationToggle(true);
       this.setState({
         recording: true,
+        showCard: true,
       });
     }
   }
@@ -77,23 +85,41 @@ class Record extends Component {
     });
   }
 
+  animationToggle(playAnimation) {
+    const circle = this.refs.outerCircle;
+    if (playAnimation) {
+      this.tl
+        .to(circle, 0.2, {
+          scale: 0,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 1.2,
+          opacity: 0.5,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 0.2,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 1.3,
+          opacity: 0.5,
+          ease: Power1.easeInOut,
+        });
+    } else {
+      this.tl.kill();
+    }
+  }
+
   render() {
     const styles = {
       mic: {
+        margin: "auto",
+        position: "absolute",
+        top: 100,
+        left: 270,
         cursor: "pointer",
-        margin: "auto",
-        paddingTop: 70,
-        paddingLeft: 90,
-      },
-      iconOn: {
-        width: 200,
-        color: "#0a00b6",
-        margin: "auto",
-      },
-      iconOff: {
-        width: 200,
-        color: "#d50000",
-        margin: "auto",
       },
       outerDiv: {
         paddingTop: 150,
@@ -107,6 +133,7 @@ class Record extends Component {
       innerDiv: {
         width: "50%",
         float: "left",
+        position: "relative",
       },
       promptContainer: {
         marginTop: "4em",
@@ -131,32 +158,47 @@ class Record extends Component {
         width: 300,
         height: 300,
         borderRadius: "50%",
-        margin: "auto",
-        marginTop: 20,
+        position: "absolute",
+        top: 25,
+        left: 175,
+        cursor: "pointer",
       },
       outerCircle: {
         width: 350,
         height: 350,
         border: "5px solid #ffffff",
         borderRadius: "50%",
-        margin: "auto",
+        userSelect: "none",
+        position: "absolute",
+        top: 0,
+        left: 150,
       },
       card: {
         backgroundColor: "#ffffff",
-
-        height: 200,
-        width: 300,
+        height: 250,
+        width: 400,
+        position: "absolute",
+        top: 250,
+        left: 125,
+        borderRadius: 10,
+        padding: 20,
+        textAlign: "center",
       },
     };
 
     const resultsCard = (
       <div style={styles.card}>
-        <h2>What I'm hearing...</h2>
-        <h3>{this.state.speechResult}</h3>
+        <h2>
+          {
+            this.state.recording
+              ? "What I'm hearing..."
+              : "What I heard..."
+          }
+        </h2>
+        <h3>{this.state.interimResults}</h3>
       </div>
     );
 
-      console.log(this.state);
     return (
       <div style={styles.outerDiv}>
         <div style={styles.innerDiv}>
@@ -172,19 +214,15 @@ class Record extends Component {
           <h3>{this.state.prompt}</h3>
         </div>
         <div style={styles.innerDiv}>
-          <div style={styles.outerCircle}>
-            <div style={styles.innerCircle}>
-              <div style={styles.mic}>
-                <img onClick={this.recordingToggle} src="mic.svg"/>
-              </div>
-            </div>
-          </div>
+          <div style={styles.outerCircle} ref="outerCircle" />
+          <div style={styles.innerCircle} onClick={this.recordingToggle} />
+          <img style={styles.mic} src="mic.svg" onClick={this.recordingToggle} />
+          {
+            this.state.showCard
+              ? resultsCard
+              : null
+          }
         </div>
-        {
-          this.state.recording
-            ? resultsCard
-            : null
-        }
       </div>
     );
   }
