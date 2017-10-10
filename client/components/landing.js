@@ -1,5 +1,5 @@
 import React from 'react';
-import {withRouter, Link} from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 
 import Splash from './Splash';
@@ -9,34 +9,48 @@ import {
 } from './auth-form';
 
 const containerStyles = {
-  width: "650px",
+  width: "900px",
   display: "flex",
   alignItems: "left",
   justifyContent: "center",
   flexWrap: "wrap",
   flexDirection: "column",
   marginTop: "auto",
-  padding: "0px 50px 300px 100px",
+  padding: "0px 0px 300px 100px",
 };
 
 const headerStyles = {
-  color: "#ffd600",
+  h1: {
+    color: '#2b282e',
+    fontSize: 36,
+  },
+  h3: {
+    color: '#2b282e',
+    fontSize: 28,
+  },
+  button: {
+    marginTop: 25,
+  },
 };
 
 const Welcome = props => (
   <div style={containerStyles}>
-    <h1 style={headerStyles}>
+    <h1 style={headerStyles.h1}>
       Want to up your vocabulary game?
     </h1>
-    <h3 style={headerStyles}>
+    <h3 style={headerStyles.h3}>
       Analyze your vocabulary level, get custom recommendations and play some games to learn new words.
     </h3>
     <Link to="/signup">
-      <Button>Get Started</Button>
+      <Button
+        inverted
+        size="massive"
+        style={headerStyles.button}>
+      Get Started
+      </Button>
     </Link>
   </div>
 );
-
 
 const Landing = props => {
   let component = "";
