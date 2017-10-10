@@ -1,17 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Header, Grid, Container, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
-const styles = {
+import { Table, Header, Grid, Container, Icon, Button, Label } from 'semantic-ui-react';
+
+const style = {
   all: {
     width: "100%",
     backgroundColor: "#e9e9e9",
     flexGrow: 1,
   },
   container: {
-    padding: "7em 0em",
-    minWidth: "80%",
+    padding: "4em 0em",
+    minWidth: "65%",
   },
   leftContainer: {
     backgroundColor: "#ffffff",
@@ -21,12 +22,22 @@ const styles = {
     boxShadow: "0 0 25px rgba(0,0,0,.04)",
     textAlign: "center",
   },
-  rightContainer: {
+  rightContainerTop: {
     backgroundColor: "#ffffff",
     maxHeight: "380px",
     minWidth: "300px",
     padding: "2em",
-    marginBottom: "4em",
+    marginBottom: "3em",
+    borderRadius: "10px",
+    boxShadow: "0 0 25px rgba(0,0,0,.04)",
+    textAlign: "center",
+  },
+  rightContainerBot: {
+    backgroundColor: "#ffffff",
+    minWidth: "300px",
+    padding: "2em",
+    marginTop: "-2em",
+    marginBottom: "3em",
     borderRadius: "10px",
     boxShadow: "0 0 25px rgba(0,0,0,.04)",
     textAlign: "center",
@@ -34,122 +45,195 @@ const styles = {
   title: {
     fontSize: '4em',
     marginTop: '0.5em',
-  },
-  buttonCol: {
-    marginTop: '10em',
-  },
-  buttonIcon: {
-    fontSize: '10em',
-    display: 'inline',
+    fontFamily: "Fredoka One",
+    fontWeight: 500,
   },
   subTitle: {
     fontSize: '2em',
+    fontFamily: "Fredoka One",
+    fontWeight: 200,
+  },
+  gameGroup: {
+    margin: '2.5em auto 1em',
+  },
+  buttonCol: {
+    margin: '0.6em auto',
+  },
+  gameContainer: {
+    marginTop: '0.6em',
+  },
+  gameButton: {
+    height: '13.5em',
+    width: '13.5em',
+    background: '#2b282e',
+  },
+  gameIcon: {
+    margin: 'auto',
+    color: '#ffd600',
+  },
+  gameLabel: {
+    margin: '0.8em auto 0 auto',
+    color: '#ffd600',
   },
   levelContainer: {
-    marginTop: '11em',
+    marginTop: '6em',
+    marginBottom: '-5em',
   },
   levelIcon: {
-    fontSize: '15em',
+    fontSize: '11em',
     display: 'inline-block',
     position: 'relative',
-    color: '#4183c4',
+    color: '#ffd600',
   },
-  levelNumaber: {
-    fontSize: '6em',
-    color: '#fff',
-    display: 'inline-block',
-    position: 'absolute',
-    top: '22.5%',
-    left: '43.5%',
+  levelNumber: {
+    fontWeight: 100,
+    fontSize: '0.6em',
   },
 };
 
 const Games = props => {
-  const { level, words } = props;
+  const { level } = props;
 
   const seed = Math.floor(Math.random() * 100);
   const games = [
-    { key: 0, name: 'Synonyms', ref: 'synonyms', icon: 'skyatlas' },
+    { key: 0, name: 'Synonym Matching', ref: 'synonyms', icon: 'cloud' },
     { key: 1, name: 'Definitions', ref: `definitions/${seed}`, icon: 'telegram' },
-    { key: 2, name: 'Examples', ref: 'fill-it-in', icon: 'game' },
+    { key: 2, name: 'Examples', ref: 'fill-it-in', icon: 'bookmark' },
     { key: 3, name: 'Chat Chat', ref: '', icon: 'wechat' },
-    { key: 5, name: 'Word University', ref: '', icon: 'university' },
+    { key: 5, name: 'Word School', ref: '', icon: 'pencil' },
     { key: 6, name: 'Under Contruction', ref: '', icon: 'cogs' },
   ];
 
   const gameButtons = games.map(game => (
-    <Grid.Column key={game.key} style={styles.buttonCol}>
-      <Link to={`/games/${game.ref}`}>
-        <Icon
-          style={styles.buttonIcon}
-          name={game.icon} />
-        <Header as="h2" style={{ marginTop: '2em' }}>{game.name}</Header>
-      </Link>
+    <Grid.Column key={game.key} style={style.buttonCol}>
+      <Button
+        icon as={Link}
+        to={`/games/${game.ref}`}
+        style={style.gameButton}>
+        <Container style={style.gameContainer}>
+          <Icon
+            style={style.gameIcon}
+            name={game.icon}
+            size="massive"
+          />
+          <Header as="h3" style={style.gameLabel}>
+            {game.name}
+          </Header>
+        </Container>
+      </Button>
     </Grid.Column>
   ));
 
-  let topFiveWords = Object.keys(words).sort((a, b) => (words[b].numUsed - words[a].numUsed));
-  topFiveWords = topFiveWords.slice(0, 5).map((word, index) => ({
-    name: word,
-    level: words[word].level,
-    numUsed: words[word].numUsed,
-    rank: index + 1,
-  }));
-  console.log('TOP WORDS!!', topFiveWords)
+  const userLevelBlock = (
+    <Container style={style.rightContainerTop}>
+      <Header as="h2" style={style.subTitle}>
+        {'Your level: '}
+        <Label
+          circular
+          color="red"
+          style={style.levelNumber}>
+          {level}
+        </Label>
+      </Header>
+      <Container style={style.levelContainer}>
+        <Icon
+          style={style.levelIcon}
+          name={'trophy'}
+        />
+      </Container>
+    </Container>
+  );
 
-  const topWordTableRows = topFiveWords.map(word => (
-    <Table.Row key={word.rank}>
-      <Table.Cell>{word.rank}</Table.Cell>
-      <Table.Cell>{word.name}</Table.Cell>
-      <Table.Cell>{word.numUsed}</Table.Cell>
-      <Table.Cell>{word.level}</Table.Cell>
+  // TODO: fake datat for now
+  const topScoresArr = [
+    {
+      rank: 1,
+      score: 140,
+      userName: 'Louis',
+      userLevel: 9,
+      userImage: 'https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/67.png',
+    },
+    {
+      rank: 2,
+      score: 135,
+      userName: 'Maggie',
+      userLevel: 7,
+      userImage: 'https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/98.png',
+    },
+    {
+      rank: 3,
+      score: 100,
+      userName: 'Tyler',
+      userLevel: 8,
+      userImage: 'https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/male/128.png',
+    },
+    {
+      rank: 4,
+      score: 99,
+      userName: 'Eva',
+      userLevel: 8,
+      userImage: 'https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/103.png',
+    },
+    {
+      rank: 5,
+      score: 98,
+      userName: 'Mabelle',
+      userLevel: 6,
+      userImage: ' https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/30.png',
+    },
+  ]
+
+  const topScoreTableRows = topScoresArr.map(score => (
+    <Table.Row key={score.rank}>
+      <Table.Cell>{score.rank}</Table.Cell>
+      <Table.Cell>{score.score}</Table.Cell>
+      <Table.Cell>
+        <Label image>
+          <img src={score.userImage} alt={score.userName} />
+          {score.userName}
+        </Label>
+      </Table.Cell>
+      <Table.Cell>{score.userLevel}</Table.Cell>
     </Table.Row>
   ))
 
   return (
-    <Container style={styles.all}>
+    <Container style={style.all}>
       <Grid
         container
         stackable
         stretched
         relaxed
-        style={styles.container}>
+        style={style.container}>
         <Grid.Row>
           <Grid.Column width={11}>
-            <Container style={styles.leftContainer}>
-              <Header as="h1" style={styles.title}>Mini games</Header>
-              <Grid columns={3} doubling>
+            <Container style={style.leftContainer}>
+              <Header as="h1" style={style.title}>
+                Playground
+              </Header>
+              <Grid columns={3} doubling style={style.gameGroup}>
                 {gameButtons}
               </Grid>
             </Container>
           </Grid.Column>
-          <Grid.Column floated='right' width={5}>
+          <Grid.Column floated="right" width={5}>
             <Grid.Row >
-              <Container style={styles.rightContainer}>
-                <Header as="h2" style={styles.subTitle}>Your level</Header>
-                <Container style={styles.levelContainer}>
-                  <Icon
-                    style={styles.levelIcon}
-                    name={'trophy'}
-                  />
-                  <span style={styles.levelNumaber}>{level}</span>
-                </Container>
-              </Container>
+              {userLevelBlock}
             </Grid.Row>
             <Grid.Row>
-              <Container style={styles.rightContainer}>
-                <Header as="h2" style={styles.subTitle}>Your top words</Header>
-                <Table basic>
+              <Container style={style.rightContainerBot}>
+                <Header as="h2" style={style.subTitle}>Top scores</Header>
+                <Table color="red">
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>Rank</Table.HeaderCell>
-                      <Table.HeaderCell>Name</Table.HeaderCell>
-                      <Table.HeaderCell># Used</Table.HeaderCell>
+                      <Table.HeaderCell>Score</Table.HeaderCell>
+                      <Table.HeaderCell>User</Table.HeaderCell>
                       <Table.HeaderCell>Level</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {topWordTableRows}
+                    {topScoreTableRows}
                   </Table.Body>
                 </Table>
               </Container>
@@ -167,7 +251,6 @@ const Games = props => {
 const mapState = state => {
   return {
     level: state.userLevel,
-    words: state.userWords,
   };
 };
 

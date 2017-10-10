@@ -16,7 +16,7 @@ const styles = {
     flexGrow: 1,
   },
   container: {
-    padding: "7em 0em",
+    padding: "4em 0em",
     minWidth: "70%",
   },
   subContainer: {
@@ -27,6 +27,9 @@ const styles = {
   },
   iconHeader: {
     marginTop: "1em",
+    fontSize: '2em',
+    fontFamily: "Fredoka One",
+    fontWeight: 500,
   },
 };
 
