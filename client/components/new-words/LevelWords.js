@@ -40,17 +40,17 @@ class LevelWords extends React.Component {
   }
 
   render() {
-    const { suggestedWords } = this.props;
+    const { userLevelWords } = this.props;
 
     const selectedWord = this.state.activeItem === '' ?
       null :
       (
-        suggestedWords.find(word => word.name === this.state.activeItem)
+        userLevelWords.find(word => word.name === this.state.activeItem)
       );
 
     let cardKey = 0;
-    const suggestionButtons = suggestedWords ?
-      suggestedWords.map((word, index) => {
+    const suggestionButtons = userLevelWords ?
+      userLevelWords.map((word, index) => {
         cardKey += 1;
         return (
           <Grid.Column key={cardKey}>
@@ -72,6 +72,7 @@ class LevelWords extends React.Component {
           this.state.activeItem === '' ?
             (
               <Container>
+<<<<<<< HEAD
                 <Message
                   icon="android"
                   header="Word suggestions based on your level"
@@ -79,6 +80,11 @@ class LevelWords extends React.Component {
                   positive
                   style={styles.infoMessage}
                 />
+=======
+                <Header as="h2">
+                  {`These are high level words you haven't tried.`}
+                </Header>
+>>>>>>> master
                 <Grid columns={3} stackable style={styles.buttonGroup}>
                   {suggestionButtons}
                 </Grid>
@@ -105,7 +111,7 @@ class LevelWords extends React.Component {
  */
 const mapState = state => {
   return {
-    suggestedWords: [...state.userSuggestedWords],
+    userLevelWords: [...state.userLevelWords],
   };
 };
 
