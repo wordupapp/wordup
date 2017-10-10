@@ -130,8 +130,7 @@ class Record extends Component {
         onClick={this.stopRecording}
         style={styles.mic}>
         <Icon name="microphone" size="massive"style={styles.iconOff} />
-        <Message icon>
-          <Icon name='circle notched' loading />
+        <Message>
           <Message.Content>
             <Message.Header>
               Converting speech into text...
