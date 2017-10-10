@@ -8,16 +8,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Chance from 'chance';
-import { Checkbox, 
-        Container,
-        Dimmer,
-        Form,
-        Header,
-        List,
-        Loader,
-        Progress,
-        Segment,
-       } from 'semantic-ui-react';
+import {
+  Checkbox, 
+  Container,
+  Dimmer,
+  Form,
+  Header,
+  List,
+  Loader,
+  Progress,
+  Segment,
+} from 'semantic-ui-react';
 
 // LOCAL MODULES
 import { NextQuestion, Skip, Submit } from './DefinitionsControls';
@@ -30,7 +31,7 @@ import { fetchDefinitionsForLevelThunk } from '../../store/words';
 const styles = {
   fullScreen: {
     background: "#ffd600",
-    height: "-webkit-fill-available",
+    height: "100vh",
   },
   container: {
     margin: "auto",
@@ -51,7 +52,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     padding: "0em 3em",
-    marginTop: "80px",
+    marginTop: "60px",
   },
   nav: {
     margin: "0",
@@ -72,7 +73,13 @@ const styles = {
     borderRadius: "5px",
     borderWidth: "thick",
     padding: "9px",
-  }
+  },
+  showCorrect: {
+    borderStyle: "double",
+    borderColor: "springgreen",
+    borderRadius: "5px",
+    borderWidth: "thick",
+  },
 }
 
 
@@ -189,7 +196,9 @@ class Definitions extends Component {
               {
                 options.map( (option, index) => {
                   return (
-                    <Form.Field key={index} >
+                    <Form.Field key={index} style={
+                      this.state.response === 'incorrect' && option === selected.word ? styles.showCorrect : null
+                    }>
                       <Segment
                         className="option"
                         raised
