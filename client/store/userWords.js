@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { setUserLevel } from './userLevel';
-import { getSuggestedWords } from './userSuggestedWords';
+import { getRecWordsForLevel } from './userWordSuggestion/userLevelWords';
+import { getRecWordsForOther } from './userWordSuggestion/userOtherWords';
 
 /**
  * ACTION TYPES
@@ -42,23 +43,26 @@ export const getWords = userId => dispatch => {
     .then(res => res.data)
     .then(userWords => {
       const finalWords = {};
-      userWords.forEach(word => {
-        finalWords[word[0]] = {
-          level: word[1] ? word[1].low : null,
-          numUsed: word[2] ? word[2].low : null,
-          dates: word[3] ? word[3] : '',
-        };
-      });
-      dispatch(getUserWords(finalWords));
-      const level = calcUserLevel(finalWords);
-      dispatch(setUserLevel(level));
-      dispatch(getSuggestedWords(userId, level));
+      if (userWords) {
+        userWords.forEach(word => {
+          finalWords[word[0]] = {
+            level: word[1] ? word[1].low : null,
+            numUsed: word[2] ? word[2].low : null,
+            dates: word[3] ? word[3] : '',
+          };
+        });
+        dispatch(getUserWords(finalWords));
+        const level = calcUserLevel(finalWords);
+        dispatch(setUserLevel(level));
+        dispatch(getRecWordsForLevel(userId, level));
+        dispatch(getRecWordsForOther(userId, level));
+      }
     })
     .catch(console.error);
 };
 
-export const sendWords = (words, userId) => dispatch => {
-  axios.post(`/api/users/${userId}/words`, words)
+export const sendWords = (speech, userId) => dispatch => {
+  axios.post(`/api/users/${userId}/words`, { speech })
     .then(res => res.data)
     .then(userWords => {
       const finalWords = {};

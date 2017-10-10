@@ -9,6 +9,22 @@ body {
     display: block;
   }
 
+  .skip:hover {
+    color: red;
+  }
+
+  .option:hover {
+    border-style: double;
+    border-color: rgb(180, 19, 236);
+    border-radius: 5px;
+    border-width: thick;
+    padding: 9px;
+  }
+
+  .ui.purple.tiny.progress {
+    width: 100%;
+  }
+  
   .node {
   cursor: pointer;
   }
@@ -23,7 +39,8 @@ body {
   }
 
   .label {
-    font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 18px 'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
     text-anchor: middle;
     text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 - 1px 0 #fff;
   }
@@ -114,4 +131,17 @@ body {
   //   margin: 1em;
   //   display: inline-block;
   // }
+
+  @media (min-width: 767px)  {
+    .definitions-container {
+      width: min-content!important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .fullScreen {
+      height: 100% !important;
+      padding-bottom: 2em;
+    }
+  }
 }

@@ -16,18 +16,19 @@ class Navbar extends Component {
     };
     this.links = [
       { url: '/record', name: 'Speak' },
-      { url: '/data/1', name: 'Cloud' },
+      { url: '/data/1', name: 'Stats' },
       { url: '/games', name: 'Play' },
     ];
     this.styles = {
       navbar: {
-        height: `90px`,
-        background: '#B413EC',
+        height: "6rem",
+        background: '#2b282e',
       },
-      title: {
-        fontSize: '40px',
-        fontWeight: 800,
-        color: '#ffffff',
+      logo: {
+        paddingTop: 15,
+        paddingLeft: 20,
+        paddingBottom: 5,
+        paddingRight: 5,
       },
       menuItem: {
         color: '#ffffff',
@@ -74,12 +75,14 @@ class Navbar extends Component {
     return (
       <Menu floated fixed="top" secondary style={this.styles.navbar}>
         <Menu.Menu style={this.styles.menuMenu} >
-          <Menu.Item
-            header
-            as={Link}
-            to={'/'}>
-            <span style={this.styles.title}>WORDUP</span>
-          </Menu.Item>
+          <Link to="/">
+            <img
+              alt="wordUP"
+              src="/logo.svg"
+              height="75"
+              style={this.styles.logo}
+            />
+          </Link>
           {isLoggedIn ?
             loggedInMenuOptions :
             null
@@ -92,6 +95,10 @@ class Navbar extends Component {
                 <Dropdown.Item as={Link} to={'/home'}>
                   <Icon name='user' />
                   Your profile
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={'/newwords'}>
+                  <Icon name='rocket' />
+                  New words
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to={'/home'}>
                   <Icon name='setting' />

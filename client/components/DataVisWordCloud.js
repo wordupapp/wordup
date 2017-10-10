@@ -10,6 +10,7 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable no-console */
 /* eslint-disable no-plusplus */
+/* eslint-disable no-else-return */
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -24,10 +25,18 @@ class DataVisWordCloud extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.styles = {
+      svg: {
+        overflow: "visible",
+        marginLeft: "4em",
+      },
+    };
   }
 
   componentDidMount() {
-    this.createBubbles(this.createBubbleStructure(this.props));
+    if ((Object.keys(this.props.userWords)).length) {
+      this.createBubbles(this.createBubbleStructure(this.props));
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -85,22 +94,22 @@ class DataVisWordCloud extends Component {
     childrenWords.push({ "name": "Level 1", "children": level1Words }, { "name": "Level 2", "children": level2Words }, { "name": "Level 3", "children": level3Words }, { "name": "Level 4", "children": level4Words }, { "name": "Level 5", "children": level5Words }, { "name": "Level 6", "children": level6Words }, { "name": "Level 7", "children": level7Words }, { "name": "Level 8", "children": level8Words }, { "name": "Level 9", "children": level9Words }, { "name": "Level 10", "children": level10Words });
 
     const root = {
-      "name": "wordCloud",
-      "children": childrenWords,
+        "name": "wordCloud",
+        "children": childrenWords,
     };
+
     return root;
   }
 
   createBubbles(rootParam) {
-    console.log(this.props.userWords);
     var svg = d3.select(this.svgRoot),
       margin = 20,
       diameter = +svg.attr("width"),
       g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
     var color = d3.scaleLinear()
-      .domain([-1, 5])
-      .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+      .domain([-1, 2])
+      .range(["hsl(0, 0%, 91%)", "hsl(259, 100%, 20%)"])
       .interpolate(d3.interpolateHcl);
 
     var pack = d3.pack()
@@ -209,13 +218,13 @@ class DataVisWordCloud extends Component {
   }
 
   render() {
-    console.log(this.props.userWords);
     return (
-      <svg
-        width="910"
-        height="910"
-        ref={svg => this.svgRoot = svg}
-      />
+        <svg
+          width="890"
+          height="890"
+          style={this.styles.svg}
+          ref={svg => this.svgRoot = svg}
+        />
     );
   }
 }

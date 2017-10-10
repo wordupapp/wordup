@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Button } from 'semantic-ui-react';
+import { Icon, Button, Message } from 'semantic-ui-react';
 import { sendWords } from '../store/userWords';
-
+import { TweenLite, Power1, TimelineMax } from 'gsap';
 
 const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 const SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
@@ -14,13 +14,16 @@ class Record extends Component {
     this.state = {
       recognition: {},
       recording: false,
-      results: [],
+      speechResult: '',
       userEnded: false,
       prompt: '',
+      interimResults: '',
+      showCard: false,
     };
-    this.startRecording = this.startRecording.bind(this);
-    this.stopRecording = this.stopRecording.bind(this);
+    this.recordingToggle = this.recordingToggle.bind(this);
     this.randomPrompt = this.randomPrompt.bind(this);
+    this.animationToggle = this.animationToggle.bind(this);
+    this.tl = new TimelineMax({ repeat: -1 });
   }
 
   componentDidMount() {
@@ -31,7 +34,7 @@ class Record extends Component {
     recognition.grammars = speechRecognitionList;
     recognition.continuous = true;
     recognition.lang = 'en-US';
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
     const home = this;
@@ -39,10 +42,10 @@ class Record extends Component {
       const { dispatchSendWords, user } = home.props;
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
-      const newResult = [speechResult, confidence];
-      const newWords = home.getFormattedWords(newResult);
-      console.log('newWords: ', newWords)
-      dispatchSendWords(newWords, user.id);
+      if (confidence > 0.5) {
+        home.setState({ speechResult, interimResults: speechResult });
+        dispatchSendWords(speechResult, user.id);
+      }
     };
 
     recognition.onerror = function (event) {
@@ -51,38 +54,28 @@ class Record extends Component {
       });
       console.log('Error occured: ', event.error);
     };
-
-    this.setState({
-      recognition,
-    });
+    recognition.onerror = recognition.onerror.bind(home);
+    this.setState({ recognition });
   }
 
-  startRecording() {
-    this.state.recognition.start();
-    this.setState({
-      recording: true,
-    });
-  }
-
-  stopRecording() {
-    this.state.recognition.stop();
-    this.setState({
-      userEnded: true,
-      recording: false,
-    });
-  }
-
-  getFormattedWords(result) {
-    const formattedWords = new Set();
-    if (result[1] > 0.5) {
-      const tempArr = result[0].split(' ');
-      const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
-      tempArr.forEach(word => {
-        if (pattern.test(word)) return; // don't process words with special characters
-        if (word) formattedWords.add(word.toLowerCase());
+  recordingToggle() {
+    if (this.state.recording) {
+      this.animationToggle(false);
+      this.state.recognition.stop();
+      this.setState({
+        userEnded: true,
+        recording: false,
+        speechResult: '',
+        interimResults: '',
+      });
+    } else {
+      this.state.recognition.start();
+      this.animationToggle(true);
+      this.setState({
+        recording: true,
+        showCard: true,
       });
     }
-    return [...formattedWords];
   }
 
   randomPrompt() {
@@ -92,69 +85,143 @@ class Record extends Component {
     });
   }
 
+  animationToggle(playAnimation) {
+    const circle = this.refs.outerCircle;
+    if (playAnimation) {
+      this.tl
+        .to(circle, 0.2, {
+          scale: 0,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 1.2,
+          opacity: 0.5,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 0.2,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 1.3,
+          opacity: 0.5,
+          ease: Power1.easeInOut,
+        });
+    } else {
+      this.tl.kill();
+    }
+  }
+
   render() {
     const styles = {
       mic: {
-        width: 200,
-        height: 200,
         margin: "auto",
+        position: "absolute",
+        top: 100,
+        left: 270,
         cursor: "pointer",
       },
-      iconOn: {
-        width: 200,
-        height: 200,
-        color: "#0a00b6",
-        margin: "auto",
-      },
-      iconOff: {
-        width: 200,
-        height: 200,
-        color: "#d50000",
-        margin: "auto",
-      },
       outerDiv: {
-        width: "100%",
-        height: "100%",
-        margin: "25em auto 0 auto",
+        paddingTop: 150,
+        paddingLeft: 50,
+        backgroundColor: "#ffd600",
+        height: "100vh",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      },
+      innerDiv: {
+        width: "50%",
+        float: "left",
+        position: "relative",
+      },
+      promptContainer: {
+        marginTop: "4em",
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+      },
+      prompt: {
+        marginTop: "2em",
       },
       button: {
-        backgroundColor: "#0a00b6",
+        marginTop: 50,
+      },
+      instructions: {
         color: "#ffffff",
-        margin: "auto",
+        weight: 500,
+        fontStyle: "italic",
+        fontFamily: "Roboto",
+      },
+      innerCircle: {
+        backgroundColor: "#ffffff",
+        width: 300,
+        height: 300,
+        borderRadius: "50%",
+        position: "absolute",
+        top: 25,
+        left: 175,
+        cursor: "pointer",
+      },
+      outerCircle: {
+        width: 350,
+        height: 350,
+        border: "5px solid #ffffff",
+        borderRadius: "50%",
+        userSelect: "none",
+        position: "absolute",
+        top: 0,
+        left: 150,
+      },
+      card: {
+        backgroundColor: "#ffffff",
+        height: 250,
+        width: 400,
+        position: "absolute",
+        top: 250,
+        left: 125,
+        borderRadius: 10,
+        padding: 20,
+        textAlign: "center",
       },
     };
 
-    const startRecordingButton = (
-      <div
-        onClick={this.startRecording}
-        style={styles.mic}>
-        <Icon name="microphone" size="massive"style={styles.iconOn} />
-      </div>
-    );
-
-    const stopRecordingButton = (
-      <div
-        onClick={this.stopRecording}
-        style={styles.mic}>
-        <Icon name="microphone" size="massive"style={styles.iconOff} />
+    const resultsCard = (
+      <div style={styles.card}>
+        <h2>
+          {
+            this.state.recording
+              ? "What I'm hearing..."
+              : "What I heard..."
+          }
+        </h2>
+        <h3>{this.state.interimResults}</h3>
       </div>
     );
 
     return (
       <div style={styles.outerDiv}>
-        {
-          !this.state.recording
-            ? startRecordingButton
-            : stopRecordingButton
-        }
-        <div style={styles.outerDiv}>
-          <h3>Need a prompt?</h3>
+        <div style={styles.innerDiv}>
+          <h1 style={styles.instructions}>Speak to me, I'll analyze your speech and help you improve your vocabulary. Click the mic to get started.</h1>
           <Button
-            onClick={this.randomPrompt}
-            style={styles.button}>
-            New prompt
+            style={styles.button}
+            size="large"
+            basic
+            color="black"
+            onClick={this.randomPrompt}>
+            What should I say?
           </Button>
-          <p>{this.state.prompt}</p>
+          <h3>{this.state.prompt}</h3>
+        </div>
+        <div style={styles.innerDiv}>
+          <div style={styles.outerCircle} ref="outerCircle" />
+          <div style={styles.innerCircle} onClick={this.recordingToggle} />
+          <img style={styles.mic} src="mic.svg" onClick={this.recordingToggle} />
+          {
+            this.state.showCard
+              ? resultsCard
+              : null
+          }
         </div>
       </div>
     );
@@ -172,7 +239,7 @@ const mapState = (state, ownProps) => ({
 });
 
 const mapDispatch = dispatch => ({
-  dispatchSendWords: (newWords, userId) => dispatch(sendWords(newWords, userId)),
+  dispatchSendWords: (speech, userId) => dispatch(sendWords(speech, userId)),
 });
 
 export default connect(mapState, mapDispatch)(Record);

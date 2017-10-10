@@ -16,3 +16,4 @@ export { default as Games } from './Games';
 export { default as SynonymGame } from './SynonymGame';
 export { default as Definitions } from './games/Definitions';
 export { Login, Signup } from './auth-form';
+export { default as NewWordsPanel } from './new-words/NewWordsPanel';
