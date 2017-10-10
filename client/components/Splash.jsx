@@ -13,7 +13,7 @@ const Splash = props => {
       top: 0,
       bottom: 0,
       background: `url(${background}) no-repeat center center fixed`,
-      backgroundSize: "contain",
+      backgroundSize: "cover",
       marginTop: "6rem",
     },
   };
