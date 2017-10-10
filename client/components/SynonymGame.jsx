@@ -2,12 +2,12 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
 import { Layer, Stage, Text } from 'react-konva';
 import { TweenLite, Power3, TimelineMax } from 'gsap';
 import random from 'lodash.random';
 import sampleSize from 'lodash.samplesize';
 import { fetchRandWordAndRelatedWords, removeRelatedWord } from '../store/words';
+import SynonymInstructions from './SynonymInstructions.js';
 
 class SynonymGame extends Component {
   constructor(props) {
@@ -19,6 +19,7 @@ class SynonymGame extends Component {
       level: 7,
       questionNum: 0,
       timer: 30,
+      start: false,
     };
     this.startGame = this.startGame.bind(this);
     this.updateStateAfterClick = this.updateStateAfterClick.bind(this);
@@ -43,7 +44,7 @@ class SynonymGame extends Component {
 
   componentDidMount() {
     requestAnimationFrame(this.animationUpdate);
-    this.timer = setInterval(this.tick, 1000);
+    // this.timer;
   }
 
   componentWillUnmount() {
@@ -52,6 +53,7 @@ class SynonymGame extends Component {
   }
 
   calculateMainWordPosition() {
+    console.log(this.state)
     return {
       x: (window.innerWidth / 2) - ((this.state.currentWord.length / 2) * 32),
       y: (window.innerHeight * 0.7) / 2.5,
@@ -66,8 +68,10 @@ class SynonymGame extends Component {
     const wordsForLevel = this.generateWords();
     this.setState({
       gameWords: wordsForLevel,
+      start: true,
     });
     window.setTimeout(this.applyAnimationsToWords, 0);
+    this.timer = setInterval(this.tick, 1000);
   }
 
   tick() {
@@ -75,6 +79,7 @@ class SynonymGame extends Component {
     this.setState({
       timer: currentSecond - 1,
     });
+    if (this.state.timer === 0) this.nextQuestion();
   }
 
   applyAnimationsToWords() {
@@ -232,6 +237,7 @@ class SynonymGame extends Component {
     this.setState({
       questionNum: newQuestNum,
       currentWord: wordArr[newQuestNum],
+      timer: 30,
     });
     const wordsForLevel = this.generateWords();
     this.setState({
@@ -242,7 +248,8 @@ class SynonymGame extends Component {
   render() {
     const styles = {
       title: {
-        paddingTop: 50,
+        paddingTop: "6rem",
+        fontSize: 20,
       },
       titleContainer: {
         padding: 50,
@@ -251,7 +258,13 @@ class SynonymGame extends Component {
         color: "#ffffff",
       },
       button: {
-        margin: "auto",
+        height: 100,
+        width: 100,
+        borderRadius: "50%",
+        backgroundColor: '#2b282e',
+        cursor: "pointer",
+        paddingTop: 40,
+        fontSize: 20,
       },
       div: {
         backgroundColor: "#ffd600",
@@ -275,34 +288,41 @@ class SynonymGame extends Component {
       />
     );
 
+    const startButton = (
+      <div style={styles.button} onClick={this.startGame}>Start</div>
+    );
+
+    const timer = (
+      <h3 style={styles.timer}>
+        {
+          this.state.timer < 10
+            ? `0:0${this.state.timer}`
+            : `0:${this.state.timer}`
+        }
+      </h3>
+    );
+
     const words = this.state.gameWords;
-    console.log(this.state)
 
     return (
       <div style={styles.div}>
         <div style={styles.titleContainer}>
           <div><h3>Your Score: {this.state.currentScore}</h3></div>
           <div>
-            <Button
-              basic inverted
-              size="large"
-              style={styles.button}
-              onClick={this.startGame}>
-              Start New Game
-            </Button>
-          </div>
-          <div>
-            <h3 style={styles.timer}>
-              {
-                this.state.timer < 10
-                  ? `0:0${this.state.timer}`
-                  : `0:${this.state.timer}`
-              }
-            </h3>
+            {
+              this.state.start
+                ? timer
+                : startButton
+            }
           </div>
           <div><h3>Your High Score: {this.props.highScore}</h3></div>
         </div>
         <div>
+          {
+            this.state.start
+              ? null
+              : SynonymInstructions()
+          }
           <Stage ref="stage" width={window.innerWidth} height={window.innerHeight * 0.7}>
             <Layer ref="layer">
               {mainWord}
