@@ -18,6 +18,7 @@ class SynonymGame extends Component {
       currentWord: '',
       level: 7,
       questionNum: 0,
+      timer: 30,
     };
     this.startGame = this.startGame.bind(this);
     this.updateStateAfterClick = this.updateStateAfterClick.bind(this);
@@ -30,12 +31,24 @@ class SynonymGame extends Component {
     this.animationUpdate = this.animationUpdate.bind(this);
     this.animateMainWordifCorrect = this.animateMainWordifCorrect.bind(this);
     this.animateMainWordifIncorrect = this.animateMainWordifIncorrect.bind(this);
+    this.applyAnimationsToIncorrectWord = this.applyAnimationsToIncorrectWord.bind(this);
+    this.tick = this.tick.bind(this);
   }
 
   componentWillMount() {
     for (let i = 0; i <= 5; i += 1) {
       this.props.dispatchGetRelatedWords(this.state.level);
     }
+  }
+
+  componentDidMount() {
+    requestAnimationFrame(this.animationUpdate);
+    this.timer = setInterval(this.tick, 1000);
+  }
+
+  componentWillUnmount() {
+    this.unmounted = false;
+    clearInterval(this.timer);
   }
 
   calculateMainWordPosition() {
@@ -55,6 +68,13 @@ class SynonymGame extends Component {
       gameWords: wordsForLevel,
     });
     window.setTimeout(this.applyAnimationsToWords, 0);
+  }
+
+  tick() {
+    const currentSecond = this.state.timer;
+    this.setState({
+      timer: currentSecond - 1,
+    });
   }
 
   applyAnimationsToWords() {
@@ -85,6 +105,28 @@ class SynonymGame extends Component {
     });
   }
 
+  applyAnimationsToIncorrectWord(word) {
+    const tl = new TimelineMax({ repeat: -1 });
+    const tl2 = new TimelineMax({ repeat: -1 });
+    tl
+      .to(word, 14, {
+        opacity: 1,
+      })
+      .to(word, 3, {
+        opacity: 1,
+      })
+      .to(word, 14, {
+        opacity: 0,
+      })
+      .to(word, 4, {
+        opacity: 0,
+      });
+    tl2
+      .to(word, 35, {
+        y: `-=${((window.innerHeight * 0.7) - 50)}`,
+      });
+  }
+
   generateWords() {
     const gameWords = this.props.gameWords;
     let incorrectWords = [];
@@ -100,7 +142,7 @@ class SynonymGame extends Component {
     wordsToRender = wordsToRender.map(word => {
       return {
         word,
-        
+
         x: random(50, (window.innerWidth * 0.9) - 50),
         y: random(200, (window.innerHeight * 0.7) - 50),
       };
@@ -114,6 +156,7 @@ class SynonymGame extends Component {
     let newScore;
     if (currentWordSynonyms.indexOf(clickedWord) === -1) {
       newScore = this.state.currentScore - 1;
+      this.applyAnimationsToIncorrectWord(event.target);
       this.animateMainWordifIncorrect();
     } else {
       newScore = this.state.currentScore + 1;
@@ -138,7 +181,7 @@ class SynonymGame extends Component {
       ease: Power3.easeIn,
       onComplete: this.updateStateAfterClick,
       onCompleteParams: [event],
-      // onUpdate: this.drawLayer,
+      onUpdate: this.drawLayer,
     });
   }
 
@@ -160,23 +203,27 @@ class SynonymGame extends Component {
     const mainWord = this.refs.mainWord;
     const tl = new TimelineMax({ repeat: 2 });
     tl
-      .to(mainWord, 0.2, {
+      .to(mainWord, 0.1, {
         x: '+= 10',
         ease: Power3.easeInOut,
       })
-      .to(mainWord, 0.2, {
+      .to(mainWord, 0.1, {
         x: '-= 10',
         ease: Power3.easeInOut,
       });
   }
 
   drawLayer() {
-    this.refs.layer.draw();
+    if (this.refs.layer) {
+      this.refs.layer.draw();
+    }
   }
 
   animationUpdate() {
     this.drawLayer();
-    requestAnimationFrame(this.animationUpdate);
+    if (this.unmounted !== true) {
+      requestAnimationFrame(this.animationUpdate);
+    }
   }
 
   nextQuestion() {
@@ -197,24 +244,23 @@ class SynonymGame extends Component {
       title: {
         paddingTop: 50,
       },
-      titleFont: {
-        fontFamily: "Fredoka One",
-        fontSize: 68,
-      },
       titleContainer: {
+        padding: 50,
         display: "flex",
-        justifyContent: "space-evenly",
+        justifyContent: "space-between",
+        color: "#ffffff",
       },
       button: {
-        backgroundColor: "#0a00b6",
-        color: "#ffffff",
         margin: "auto",
       },
       div: {
         backgroundColor: "#ffd600",
         textAlign: "center",
       },
-
+      timer: {
+        color: "#2b282e",
+        fontSize: "30",
+      },
     };
 
     const mainWord = (
@@ -222,30 +268,39 @@ class SynonymGame extends Component {
         ref="mainWord"
         text={this.state.currentWord}
         fontFamily="Fredoka One"
-        fontSize={50}
+        fontSize={62}
+        fill="#ffffff"
         x={this.calculateMainWordPosition().x}
         y={this.calculateMainWordPosition().y}
       />
     );
 
     const words = this.state.gameWords;
-    requestAnimationFrame(this.animationUpdate);
+    console.log(this.state)
 
     return (
       <div style={styles.div}>
-        <div style={styles.title}>
-          <h1 style={styles.titleFont}>Synonym Matching</h1>
-          <div style={styles.titleContainer}>
-            <div><h3>Your Score: {this.state.currentScore}</h3></div>
-            <div>
-              <Button
-                style={styles.button}
-                onClick={this.startGame}>
-                Start New Game
-              </Button>
-            </div>
-            <div><h3>Your High Score: {this.props.highScore}</h3></div>
+        <div style={styles.titleContainer}>
+          <div><h3>Your Score: {this.state.currentScore}</h3></div>
+          <div>
+            <Button
+              basic inverted
+              size="large"
+              style={styles.button}
+              onClick={this.startGame}>
+              Start New Game
+            </Button>
           </div>
+          <div>
+            <h3 style={styles.timer}>
+              {
+                this.state.timer < 10
+                  ? `0:0${this.state.timer}`
+                  : `0:${this.state.timer}`
+              }
+            </h3>
+          </div>
+          <div><h3>Your High Score: {this.props.highScore}</h3></div>
         </div>
         <div>
           <Stage ref="stage" width={window.innerWidth} height={window.innerHeight * 0.7}>
@@ -256,11 +311,12 @@ class SynonymGame extends Component {
                   return (
                     <Text
                       ref={word.word}
-                      key={word.word}
+                      key={index}
                       text={word.word}
                       fontFamily="Roboto"
                       opacity={0}
-                      fontSize={16}
+                      fontSize={26}
+                      fontStyle="bold"
                       x={word.x} y={word.y}
                       onClick={this.animateWordAfterClick}
                       onMouseEnter={() => {
@@ -286,6 +342,7 @@ class SynonymGame extends Component {
 const mapState = (state, ownProps) => ({
   gameWords: state.words.relatedWords || {},
   highScore: 98,
+  start: new Date(),
 });
 
 const mapDispatch = dispatch => ({
