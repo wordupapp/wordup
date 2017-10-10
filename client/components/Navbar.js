@@ -25,9 +25,10 @@ class Navbar extends Component {
         background: '#2b282e',
       },
       logo: {
-        paddingTop: 10,
-        paddingLeft: 10,
-        paddingBottom: 5,
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingBottom: 10,
+        paddingRight: 5,
       },
       menuItem: {
         color: '#ffffff',
@@ -74,7 +75,7 @@ class Navbar extends Component {
     return (
       <Menu floated fixed="top" secondary style={this.styles.navbar}>
         <Menu.Menu style={this.styles.menuMenu} >
-          <img src="wordUP-logo.png" style={this.styles.logo} height="80" width="200"/>
+          <img src="wordUP-logo.png" style={this.styles.logo} height="75" width="180"/>
           {isLoggedIn ?
             loggedInMenuOptions :
             null
