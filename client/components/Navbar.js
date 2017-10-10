@@ -22,7 +22,7 @@ class Navbar extends Component {
     this.styles = {
       navbar: {
         height: `90px`,
-        background: '#B413EC',
+        background: '#2b282e',
       },
       title: {
         fontSize: '40px',
