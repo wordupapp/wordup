@@ -3,7 +3,7 @@ import { Router, Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { Header, Container, Menu } from 'semantic-ui-react';
+import { Header, Container, Menu, Icon } from 'semantic-ui-react';
 
 import history from '../../history';
 import LevelWordView from './LevelWords';
@@ -13,6 +13,7 @@ const styles = {
   all: {
     width: "100%",
     backgroundColor: "#e9e9e9",
+    flexGrow: 1,
   },
   container: {
     padding: "7em 0em",
@@ -23,6 +24,9 @@ const styles = {
     borderRadius: "10px",
     boxShadow: "0 0 25px rgba(0,0,0,.04)",
     textAlign: "center",
+  },
+  iconHeader: {
+    marginTop: "1em",
   },
 };
 
@@ -46,7 +50,15 @@ class NewWordsPanel extends React.Component {
       <Container style={styles.all}>
         <Container style={styles.container}>
           <Container style={styles.subContainer}>
-            <Header as='h1'>Learn new words</Header>
+            <Header as='h1' icon style={styles.iconHeader}>
+              <Icon name='graduation' />
+              <Header.Content>
+                Learn new words
+                <Header.Subheader>
+                  learn and up your vocabulary game!
+                </Header.Subheader>
+              </Header.Content>
+            </Header>
             <Menu pointing secondary size='massive'>
               <Menu.Item
                 name='level'

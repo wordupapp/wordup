@@ -20,6 +20,8 @@ const Main = (props) => {
     containerFull: {
       marginTop: '4em',
       flex: '1',
+      display: 'flex',
+      flexDirection: 'column',
     },
   };
 
