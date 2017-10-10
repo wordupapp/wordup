@@ -92,7 +92,6 @@ class DataVisWordCloud extends Component {
   }
 
   createBubbles(rootParam) {
-    console.log(this.props.userWords);
     var svg = d3.select(this.svgRoot),
       margin = 20,
       diameter = +svg.attr("width"),
@@ -209,7 +208,6 @@ class DataVisWordCloud extends Component {
   }
 
   render() {
-    console.log(this.props.userWords);
     return (
       <svg
         width="900"
