@@ -92,15 +92,14 @@ class DataVisWordCloud extends Component {
   }
 
   createBubbles(rootParam) {
-    console.log(this.props.userWords);
     var svg = d3.select(this.svgRoot),
       margin = 20,
       diameter = +svg.attr("width"),
       g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
     var color = d3.scaleLinear()
-      .domain([-1, 5])
-      .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+      .domain([-1, 2])
+      .range(["hsl(0, 0%, 91%)", "hsl(259, 100%, 20%)"])
       .interpolate(d3.interpolateHcl);
 
     var pack = d3.pack()
@@ -209,11 +208,10 @@ class DataVisWordCloud extends Component {
   }
 
   render() {
-    console.log(this.props.userWords);
     return (
       <svg
-        width="910"
-        height="910"
+        width="900"
+        height="900"
         ref={svg => this.svgRoot = svg}
       />
     );
