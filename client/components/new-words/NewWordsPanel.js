@@ -17,7 +17,7 @@ const styles = {
   },
   container: {
     padding: "7em 0em",
-    minWidth: "80%",
+    minWidth: "70%",
   },
   subContainer: {
     backgroundColor: "#ffffff",
