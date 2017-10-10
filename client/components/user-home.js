@@ -8,11 +8,79 @@ import { Button, Container, Header, Icon, Image, Segment, Grid, List, Table, Car
  * COMPONENT STYLE
  */
 const style = {
-  levelIcon: {
-    display: 'inline-block',
+  all: {
+    width: "100%",
+    backgroundColor: "#e9e9e9",
+    flexGrow: 1,
   },
-  level: {
+  container: {
+    padding: "7em 0em",
+    minWidth: "60%",
+  },
+  leftContainer: {
+    backgroundColor: "#ffffff",
+    padding: "2em",
+    marginBottom: "4em",
+    borderRadius: "10px",
+    boxShadow: "0 0 25px rgba(0,0,0,.04)",
+    textAlign: "center",
+  },
+  rightContainerTop: {
+    backgroundColor: "#ffffff",
+    maxHeight: "380px",
+    minWidth: "300px",
+    padding: "2em",
+    marginBottom: "3em",
+    borderRadius: "10px",
+    boxShadow: "0 0 25px rgba(0,0,0,.04)",
+    textAlign: "center",
+  },
+  rightContainerBot: {
+    backgroundColor: "#ffffff",
+    minWidth: "300px",
+    padding: "2em",
+    marginTop: "-2em",
+    marginBottom: "3em",
+    borderRadius: "10px",
+    boxShadow: "0 0 25px rgba(0,0,0,.04)",
+    textAlign: "center",
+  },
+  userImage: {
+    margin: '3em auto',
+  },
+  title: {
+    fontSize: '3em',
+    marginTop: '0.5em',
+  },
+  subTitle: {
+    fontSize: '2em',
+  },
+  list: {
+    fontSize: '1.5em',
+    margin: '3em auto 2em',
+    width: '50%',
+  },
+  emailLink: {
+    color: '#2185d0',
+  },
+  editButton: {
+    marginBottom: '1em',
+    background: '#ffd600',
+    color: '#2b282e',
+  },
+  levelContainer: {
+    marginTop: '6em',
+    marginBottom: '-5em',
+  },
+  levelIcon: {
+    fontSize: '11em',
+    display: 'inline-block',
+    position: 'relative',
+    color: '#ffd600',
+  },
+  levelNumber: {
     color: 'red',
+    fontWeight: '700',
   },
 };
 
@@ -20,99 +88,134 @@ const style = {
  * COMPONENT
  */
 export const UserHome = props => {
-  const { email, name, phone, level, suggestedWords } = props;
+  const { email, name, phone, level, words } = props;
   let { image } = props;
-  const firstName = name.split(' ')[0];
+  const firstName = name ? name.split(' ')[0] : '';
 
   // default image
   if (!image) image = 'http://www.answerspoint.com/user/uploads/users/default_user.png';
 
+  const userInfoBlock = (
+    <Container style={style.leftContainer}>
+      <Header as='h3' style={style.title}>
+        Hello, {firstName}!
+      </Header>
+      <Image
+        size="small"
+        shape="circular"
+        src={image}
+        style={style.userImage}
+      />
+      <List style={style.list} >
+        <List.Item>
+          <List.Icon name='user' />
+          <List.Content>{name}</List.Content>
+        </List.Item>
+        <List.Item>
+          <List.Icon name='marker' />
+          <List.Content>Chicago, IL</List.Content>
+        </List.Item>
+        <List.Item>
+          <List.Icon name='mail' />
+          <List.Content>
+            <a style={style.emailLink} href={`mailto$:${email}`}>
+              {email}
+            </a>
+          </List.Content>
+        </List.Item>
+        {
+          phone ?
+            <List.Item>
+              <List.Icon name='phone' />
+              <List.Content>
+                {phone}
+              </List.Content>
+            </List.Item> :
+            null
+        }
+      </List>
+      <Button size='huge' style={style.editButton}>
+        Edit your profile
+      </Button>
+    </Container>
+  );
+
+  const userLevelBlock = (
+    <Container style={style.rightContainerTop}>
+      <Header as="h2" style={style.subTitle}>
+        {'Your level: '}
+        <span style={style.levelNumber}>
+          {level}
+        </span>
+      </Header>
+      <Container style={style.levelContainer}>
+        <Icon
+          style={style.levelIcon}
+          name={'trophy'}
+        />
+      </Container>
+    </Container>
+  );
+
+  let topFiveWords = Object.keys(words).sort((a, b) => (words[b].numUsed - words[a].numUsed));
+  topFiveWords = topFiveWords.slice(0, 5).map((word, index) => ({
+    name: word,
+    level: words[word].level,
+    numUsed: words[word].numUsed,
+    rank: index + 1,
+  }));
+
+  const topWordTableRows = topFiveWords.map(word => (
+    <Table.Row key={word.rank}>
+      <Table.Cell>{word.rank}</Table.Cell>
+      <Table.Cell>{word.name}</Table.Cell>
+      <Table.Cell>{word.numUsed}</Table.Cell>
+      <Table.Cell>{word.level}</Table.Cell>
+    </Table.Row>
+  ));
+
+  const userTopWordsBlock = (
+    <Container style={style.rightContainerBot}>
+      <Header as="h2" style={style.subTitle}>Your top words</Header>
+      <Table color="red">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Rank</Table.HeaderCell>
+            <Table.HeaderCell>Name</Table.HeaderCell>
+            <Table.HeaderCell># Used</Table.HeaderCell>
+            <Table.HeaderCell>Level</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {topWordTableRows}
+        </Table.Body>
+      </Table>
+    </Container>
+  );
+
   return (
-    <div>
-      <Segment vertical style={{ padding: '6em 0em' }}>
-        <Grid container stackable verticalAlign='middle'>
-          <Grid.Row>
-            <Grid.Column width={6}>
-              <Image
-                bordered
-                size='large'
-                src={image}
-              />
-            </Grid.Column>
-            <Grid.Column width={8} floated='right' >
-              <Header as='h3' style={{ fontSize: '3em' }}>
-                Hello, {firstName}!
-              </Header>
-              <List style={{ fontSize: '1.5em' }}>
-                <List.Item>
-                  <List.Icon name='user' />
-                  <List.Content>{name}</List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Icon name='marker' />
-                  <List.Content>Chicago, IL</List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Icon name='mail' />
-                  <List.Content>
-                    <a href={`mailto$:${email}`}>
-                      {email}
-                    </a>
-                  </List.Content>
-                </List.Item>
-                {
-                  phone ?
-                    <List.Item>
-                      <List.Icon name='phone' />
-                      <List.Content>
-                        {phone}
-                      </List.Content>
-                    </List.Item> :
-                    null
-                }
-              </List>
-              <Button size='huge'>Edit your profile</Button>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
-      <Segment style={{ padding: '5em' }} vertical>
-        <Container text>
-          <Header as="h3" style={{ fontSize: '1.5em' }}>
-            <Icon name="check square" style={style.levelIcon} />
-            <span>Your Vocab Level: </span>
-            <span style={style.level} >{level}</span>
-          </Header>
-          <p style={{ fontSize: '1.2em' }}>
-            {`Based on words you have spoken, we calculate that your vocabulary level is ${level}!`}
-          </p>
-        </Container>
-      </Segment>
-      <Segment style={{ padding: '6em 12em' }} vertical>
-        <Table color="red" key="red">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Ranking</Table.HeaderCell>
-              <Table.HeaderCell>Scores</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>1</Table.Cell>
-              <Table.Cell>2600</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>2</Table.Cell>
-              <Table.Cell>2310</Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>3</Table.Cell>
-              <Table.Cell>1810</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      </Segment>
-    </div>
+    <Container style={style.all}>userTopWordsBlock
+      <Grid
+        container
+        stackable
+        stretched
+        relaxed
+        style={style.container}>
+        <Grid.Row>
+          <Grid.Column width={10}>
+            {userInfoBlock}
+          </Grid.Column>
+          <Grid.Column floated="right" width={6}>
+            <Grid.Row>
+              {userLevelBlock}
+            </Grid.Row>
+            <Grid.Row>
+              {userTopWordsBlock}
+            </Grid.Row>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Container>
   );
 };
 
@@ -126,6 +229,7 @@ const mapState = state => {
     phone: state.user.phone,
     image: state.user.image,
     level: state.userLevel,
+    words: state.userWords,
   };
 };
 
