@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Button } from 'semantic-ui-react';
+import { Icon, Button, Message } from 'semantic-ui-react';
 import { sendWords } from '../store/userWords';
 
 
@@ -14,12 +14,11 @@ class Record extends Component {
     this.state = {
       recognition: {},
       recording: false,
-      results: [],
+      speechResult: '',
       userEnded: false,
       prompt: '',
     };
-    this.startRecording = this.startRecording.bind(this);
-    this.stopRecording = this.stopRecording.bind(this);
+    this.recordingToggle = this.recordingToggle.bind(this);
     this.randomPrompt = this.randomPrompt.bind(this);
   }
 
@@ -40,9 +39,7 @@ class Record extends Component {
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       if (confidence > 0.5) {
-        // const newResult = [speechResult, confidence];
-        // const newWords = home.getFormattedWords(newResult);
-        console.log('speechResult: ', speechResult);
+        home.setState({ speechResult });
         dispatchSendWords(speechResult, user.id);
       }
     };
@@ -54,39 +51,24 @@ class Record extends Component {
       console.log('Error occured: ', event.error);
     };
     recognition.onerror = recognition.onerror.bind(home);
-
-    this.setState({
-      recognition,
-    });
+    this.setState({ recognition });
   }
 
-  startRecording() {
-    this.state.recognition.start();
-    this.setState({
-      recording: true,
-    });
+  recordingToggle() {
+    if (this.state.recording) {
+      this.state.recognition.stop();
+      this.setState({
+        userEnded: true,
+        recording: false,
+        speechResult: '',
+      });
+    } else {
+      this.state.recognition.start();
+      this.setState({
+        recording: true,
+      });
+    }
   }
-
-  stopRecording() {
-    this.state.recognition.stop();
-    this.setState({
-      userEnded: true,
-      recording: false,
-    });
-  }
-
-  // getFormattedWords(result) {
-  //   const formattedWords = new Set();
-  //   if (result[1] > 0.5) {
-  //     const tempArr = result[0].split(' ');
-  //     const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
-  //     tempArr.forEach(word => {
-  //       if (pattern.test(word)) return; // don't process words with special characters
-  //       if (word) formattedWords.add(word.toLowerCase());
-  //     });
-  //   }
-  //   return [...formattedWords];
-  // }
 
   randomPrompt() {
     const randomIndex = Math.floor(Math.random() * this.props.prompts.length);
@@ -99,6 +81,9 @@ class Record extends Component {
     const styles = {
       mic: {
         cursor: "pointer",
+        margin: "auto",
+        paddingTop: 70,
+        paddingLeft: 90,
       },
       iconOn: {
         width: 200,
@@ -111,11 +96,17 @@ class Record extends Component {
         margin: "auto",
       },
       outerDiv: {
+        paddingTop: 150,
+        paddingLeft: 50,
+        backgroundColor: "#ffd600",
         height: "100vh",
-        display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+      },
+      innerDiv: {
+        width: "50%",
+        float: "left",
       },
       promptContainer: {
         marginTop: "4em",
@@ -127,44 +118,73 @@ class Record extends Component {
         marginTop: "2em",
       },
       button: {
-        backgroundColor: "#0a00b6",
+        marginTop: 50,
+      },
+      instructions: {
         color: "#ffffff",
+        weight: 500,
+        fontStyle: "italic",
+        fontFamily: "Roboto",
+      },
+      innerCircle: {
+        backgroundColor: "#ffffff",
+        width: 300,
+        height: 300,
+        borderRadius: "50%",
         margin: "auto",
+        marginTop: 20,
+      },
+      outerCircle: {
+        width: 350,
+        height: 350,
+        border: "5px solid #ffffff",
+        borderRadius: "50%",
+        margin: "auto",
+      },
+      card: {
+        backgroundColor: "#ffffff",
+
+        height: 200,
+        width: 300,
       },
     };
 
-    const startRecordingButton = (
-      <div
-        onClick={this.startRecording}
-        style={styles.mic}>
-        <Icon name="microphone" size="massive"style={styles.iconOn} />
+    const resultsCard = (
+      <div style={styles.card}>
+        <h2>What I'm hearing...</h2>
+        <h3>{this.state.speechResult}</h3>
       </div>
     );
 
-    const stopRecordingButton = (
-      <div
-        onClick={this.stopRecording}
-        style={styles.mic}>
-        <Icon name="microphone" size="massive"style={styles.iconOff} />
-      </div>
-    );
-
+      console.log(this.state);
     return (
       <div style={styles.outerDiv}>
-        {
-          !this.state.recording
-            ? startRecordingButton
-            : stopRecordingButton
-        }
-        <div style={styles.promptContainer}>
-          <h3>Need a prompt?</h3>
+        <div style={styles.innerDiv}>
+          <h1 style={styles.instructions}>Speak to me, I'll analyze your speech and help you improve your vocabulary. Click the mic to get started.</h1>
           <Button
-            onClick={this.randomPrompt}
-            style={styles.button}>
-            New prompt
+            style={styles.button}
+            size="large"
+            basic
+            color="black"
+            onClick={this.randomPrompt}>
+            What should I say?
           </Button>
+          <h3>{this.state.prompt}</h3>
         </div>
-        <p style={styles.prompt}>{this.state.prompt}</p>
+        <div style={styles.innerDiv}>
+          <div style={styles.outerCircle}>
+            <div style={styles.innerCircle}>
+              <div style={styles.mic}>
+                <img onClick={this.recordingToggle} src="mic.svg"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        {
+          this.state.recording
+            ? resultsCard
+            : null
+        }
       </div>
     );
   }
