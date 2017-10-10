@@ -8,19 +8,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Chance from 'chance';
-import { Checkbox, 
-        Container,
-        Dimmer,
-        Form,
-        Header,
-        List,
-        Loader,
-        Progress,
-        Segment,
-       } from 'semantic-ui-react';
+import {
+  Container,
+  Dimmer,
+  Form,
+  Header,
+  List,
+  Loader,
+  Progress,
+  Segment,
+} from 'semantic-ui-react';
 
 // LOCAL MODULES
-import { NextQuestion, Skip, Submit } from './DefinitionsControls';
+import { GameComplete, NextQuestion, Skip, Submit } from './DefinitionsControls';
 import { fetchDefinitionsForLevelThunk } from '../../store/words';
 
 
@@ -30,7 +30,7 @@ import { fetchDefinitionsForLevelThunk } from '../../store/words';
 const styles = {
   fullScreen: {
     background: "#ffd600",
-    height: "-webkit-fill-available",
+    height: "100vh",
   },
   container: {
     margin: "auto",
@@ -51,7 +51,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     padding: "0em 3em",
-    marginTop: "80px",
+    marginTop: "60px",
   },
   nav: {
     margin: "0",
@@ -72,7 +72,13 @@ const styles = {
     borderRadius: "5px",
     borderWidth: "thick",
     padding: "9px",
-  }
+  },
+  showCorrect: {
+    borderStyle: "double",
+    borderColor: "springgreen",
+    borderRadius: "5px",
+    borderWidth: "thick",
+  },
 }
 
 
@@ -97,7 +103,11 @@ class Definitions extends Component {
   }
 
   componentDidMount() {
-    let level = this.props.userLevel < 7 ? 7 : this.props.userLevel + 1;
+    let level;
+    if(!this.props.userLevel) level = 7;
+    else {
+      level = this.props.userLevel < 7 ? 7 : this.props.userLevel + 1;
+    }
     this.props.fetchDefinitionsForLevel(level);
   }
 
@@ -175,6 +185,11 @@ class Definitions extends Component {
       
       return (
         <div className="fullScreen" style={styles.fullScreen}>
+          <GameComplete 
+            total={this.state.total}
+            correct={this.state.correct}
+            forceUpdate={this.forceUpdate}
+          />
           <Container className="definitions-container" style={styles.container}>
             <Header as="h2" style={styles.score}>Score: {correct}/{total} </Header>
             <Progress percent={this.state.total/.1} size='tiny' color="purple" />
@@ -182,14 +197,18 @@ class Definitions extends Component {
             <div style={styles.definitionsList}>
               <Header as="h3" style={{marginBottom: 0}}>Definition(s):</Header>
               <List>
-                {selected.meaning.map( (entry, index) => <li style={styles.listItem} key={index}>{`${index + 1}. ${entry}`}</li> )}
+                {selected.meaning.map( (entry, index) =>(
+                  <li style={styles.listItem} key={index}>{`${index + 1}. ${entry}`}</li>
+                ))}
               </List>
             </div>
             <Form style={styles.form} data-word={selected.word} onSubmit={this.handleSubmit}>
               {
                 options.map( (option, index) => {
                   return (
-                    <Form.Field key={index} >
+                    <Form.Field key={index} style={
+                      this.state.response === 'incorrect' && option === selected.word ? styles.showCorrect : null
+                    }>
                       <Segment
                         className="option"
                         raised
