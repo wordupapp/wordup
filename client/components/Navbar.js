@@ -21,7 +21,7 @@ class Navbar extends Component {
     ];
     this.styles = {
       navbar: {
-        height: `6rem`,
+        height: "6rem",
         background: '#2b282e',
       },
       logo: {
