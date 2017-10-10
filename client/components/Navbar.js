@@ -22,12 +22,13 @@ class Navbar extends Component {
     this.styles = {
       navbar: {
         height: `90px`,
-        background: '#B413EC',
+        background: '#2b282e',
       },
-      title: {
-        fontSize: '40px',
-        fontWeight: 800,
-        color: '#ffffff',
+      logo: {
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingBottom: 10,
+        paddingRight: 5,
       },
       menuItem: {
         color: '#ffffff',
@@ -74,12 +75,7 @@ class Navbar extends Component {
     return (
       <Menu floated fixed="top" secondary style={this.styles.navbar}>
         <Menu.Menu style={this.styles.menuMenu} >
-          <Menu.Item
-            header
-            as={Link}
-            to={'/'}>
-            <span style={this.styles.title}>WORDUP</span>
-          </Menu.Item>
+          <img src="wordUP-logo.png" style={this.styles.logo} height="75" width="180"/>
           {isLoggedIn ?
             loggedInMenuOptions :
             null

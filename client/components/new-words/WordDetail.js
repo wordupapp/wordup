@@ -1,12 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Container, Header, List } from 'semantic-ui-react';
+import { Label, Header, List, Segment, Icon } from 'semantic-ui-react';
 
 /**
  * COMPONENT STYLE
  */
-const style = {
+const styles = {
+  all: {
+    margin: '3em auto',
+    textAlign: 'left',
+    maxWidth: '70%',
+    paddingBottom: '8em',
+  },
+  listItem: {
+    margin: '1em',
+  },
 };
 
 /**
@@ -23,14 +32,20 @@ export const WordDetail = props => {
     const oneDefList = def.text.split('\n').map(text => {
       contentKey += 1;
       const dispText = text.split(')').slice(1).join('');
-      return (<List.Description key={contentKey}>
-        <List.Icon name="bookmark" />
-        {dispText}
-      </List.Description>);
+      return (
+        <List.Description key={contentKey} style={styles.listItem}>
+          <List.Icon name="bookmark" />
+          {dispText}
+        </List.Description>
+      );
     });
     return (
       <List.Item key={contentKey}>
-        <List.Header>{def.pos}</List.Header>
+        <List.Header>
+          <Label ribbon>
+            {def.pos}
+          </Label>
+        </List.Header>
         {oneDefList}
       </List.Item>
     );
@@ -39,19 +54,34 @@ export const WordDetail = props => {
   const exampleList = examples.map(example => {
     contentKey += 1;
     return (
-      <List.Item key={contentKey}>
+      <List.Item key={contentKey} style={styles.listItem}>
         <List.Icon name="book" />
-        {example}
+        {`"${example}"`}
       </List.Item>
     );
   });
 
   return (
-    <Container>
-      <Header as="h2">{name}</Header>
-      {definitionList}
-      {exampleList}
-    </Container>
+    <div style={styles.all}>
+      <Header as="h2" attached="top">
+        <Icon name="book" />
+        <Header.Content>
+          {name}
+          <Header.Subheader>
+            {`definitions of ${name}:`}
+          </Header.Subheader>
+        </Header.Content>
+      </Header>
+      <Segment attached color="red">
+        {definitionList}
+      </Segment>
+      <Segment attached color="red">
+        <Label ribbon>
+          Examples
+        </Label>
+        {exampleList}
+      </Segment>
+    </div>
   );
 };
 
