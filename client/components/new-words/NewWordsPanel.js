@@ -88,11 +88,6 @@ class NewWordsPanel extends React.Component {
 /**
  * CONTAINER
  */
-const mapState = state => {
-  return {
-    level: state.userLevel,
-    words: state.newwords,
-  };
-};
+const mapState = null;
 
 export default connect(mapState)(NewWordsPanel);
