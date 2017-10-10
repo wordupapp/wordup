@@ -75,7 +75,15 @@ class Navbar extends Component {
     return (
       <Menu floated fixed="top" secondary style={this.styles.navbar}>
         <Menu.Menu style={this.styles.menuMenu} >
-          <img alt="wordUP" src="/wordUP-logo.png" style={this.styles.logo} height="75" width="180" />
+          <Link to="/">
+            <img
+              alt="wordUP"
+              src="/wordUP-logo.png"
+              style={this.styles.logo}
+              height="75"
+              width="180"
+            />
+          </Link>
           {isLoggedIn ?
             loggedInMenuOptions :
             null
