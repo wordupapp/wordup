@@ -14,7 +14,7 @@ const style = {
     flexGrow: 1,
   },
   container: {
-    padding: "4em 0em",
+    padding: "2em 0em 4em",
     minWidth: "60%",
   },
   leftContainer: {
@@ -164,7 +164,8 @@ export const UserHome = props => {
     </Container>
   );
 
-  let topFiveWords = Object.keys(words).sort((a, b) => (words[b].numUsed - words[a].numUsed));
+  let topFiveWords = Object.keys(words).filter(word => (words[word].level > 0));
+  topFiveWords = topFiveWords.sort((a, b) => (words[b].numUsed - words[a].numUsed));
   topFiveWords = topFiveWords.slice(0, 5).map((word, index) => ({
     name: word,
     level: words[word].level,

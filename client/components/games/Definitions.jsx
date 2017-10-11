@@ -30,7 +30,7 @@ import { fetchDefinitionsForLevelThunk } from '../../store/words';
 const styles = {
   fullScreen: {
     background: "#ffd600",
-    height: "100vh",
+    height: "-webkit-fill-available",
   },
   container: {
     margin: "auto",
@@ -64,17 +64,17 @@ const styles = {
     marginBottom: "1em",
   },
   score: {
-    marginTop: "4em",
+    marginTop: "2em",
   },
   selected: {
-    borderStyle: "double",
+    borderStyle: "solid",
     borderColor: "rgb(180, 19, 236)",
     borderRadius: "5px",
     borderWidth: "thick",
     padding: "9px",
   },
   showCorrect: {
-    borderStyle: "double",
+    borderStyle: "solid",
     borderColor: "springgreen",
     borderRadius: "5px",
     borderWidth: "thick",
@@ -197,7 +197,7 @@ class Definitions extends Component {
             <div style={styles.definitionsList}>
               <Header as="h3" style={{marginBottom: 0}}>Definition(s):</Header>
               <List>
-                {selected.meaning.map( (entry, index) =>(
+                {selected.meaning.slice(0,3).map( (entry, index) =>(
                   <li style={styles.listItem} key={index}>{`${index + 1}. ${entry}`}</li>
                 ))}
               </List>

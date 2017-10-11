@@ -226,8 +226,10 @@ const getLevel = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.ten_degree);
-        else reject(`Failed to get level for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Level API usage: ', result.headers);
+          resolve(result.body.ten_degree);
+        } else reject(`Failed to get level for: ${wordName}`);
       });
   });
 };
@@ -238,8 +240,10 @@ const getDefinition = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.meaning);
-        else reject(`Failed to get definitions for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Definition API usage: ', result.headers);
+          resolve(result.body.meaning);
+        } else reject(`Failed to get definitions for: ${wordName}`);
       });
   });
 };
@@ -250,8 +254,10 @@ const getExample = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.example);
-        else reject(`Failed to get examples for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Language scoring API usage: ', result.headers);
+          resolve(result.body.example);
+        } else reject(`Failed to get examples for: ${wordName}`);
       });
   });
 };
@@ -262,8 +268,10 @@ const getRelation = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.relation);
-        else reject(`Failed to get relations for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Language scoring API usage: ', result.headers);
+          resolve(result.body.relation);
+        } else reject(`Failed to get relations for: ${wordName}`);
       });
   });
 };
