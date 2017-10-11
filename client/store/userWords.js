@@ -24,20 +24,22 @@ export const addUserWords = newWords => ({ type: ADD_USER_WORDS, newWords });
  */
 
 const calcUserLevel = wordsObj => {
+  let levelSquareSum = 0;
   let levelSum = 0;
-  let wordCount = 0;
   let level = 0;
 
+  // Take weighted artithmetic mean:
+  //   https://en.wikipedia.org/wiki/Weighted_arithmetic_mean
+
   if (Object.keys(wordsObj).length) {
-    console.log('wordsObj!!', wordsObj)
     Object.keys(wordsObj).forEach(word => {
       const wordLevel = wordsObj[word].level;
       if (wordLevel > 0) {
+        levelSquareSum += wordLevel * wordLevel;
         levelSum += wordLevel;
-        wordCount += 1;
       }
     });
-    level = Math.floor(levelSum / wordCount);
+    level = Math.round(levelSquareSum / levelSum);
   }
 
   if (level < 1) level = 1;

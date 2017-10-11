@@ -11,7 +11,7 @@ const style = {
     flexGrow: 1,
   },
   container: {
-    padding: "4em 0em",
+    padding: "2em 0em 4em",
     minWidth: "65%",
   },
   leftContainer: {
