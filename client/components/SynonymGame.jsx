@@ -20,6 +20,7 @@ class SynonymGame extends Component {
       questionNum: 0,
       timer: 30,
       start: false,
+      gameEnded: false,
     };
     this.startGame = this.startGame.bind(this);
     this.updateStateAfterClick = this.updateStateAfterClick.bind(this);
@@ -32,6 +33,8 @@ class SynonymGame extends Component {
     this.animationUpdate = this.animationUpdate.bind(this);
     this.animateMainWordifCorrect = this.animateMainWordifCorrect.bind(this);
     this.animateMainWordifIncorrect = this.animateMainWordifIncorrect.bind(this);
+    this.animateScoreifIncorrect = this.animateScoreifIncorrect.bind(this);
+    this.animateScoreifCorrect = this.animateScoreifCorrect.bind(this);
     this.applyAnimationsToIncorrectWord = this.applyAnimationsToIncorrectWord.bind(this);
     this.tick = this.tick.bind(this);
   }
@@ -44,7 +47,6 @@ class SynonymGame extends Component {
 
   componentDidMount() {
     requestAnimationFrame(this.animationUpdate);
-    // this.timer;
   }
 
   componentWillUnmount() {
@@ -53,7 +55,6 @@ class SynonymGame extends Component {
   }
 
   calculateMainWordPosition() {
-    console.log(this.state)
     return {
       x: (window.innerWidth / 2) - ((this.state.currentWord.length / 2) * 32),
       y: (window.innerHeight * 0.7) / 2.5,
@@ -163,6 +164,7 @@ class SynonymGame extends Component {
       newScore = this.state.currentScore - 1;
       this.applyAnimationsToIncorrectWord(event.target);
       this.animateMainWordifIncorrect();
+      this.animateScoreifIncorrect();
     } else {
       newScore = this.state.currentScore + 1;
       if (this.state.gameWords.length === 11) {
@@ -171,6 +173,7 @@ class SynonymGame extends Component {
         const updatedWords = this.state.gameWords.filter(wordObj => wordObj.word !== clickedWord);
         this.setState({ gameWords: updatedWords });
         this.animateMainWordifCorrect();
+        this.animateScoreifCorrect();
       }
     }
     this.setState({
@@ -204,6 +207,20 @@ class SynonymGame extends Component {
       });
   }
 
+  animateScoreifCorrect() {
+    const score = this.refs.score;
+    const tl = new TimelineMax();
+    tl
+      .to(score, 0.5, {
+        scale: 1.2,
+        color: "#65ab00",
+      })
+      .to(score, 0.5, {
+        scale: 1,
+        color: "#ffffff",
+      });
+  }
+
   animateMainWordifIncorrect() {
     const mainWord = this.refs.mainWord;
     const tl = new TimelineMax({ repeat: 2 });
@@ -215,6 +232,20 @@ class SynonymGame extends Component {
       .to(mainWord, 0.1, {
         x: '-= 10',
         ease: Power3.easeInOut,
+      });
+  }
+
+  animateScoreifIncorrect() {
+    const score = this.refs.score;
+    const tl = new TimelineMax();
+    tl
+      .to(score, 0.5, {
+        scale: 1.2,
+        color: "#e70800",
+      })
+      .to(score, 0.5, {
+        scale: 1,
+        color: "#ffffff",
       });
   }
 
@@ -234,15 +265,21 @@ class SynonymGame extends Component {
   nextQuestion() {
     const wordArr = Object.keys(this.props.gameWords);
     const newQuestNum = this.state.questionNum + 1;
-    this.setState({
-      questionNum: newQuestNum,
-      currentWord: wordArr[newQuestNum],
-      timer: 30,
-    });
-    const wordsForLevel = this.generateWords();
-    this.setState({
-      gameWords: wordsForLevel,
-    });
+    if (wordArr.length < newQuestNum) {
+      this.setState({
+        gameEnded: true,
+      });
+    } else {
+      this.setState({
+        questionNum: newQuestNum,
+        currentWord: wordArr[newQuestNum],
+        timer: 30,
+      });
+      const wordsForLevel = this.generateWords();
+      this.setState({
+        gameWords: wordsForLevel,
+      });
+    }
   }
 
   render() {
@@ -265,6 +302,7 @@ class SynonymGame extends Component {
         cursor: "pointer",
         paddingTop: 40,
         fontSize: 20,
+        boxShadow: "0px 0px 7px rgba(0,0,0,0.1)",
       },
       div: {
         backgroundColor: "#ffd600",
@@ -272,7 +310,7 @@ class SynonymGame extends Component {
       },
       timer: {
         color: "#2b282e",
-        fontSize: "30",
+        fontSize: 30,
       },
       scores: {
         width: 200,
@@ -280,19 +318,24 @@ class SynonymGame extends Component {
       h3: {
         fontSize: 20,
       },
+      gameOver: {
+        fontFamily: "Fredoka One",
+        fontSize: 62,
+        color: "#ffffff",
+      },
     };
 
-    const mainWord = (
-      <Text
-        ref="mainWord"
-        text={this.state.currentWord}
-        fontFamily="Fredoka One"
-        fontSize={62}
-        fill="#ffffff"
-        x={this.calculateMainWordPosition().x}
-        y={this.calculateMainWordPosition().y}
-      />
-    );
+    // const mainWord = (
+    //   <Text
+    //     ref="mainWord"
+    //     text={this.state.currentWord}
+    //     fontFamily="Fredoka One"
+    //     fontSize={62}
+    //     fill="#ffffff"
+    //     x={this.calculateMainWordPosition().x}
+    //     y={this.calculateMainWordPosition().y}
+    //   />
+    // );
 
     const startButton = (
       <div style={styles.button} onClick={this.startGame}>Start</div>
@@ -308,17 +351,21 @@ class SynonymGame extends Component {
       </h3>
     );
 
+    const gameOver = (
+      <div style={styles.gameOver}>Game Over!</div>
+    );
+
     const words = this.state.gameWords;
 
     return (
       <div style={styles.div}>
         <div style={styles.titleContainer}>
           <div style={styles.scores}>
-            <h3 style={styles.h3}>Your Score: {this.state.currentScore}</h3>
+            <h3 ref="score" style={styles.h3}>Your Score: {this.state.currentScore}</h3>
           </div>
           <div>
             {
-              this.state.start
+              this.state.start || this.state.gameEnded
                 ? timer
                 : startButton
             }
@@ -333,36 +380,51 @@ class SynonymGame extends Component {
               ? null
               : SynonymInstructions()
           }
-          <Stage ref="stage" width={window.innerWidth} height={window.innerHeight * 0.7}>
-            <Layer ref="layer">
-              {mainWord}
-              {
-                words && words.map((word, index) => {
-                  return (
+          {
+            this.state.gameEnded
+              ? gameOver
+              :
+              <Stage ref="stage" width={window.innerWidth} height={window.innerHeight * 0.7}>
+                <Layer ref="layer">
+                  {
                     <Text
-                      ref={word.word}
-                      key={index}
-                      text={word.word}
-                      fontFamily="Roboto"
-                      opacity={0}
-                      fontSize={26}
-                      fontStyle="bold"
-                      x={word.x} y={word.y}
-                      onClick={this.animateWordAfterClick}
-                      onMouseEnter={() => {
-                        const stage = this.refs.stage.getStage().container();
-                        stage.style.cursor = "pointer";
-                      }}
-                      onMouseLeave={() => {
-                        const stage = this.refs.stage.getStage().container();
-                        stage.style.cursor = "default";
-                      }}
+                      ref="mainWord"
+                      text={this.state.currentWord}
+                      fontFamily="Fredoka One"
+                      fontSize={62}
+                      fill="#ffffff"
+                      x={this.calculateMainWordPosition().x}
+                      y={this.calculateMainWordPosition().y}
                     />
-                  );
-                })
-              }
-            </Layer>
-          </Stage>
+                  }
+                  {
+                    words && words.map((word, index) => {
+                      return (
+                        <Text
+                          ref={word.word}
+                          key={index}
+                          text={word.word}
+                          fontFamily="Roboto"
+                          opacity={0}
+                          fontSize={26}
+                          fontStyle="bold"
+                          x={word.x} y={word.y}
+                          onClick={this.animateWordAfterClick}
+                          onMouseEnter={() => {
+                            const stage = this.refs.stage.getStage().container();
+                            stage.style.cursor = "pointer";
+                          }}
+                          onMouseLeave={() => {
+                            const stage = this.refs.stage.getStage().container();
+                            stage.style.cursor = "default";
+                          }}
+                        />
+                      );
+                    })
+                  }
+                </Layer>
+              </Stage>
+            }
         </div>
       </div>
     );
