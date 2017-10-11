@@ -30,7 +30,7 @@ import { fetchDefinitionsForLevelThunk } from '../../store/words';
 const styles = {
   fullScreen: {
     background: "#ffd600",
-    height: "100vh",
+    height: "-webkit-fill-available",
   },
   container: {
     margin: "auto",
@@ -64,7 +64,7 @@ const styles = {
     marginBottom: "1em",
   },
   score: {
-    marginTop: "4em",
+    marginTop: "2em",
   },
   selected: {
     borderStyle: "solid",
