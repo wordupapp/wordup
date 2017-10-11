@@ -197,7 +197,7 @@ class Definitions extends Component {
             <div style={styles.definitionsList}>
               <Header as="h3" style={{marginBottom: 0}}>Definition(s):</Header>
               <List>
-                {selected.meaning.map( (entry, index) =>(
+                {selected.meaning.slice(0,3).map( (entry, index) =>(
                   <li style={styles.listItem} key={index}>{`${index + 1}. ${entry}`}</li>
                 ))}
               </List>
