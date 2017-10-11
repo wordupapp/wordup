@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { Grid, Menu } from 'semantic-ui-react';
+import { Grid, Menu, Container } from 'semantic-ui-react';
 // import history from '../history';
 import { DataVisWordCloud, DataVisUsageTrends } from '../components';
 
@@ -23,37 +23,52 @@ class DataVisPanel extends Component {
     ];
     this.styles = {
       all: {
+        width: "100%",
         backgroundColor: "#e9e9e9",
+        flexGrow: 1,
+      },
+      container: {
+        padding: "1em 0em 1em 1em",
+        minWidth: "80%",
+      },
+      menuColumn: {
+        zIndex: 1,
       },
     };
   }
 
   render() {
     return (
-      <Grid style={this.styles.all}>
-        <Grid.Column width={3}>
-          {
-            <Menu fluid vertical pointing>
-              {this.links.map((link) => (
-                <Menu.Item
-                  key={link.name}
-                  name={link.name}
-                  active={
-                    this.props.location.pathname === link.url
-                  }
-                  as={Link}
-                  to={link.url}>
-                  {link.name}
-                </Menu.Item>
-              ))}
-            </Menu>
-          }
-        </Grid.Column>
-         <Grid.Column stretched width={12}>
-           {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
-           {/* {this.props.location.pathname === '/data/2' && <DataVisUsageTrends />} */}
-        </Grid.Column>
-      </Grid>
+      <Container style={this.styles.all}>
+        <Grid
+          stackable
+          style={this.styles.container}>
+          <Grid.Column
+            style={this.styles.menuColumn}
+            width={3}>
+            {
+              <Menu vertical pointing>
+                {this.links.map((link) => (
+                  <Menu.Item
+                    key={link.name}
+                    name={link.name}
+                    active={
+                      this.props.location.pathname === link.url
+                    }
+                    as={Link}
+                    to={link.url}>
+                    {link.name}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          </Grid.Column>
+          <Grid.Column stretched width={12}>
+            {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
+            {/* {this.props.location.pathname === '/data/2' && <DataVisUsageTrends />} */}
+          </Grid.Column>
+        </Grid>
+      </Container>
     );
   }
 }

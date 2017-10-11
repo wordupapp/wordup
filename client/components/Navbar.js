@@ -16,18 +16,18 @@ class Navbar extends Component {
     };
     this.links = [
       { url: '/record', name: 'Speak' },
-      { url: '/data/1', name: 'Cloud' },
+      { url: '/data/1', name: 'Stats' },
       { url: '/games', name: 'Play' },
     ];
     this.styles = {
       navbar: {
-        height: `90px`,
+        height: "6rem",
         background: '#2b282e',
       },
       logo: {
-        paddingTop: 20,
+        paddingTop: 15,
         paddingLeft: 20,
-        paddingBottom: 10,
+        paddingBottom: 5,
         paddingRight: 5,
       },
       menuItem: {
@@ -78,10 +78,9 @@ class Navbar extends Component {
           <Link to="/">
             <img
               alt="wordUP"
-              src="/wordUP-logo.png"
-              style={this.styles.logo}
+              src="/logo.svg"
               height="75"
-              width="180"
+              style={this.styles.logo}
             />
           </Link>
           {isLoggedIn ?

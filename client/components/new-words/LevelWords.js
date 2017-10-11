@@ -13,8 +13,12 @@ const styles = {
     padding: '3em 5em 4em 5em',
   },
   infoMessage: {
-    maxWidth: '45%',
+    maxWidth: '33%',
     margin: '3em auto 0 auto',
+    background: '#2b282e',
+    color: '#fff',
+  },
+  wordButton: {
     background: '#ffd600',
     color: '#2b282e',
   },
@@ -60,7 +64,8 @@ class LevelWords extends React.Component {
               primary
               value={word.name}
               onClick={this.handleMenuClick}
-              size="massive">
+              size="massive"
+              style={styles.wordButton}>
               {word.name}
             </Button>
           </Grid.Column>
