@@ -55,6 +55,7 @@ class DataVisUsageTrends extends Component {
     // 2017 nyeballdrop = 1483250400000
     // 2018 nyeballdrop = 1514786400000
     Object.entries(userWords).forEach(function (entry, index) {
+      // if (entry[1].)
       bubblesData.push({
         id: index,
         word: entry[0],
