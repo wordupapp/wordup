@@ -147,7 +147,7 @@ const Games = props => {
     </Container>
   );
 
-  // TODO: fake datat for now
+  // TODO: fake datat for now!
   const topScoresArr = [
     {
       rank: 1,
