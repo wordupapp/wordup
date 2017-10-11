@@ -39,30 +39,36 @@ class DataVisPanel extends Component {
 
   render() {
     return (
-      <Grid>
-        <Grid.Column width={3}>
-          {
-            <Menu fluid vertical pointing>
-              {this.links.map((link) => (
-                <Menu.Item
-                  key={link.name}
-                  name={link.name}
-                  active={
-                    this.props.location.pathname === link.url
-                  }
-                  as={Link}
-                  to={link.url}>
-                  {link.name}
-                </Menu.Item>
-              ))}
-            </Menu>
-          }
-        </Grid.Column>
-         <Grid.Column stretched width={12}>
-           {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
-            {this.props.location.pathname === '/data/2' && <DataVisUsageTrends />}
-        </Grid.Column>
-      </Grid>
+      <Container style={this.styles.all}>
+        <Grid
+          stackable
+          style={this.styles.container}>
+          <Grid.Column
+            style={this.styles.menuColumn}
+            width={3}>
+            {
+              <Menu vertical pointing>
+                {this.links.map((link) => (
+                  <Menu.Item
+                    key={link.name}
+                    name={link.name}
+                    active={
+                      this.props.location.pathname === link.url
+                    }
+                    as={Link}
+                    to={link.url}>
+                    {link.name}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          </Grid.Column>
+          <Grid.Column stretched width={12}>
+            {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
+             {this.props.location.pathname === '/data/2' && <DataVisUsageTrends />}
+          </Grid.Column>
+        </Grid>
+      </Container>
     );
   }
 }

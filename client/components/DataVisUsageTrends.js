@@ -27,12 +27,14 @@ class DataVisUsageTrends extends Component {
   }
 
   componentDidMount() {
-    this.createBubbles(this.props.userWords);
+    if ((Object.keys(this.props.userWords)).length) {
+      this.createBubbles(this.props.userWords);
+    }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.createBubbles(nextProps.userWords);
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.createBubbles(nextProps.userWords);
+  // }
 
   createBubbleStructure(data) {
     let level1Words = [];
@@ -456,8 +458,7 @@ class DataVisUsageTrends extends Component {
         var content = '<span class="name">Title: </span><span class="value">' +
           d.name +
           '</span><br/>' +
-          '<span class="name">Amount: </span><span class="value">$' +
-          addCommas(d.value) +
+          '<span class="name">Amount: </span><span class="value">' + d.value +
           '</span><br/>' +
           '<span class="name">Year: </span><span class="value">' +
           d.year +
@@ -545,18 +546,18 @@ class DataVisUsageTrends extends Component {
      * Helper function to convert a number into a string
      * and add commas to it to improve presentation.
      */
-    function addCommas(nStr) {
-      nStr += '';
-      var x = nStr.split('.');
-      var x1 = x[0];
-      var x2 = x.length > 1 ? '.' + x[1] : '';
-      var rgx = /(\d+)(\d{3})/;
-      while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-      }
+    // function addCommas(nStr) {
+    //   nStr += '';
+    //   var x = nStr.split('.');
+    //   var x1 = x[0];
+    //   var x2 = x.length > 1 ? '.' + x[1] : '';
+    //   var rgx = /(\d+)(\d{3})/;
+    //   while (rgx.test(x1)) {
+    //     x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    //   }
 
-      return x1 + x2;
-    }
+    //   return x1 + x2;
+    // }
 
     // Load the data.
     // d3.csv('words_money.csv', display);
@@ -570,9 +571,12 @@ class DataVisUsageTrends extends Component {
     return (
       <div className="svgBody">
         <div className="container">
-          <div id="toolbar" />
+          <div id="toolbar">
+            <a href="#" id="all" className="button active">All Grants</a>
+            <a href="#" id="year" className="button">Grants By Year</a>
+          </div>
           <div id="vis">
-            <div
+            <svg
               ref={svg => this.svgRoot = svg}
             />
           </div>
