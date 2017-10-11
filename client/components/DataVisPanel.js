@@ -23,7 +23,8 @@ class DataVisPanel extends Component {
     ];
     this.styles = {
       all: {
-        width: "100%",
+        // width: "100%",
+        height: "100vh",
         backgroundColor: "#e9e9e9",
         flexGrow: 1,
       },
@@ -39,7 +40,9 @@ class DataVisPanel extends Component {
 
   render() {
     return (
-      <Container style={this.styles.all}>
+      <Container
+        fluid
+        style={this.styles.all}>
         <Grid
           stackable
           style={this.styles.container}>
