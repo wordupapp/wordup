@@ -36,7 +36,7 @@ const styles = {
     margin: "auto",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    // alignItems: "center",
     flexDirection: "column",
     listStyleType: "none",
   },
@@ -51,7 +51,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     padding: "0em 3em",
-    marginTop: "60px",
+    marginTop: "2em",
   },
   nav: {
     margin: "0",
@@ -191,11 +191,16 @@ class Definitions extends Component {
             forceUpdate={this.forceUpdate}
           />
           <Container className="definitions-container" style={styles.container}>
-            <Header as="h2" style={styles.score}>Score: {correct}/{total} </Header>
+            <Header as="h2" style={styles.score} textAlign="center">Score: {correct}/{total} </Header>
             <Progress percent={this.state.total/.1} size='tiny' color="purple" />
-            <Header as="h1">Match the correct word to the definition:</Header>
+            <Header as="h2">
+              {
+                selected.meaning.length > 1 ?
+                'Match the correct word to the definitions:' :
+                'Match the correct word to the definition:'
+              }
+            </Header>
             <div style={styles.definitionsList}>
-              <Header as="h3" style={{marginBottom: 0}}>Definition(s):</Header>
               <List>
                 {selected.meaning.slice(0,3).map( (entry, index) =>(
                   <li style={styles.listItem} key={index}>{`${index + 1}. ${entry}`}</li>
@@ -207,7 +212,8 @@ class Definitions extends Component {
                 options.map( (option, index) => {
                   return (
                     <Form.Field key={index} style={
-                      this.state.response === 'incorrect' && option === selected.word ? styles.showCorrect : null
+                      this.state.response === 'incorrect' && option === selected.word ?
+                      styles.showCorrect : null
                     }>
                       <Segment
                         className="option"

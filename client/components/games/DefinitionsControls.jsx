@@ -32,18 +32,18 @@ const styles = {
   },
   correct: {
     width: "-webkit-fill-available",
-    padding: "1em 2em",
+    padding: "0em 3em",
     display: "flex",
     justifyContent: "space-between",
-    background: "#bff199",
+    // background: "#bff199",
     color: "#65ab00",
   },
   incorrect: {
     width: "-webkit-fill-available",
-    padding: "1em 2em",    
+    padding: "0em 3em",
     display: "flex",
     justifyContent: "space-between",    
-    background: "#ffd3d1",
+    // background: "#ffd3d1",
     color: "#e70800",
   },
 }
@@ -63,7 +63,7 @@ export const Submit = ({ choice, response } = props) => {
     return (
       <Form.Button
         disabled={!choice ? true : false}
-        color={choice ? "green" : "grey"}
+        color={choice ? "purple" : "grey"}
         style={styles.nav}
         >Submit
       </Form.Button>
