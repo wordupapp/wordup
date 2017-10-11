@@ -25,7 +25,7 @@ const style = {
   rightContainerTop: {
     backgroundColor: "#ffffff",
     maxHeight: "380px",
-    minWidth: "300px",
+    minWidth: "330px",
     padding: "2em",
     marginBottom: "3em",
     borderRadius: "10px",
@@ -34,7 +34,7 @@ const style = {
   },
   rightContainerBot: {
     backgroundColor: "#ffffff",
-    minWidth: "300px",
+    minWidth: "330px",
     padding: "2em",
     marginTop: "-2em",
     marginBottom: "3em",
@@ -88,6 +88,9 @@ const style = {
   levelNumber: {
     fontWeight: 100,
     fontSize: '0.6em',
+  },
+  userCol: {
+    minWidth: '8em',
   },
 };
 
@@ -228,7 +231,7 @@ const Games = props => {
                     <Table.Row>
                       <Table.HeaderCell>Rank</Table.HeaderCell>
                       <Table.HeaderCell>Score</Table.HeaderCell>
-                      <Table.HeaderCell>User</Table.HeaderCell>
+                      <Table.HeaderCell style={style.userCol}>User</Table.HeaderCell>
                       <Table.HeaderCell>Level</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
