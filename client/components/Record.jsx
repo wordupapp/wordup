@@ -34,7 +34,7 @@ class Record extends Component {
     recognition.grammars = speechRecognitionList;
     recognition.continuous = true;
     recognition.lang = 'en-US';
-    recognition.interimResults = true;
+    recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
     const home = this;
@@ -43,9 +43,20 @@ class Record extends Component {
       const speechResult = event.results[event.resultIndex][0].transcript;
       const confidence = event.results[event.resultIndex][0].confidence;
       if (confidence > 0.5) {
-        home.setState({ speechResult, interimResults: speechResult });
+        home.setState({ speechResult });
         dispatchSendWords(speechResult, user.id);
       }
+      let resultsToPrint = home.state.interimResults.concat(speechResult);
+      console.log('all results', resultsToPrint.length)
+      if (resultsToPrint.length > 250) {
+        const beginCutIndex = resultsToPrint.length - 250;
+        console.log('begincutindex', beginCutIndex);
+        resultsToPrint = resultsToPrint.slice(beginCutIndex);
+      }
+      home.setState({
+        interimResults: resultsToPrint,
+      });
+      console.log('interimResults', home.state.interimResults.length)
     };
 
     recognition.onerror = function (event) {
@@ -66,7 +77,6 @@ class Record extends Component {
         userEnded: true,
         recording: false,
         speechResult: '',
-        interimResults: '',
       });
     } else {
       this.state.recognition.start();
@@ -74,6 +84,7 @@ class Record extends Component {
       this.setState({
         recording: true,
         showCard: true,
+        interimResults: '',
       });
     }
   }
@@ -214,8 +225,8 @@ class Record extends Component {
         <h2>
           {
             this.state.recording
-              ? "What I'm hearing..."
-              : "What I heard..."
+              ? "Some of what I'm hearing..."
+              : "Some of what I heard..."
           }
         </h2>
         <h3>{this.state.interimResults}</h3>
