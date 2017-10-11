@@ -28,7 +28,6 @@ class DataVisWordCloud extends Component {
     this.styles = {
       svg: {
         overflow: "visible",
-        marginLeft: "4em",
       },
     };
   }
@@ -218,10 +217,12 @@ class DataVisWordCloud extends Component {
   }
 
   render() {
+    console.log('windowHeight ', window.innerHeight, '\nwindowWidth', window.innerWidth);
+    const svgLength = Math.min(window.innerHeight * 0.9, window.innerWidth * 0.9);
     return (
         <svg
-          width="890"
-          height="890"
+          width={svgLength}
+          height={svgLength}
           style={this.styles.svg}
           ref={svg => this.svgRoot = svg}
         />

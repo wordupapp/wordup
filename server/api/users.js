@@ -141,7 +141,7 @@ router.get('/:id/words/suggest/level/:level', (req, res, next) => {
   const userLevel = +req.params.level;
 
   // TODO: this logic is subject to change as our db grows larger
-  if (userLevel < 7) level = 7;
+  if (userLevel < 5) level = 5;
   else if (userLevel > 8) level =9;
   else level = userLevel+1;
 
@@ -164,8 +164,9 @@ router.get('/:id/words/suggest/level/:level', (req, res, next) => {
       const randomNumber = Math.floor(Math.random() * ((numWords - 1)));
       const cypherCodeForWord = `
         MATCH (user:User {pgId: ${userId}})
-        MATCH (word:Word {level: ${level}})
-          WHERE NOT ((user)-[:USED]-(word))
+        MATCH (word:Word)
+          WHERE NOT ((user)-[:USED]-(word)) AND
+            word.level >= ${level}
         RETURN word
         SKIP ${randomNumber}
         LIMIT 9
@@ -187,7 +188,7 @@ router.get('/:id/words/suggest/other/:level', (req, res, next) => {
   const userLevel = +req.params.level;
 
   // TODO: this logic is subject to change as our db grows larger
-  if (userLevel < 7) level = 7;
+  if (userLevel < 5) level = 5;
   else if (userLevel > 8) level =9;
   else level = userLevel+1;
 
@@ -226,8 +227,10 @@ const getLevel = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.ten_degree);
-        else reject(`Failed to get level for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Level API usage: ', result.headers);
+          resolve(result.body.ten_degree);
+        } else reject(`Failed to get level for: ${wordName}`);
       });
   });
 };
@@ -238,8 +241,10 @@ const getDefinition = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.meaning);
-        else reject(`Failed to get definitions for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Definition API usage: ', result.headers);
+          resolve(result.body.meaning);
+        } else reject(`Failed to get definitions for: ${wordName}`);
       });
   });
 };
@@ -250,8 +255,10 @@ const getExample = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.example);
-        else reject(`Failed to get examples for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Language scoring API usage: ', result.headers);
+          resolve(result.body.example);
+        } else reject(`Failed to get examples for: ${wordName}`);
       });
   });
 };
@@ -262,8 +269,10 @@ const getRelation = wordName => {
       .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
       .header("Accept", "application/json")
       .end(result => {
-        if (result.status === 200) resolve(result.body.relation);
-        else reject(`Failed to get relations for: ${wordName}`);
+        if (result.status === 200) {
+          console.log('Language scoring API usage: ', result.headers);
+          resolve(result.body.relation);
+        } else reject(`Failed to get relations for: ${wordName}`);
       });
   });
 };
