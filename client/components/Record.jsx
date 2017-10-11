@@ -90,24 +90,43 @@ class Record extends Component {
     if (playAnimation) {
       this.tl
         .to(circle, 0.2, {
-          scale: 0,
+          scale: 1.12,
           ease: Power1.easeInOut,
         })
         .to(circle, 0.2, {
-          scale: 1.2,
-          opacity: 0.5,
+          scale: 0.9,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.13, {
+          scale: 1.15,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.19, {
+          scale: 1,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.15, {
+          scale: 1.13,
           ease: Power1.easeInOut,
         })
         .to(circle, 0.2, {
-          scale: 0.2,
+          scale: 0.95,
           ease: Power1.easeInOut,
         })
         .to(circle, 0.2, {
-          scale: 1.3,
-          opacity: 0.5,
+          scale: 1.14,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 1.1,
+          ease: Power1.easeInOut,
+        })
+        .to(circle, 0.2, {
+          scale: 1,
           ease: Power1.easeInOut,
         });
     } else {
+      this.tl.restart();
       this.tl.kill();
     }
   }
@@ -131,7 +150,7 @@ class Record extends Component {
         flexDirection: "column",
       },
       innerDiv: {
-        width: "50%",
+        width: "45%",
         float: "left",
         position: "relative",
       },
@@ -142,16 +161,20 @@ class Record extends Component {
         flexDirection: "column",
       },
       prompt: {
-        marginTop: "2em",
+        marginLeft: 50,
       },
       button: {
         marginTop: 50,
+        marginLeft: 50,
       },
       instructions: {
         color: "#ffffff",
         weight: 500,
         fontStyle: "italic",
         fontFamily: "Roboto",
+        marginTop: 40,
+        marginLeft: 50,
+        marginRight: 50,
       },
       innerCircle: {
         backgroundColor: "#ffffff",
@@ -205,20 +228,20 @@ class Record extends Component {
           <h1 style={styles.instructions}>Speak to me, I'll analyze your speech and help you improve your vocabulary. Click the mic to get started.</h1>
           <Button
             style={styles.button}
-            size="large"
+            size="huge"
             basic
             color="black"
             onClick={this.randomPrompt}>
             What should I say?
           </Button>
-          <h3>{this.state.prompt}</h3>
+          <h3 style={styles.prompt}>{this.state.prompt}</h3>
         </div>
         <div style={styles.innerDiv}>
           <div style={styles.outerCircle} ref="outerCircle" />
           <div style={styles.innerCircle} onClick={this.recordingToggle} />
           <img style={styles.mic} src="mic.svg" onClick={this.recordingToggle} />
           {
-            this.state.showCard
+            this.state.interimResults
               ? resultsCard
               : null
           }

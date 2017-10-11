@@ -274,6 +274,12 @@ class SynonymGame extends Component {
         color: "#2b282e",
         fontSize: "30",
       },
+      scores: {
+        width: 200,
+      },
+      h3: {
+        fontSize: 20,
+      },
     };
 
     const mainWord = (
@@ -307,7 +313,9 @@ class SynonymGame extends Component {
     return (
       <div style={styles.div}>
         <div style={styles.titleContainer}>
-          <div><h3>Your Score: {this.state.currentScore}</h3></div>
+          <div style={styles.scores}>
+            <h3 style={styles.h3}>Your Score: {this.state.currentScore}</h3>
+          </div>
           <div>
             {
               this.state.start
@@ -315,7 +323,9 @@ class SynonymGame extends Component {
                 : startButton
             }
           </div>
-          <div><h3>Your High Score: {this.props.highScore}</h3></div>
+          <div style={styles.scores}>
+            <h3 style={styles.h3}>Your High Score: {this.props.highScore}</h3>
+          </div>
         </div>
         <div>
           {
