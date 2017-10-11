@@ -16,7 +16,7 @@ const style = {
   },
   leftContainer: {
     backgroundColor: "#ffffff",
-    padding: "2em",
+    padding: "3em 2em",
     marginBottom: "4em",
     borderRadius: "10px",
     boxShadow: "0 0 25px rgba(0,0,0,.04)",
@@ -63,9 +63,11 @@ const style = {
     marginTop: '0.6em',
   },
   gameButton: {
-    height: '13.5em',
-    width: '13.5em',
+    height: '100%',
+    width: '90%',
     background: '#2b282e',
+    borderRadius: '20px',
+    boxShadow: " 0px 8px 5px -5px rgba(0,0,0,0.4)",
   },
   gameIcon: {
     margin: 'auto',
