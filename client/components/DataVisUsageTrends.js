@@ -24,6 +24,11 @@ class DataVisUsageTrends extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.styles = {
+      svg: {
+        overflow: "visible",
+      },
+    };
   }
 
   componentDidMount() {
@@ -37,6 +42,28 @@ class DataVisUsageTrends extends Component {
   // }
 
   createBubbleStructure(data) {
+    const userSampleWords = [
+      { id: 1, word: "test", level: 1, numUsed: 30, year: 2015 },
+      { id: 2, word: "magnanimous", level: 2, numUsed: 40, year: 2016 },
+      { id: 3, word: "daddy", level: 3, numUsed: 50, year: 2017 },
+    ];
+
+    const bubblesData = [];
+    const userWords = data.userWords;
+    // 2015 nyeCusp = 1420092000000
+    // 2016 nyeballdrop = 1451628000000
+    // 2017 nyeballdrop = 1483250400000
+    // 2018 nyeballdrop = 1514786400000
+    Object.entries(userWords).forEach(function (entry, index) {
+      bubblesData.push({
+        id: index,
+        word: entry[0],
+        level: entry[1].level,
+        numUsed: entry[1].numUsed,
+
+      });
+    });
+
     let level1Words = [];
     let level2Words = [];
     let level3Words = [];
@@ -86,11 +113,7 @@ class DataVisUsageTrends extends Component {
     if (!level10Words.length) level10Words = [{ "name": "You have not used any words from level 10 yet!", "size": 10 }];
     childrenWords.push({ "name": "Level 1", "children": level1Words }, { "name": "Level 2", "children": level2Words }, { "name": "Level 3", "children": level3Words }, { "name": "Level 4", "children": level4Words }, { "name": "Level 5", "children": level5Words }, { "name": "Level 6", "children": level6Words }, { "name": "Level 7", "children": level7Words }, { "name": "Level 8", "children": level8Words }, { "name": "Level 9", "children": level9Words }, { "name": "Level 10", "children": level10Words });
 
-    const root = {
-      "name": "wordCloud",
-      "children": childrenWords,
-    };
-    return root;
+    return bubblesData;
   }
 
   createBubbles(rootParam) {
@@ -118,7 +141,7 @@ class DataVisUsageTrends extends Component {
       function floatingTooltip(tooltipId, width) {
         // Local variable to hold tooltip div for
         // manipulation in other functions.
-        var tt = d3.select('.svgBody')
+        var tt = d3.select('body')
           .append('div')
           .attr('class', 'tooltip')
           .attr('id', tooltipId)
@@ -201,16 +224,16 @@ class DataVisUsageTrends extends Component {
       var center = { x: width / 2, y: height / 2 };
 
       var yearCenters = {
-        2008: { x: width / 3, y: height / 2 },
-        2009: { x: width / 2, y: height / 2 },
-        2010: { x: 2 * width / 3, y: height / 2 }
+        2015: { x: width / 3, y: height / 2 },
+        2016: { x: width / 2, y: height / 2 },
+        2017: { x: 2 * width / 3, y: height / 2 }
       };
 
       // X locations of the year titles.
       var yearsTitleX = {
-        2008: 160,
-        2009: width / 2,
-        2010: width - 160
+        2015: 160,
+        2016: width / 2,
+        2017: width - 160
       };
 
       // @v4 strength to apply to the position forces
@@ -326,10 +349,10 @@ class DataVisUsageTrends extends Component {
 
         // Create a SVG element inside the provided selector
         // with desired size.
-        svg = d3.select(selector)
-          .append('svg')
-          .attr('width', width)
-          .attr('height', height);
+        svg = d3.select(selector);
+        // .append('svg')
+        // .attr('width', width)
+        // .attr('height', height);
 
         // Bind nodes data to what will become DOM elements to represent them.
         bubbles = svg.selectAll('.bubble')
@@ -384,6 +407,7 @@ class DataVisUsageTrends extends Component {
        * x force.
        */
       function nodeYearPos(d) {
+        console.log(d);
         return yearCenters[d.year].x;
       }
 
@@ -504,7 +528,7 @@ class DataVisUsageTrends extends Component {
      */
 
     var myBubbleChart = bubbleChart();
-    myBubbleChart('#vis', rootParam);
+    myBubbleChart(this.svgRoot, rootParam);
 
     /*
      * Function called once data is loaded from CSV.
@@ -568,6 +592,7 @@ class DataVisUsageTrends extends Component {
 
   render() {
     console.log(this.props.userWords);
+    const svgLength = Math.min(window.innerHeight * 0.9, window.innerWidth * 0.9);
     return (
       <div className="svgBody">
         <div className="container">
@@ -577,6 +602,9 @@ class DataVisUsageTrends extends Component {
           </div>
           <div id="vis">
             <svg
+              width={svgLength}
+              height={svgLength}
+              style={this.styles.svg}
               ref={svg => this.svgRoot = svg}
             />
           </div>
