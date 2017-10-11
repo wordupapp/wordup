@@ -141,7 +141,7 @@ router.get('/:id/words/suggest/level/:level', (req, res, next) => {
   const userLevel = +req.params.level;
 
   // TODO: this logic is subject to change as our db grows larger
-  if (userLevel < 7) level = 7;
+  if (userLevel < 5) level = 5;
   else if (userLevel > 8) level =9;
   else level = userLevel+1;
 
@@ -164,8 +164,9 @@ router.get('/:id/words/suggest/level/:level', (req, res, next) => {
       const randomNumber = Math.floor(Math.random() * ((numWords - 1)));
       const cypherCodeForWord = `
         MATCH (user:User {pgId: ${userId}})
-        MATCH (word:Word {level: ${level}})
-          WHERE NOT ((user)-[:USED]-(word))
+        MATCH (word:Word)
+          WHERE NOT ((user)-[:USED]-(word)) AND
+            word.level >= ${level}
         RETURN word
         SKIP ${randomNumber}
         LIMIT 9
@@ -187,7 +188,7 @@ router.get('/:id/words/suggest/other/:level', (req, res, next) => {
   const userLevel = +req.params.level;
 
   // TODO: this logic is subject to change as our db grows larger
-  if (userLevel < 7) level = 7;
+  if (userLevel < 5) level = 5;
   else if (userLevel > 8) level =9;
   else level = userLevel+1;
 
