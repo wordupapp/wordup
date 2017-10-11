@@ -67,14 +67,14 @@ const styles = {
     marginTop: "4em",
   },
   selected: {
-    borderStyle: "double",
+    borderStyle: "solid",
     borderColor: "rgb(180, 19, 236)",
     borderRadius: "5px",
     borderWidth: "thick",
     padding: "9px",
   },
   showCorrect: {
-    borderStyle: "double",
+    borderStyle: "solid",
     borderColor: "springgreen",
     borderRadius: "5px",
     borderWidth: "thick",
