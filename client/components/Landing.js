@@ -17,7 +17,7 @@ const containerStyles = {
   flexWrap: "wrap",
   flexDirection: "column",
   marginTop: "auto",
-  padding: "0px 0px 300px 100px",
+  padding: "0px 0px 500px 100px",
 };
 
 const subContainerStyles = {

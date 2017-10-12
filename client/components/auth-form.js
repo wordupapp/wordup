@@ -12,7 +12,7 @@ const authStyles = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  margin: "auto",
+  margin: "0em auto 15em",
 };
 
 /**
