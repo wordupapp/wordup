@@ -18,7 +18,7 @@ class SynonymGame extends Component {
       currentWord: '',
       level: 7,
       questionNum: 0,
-      timer: 30,
+      timer: 15,
       start: false,
       gameEnded: false,
     };
@@ -40,7 +40,7 @@ class SynonymGame extends Component {
   }
 
   componentWillMount() {
-    for (let i = 0; i <= 5; i += 1) {
+    for (let i = 1; i <= 5; i += 1) {
       this.props.dispatchGetRelatedWords(this.state.level);
     }
   }
@@ -85,7 +85,7 @@ class SynonymGame extends Component {
 
   applyAnimationsToWords() {
     this.state.gameWords.forEach(word => {
-      const randomDelay = random(0, 10, true);
+      const randomDelay = random(0, 4, true);
       const currentWord = this.refs[word.word];
       const tl = new TimelineMax({ repeat: -1 });
       const tl2 = new TimelineMax({ repeat: -1 });
@@ -105,7 +105,7 @@ class SynonymGame extends Component {
         });
       tl2
         .to(currentWord, 35, {
-          y: `-=${((window.innerHeight * 0.7) - 50)}`,
+          y: `-=${((window.innerHeight * 0.4) - 50)}`,
           delay: randomDelay,
         });
     });
@@ -265,20 +265,22 @@ class SynonymGame extends Component {
   nextQuestion() {
     const wordArr = Object.keys(this.props.gameWords);
     const newQuestNum = this.state.questionNum + 1;
-    if (wordArr.length < newQuestNum) {
+    if (wordArr.length === newQuestNum) {
       this.setState({
         gameEnded: true,
+        currentWord: '',
       });
+      clearInterval(this.timer);
     } else {
       this.setState({
         questionNum: newQuestNum,
         currentWord: wordArr[newQuestNum],
-        timer: 30,
+        timer: 15,
       });
       const wordsForLevel = this.generateWords();
       this.setState({
         gameWords: wordsForLevel,
-      });
+      }, this.applyAnimationsToWords);
     }
   }
 
@@ -307,6 +309,7 @@ class SynonymGame extends Component {
       div: {
         backgroundColor: "#ffd600",
         textAlign: "center",
+        height: "100vh",
       },
       timer: {
         color: "#2b282e",
@@ -356,7 +359,6 @@ class SynonymGame extends Component {
     );
 
     const words = this.state.gameWords;
-
     return (
       <div style={styles.div}>
         <div style={styles.titleContainer}>
@@ -386,23 +388,21 @@ class SynonymGame extends Component {
               :
               <Stage ref="stage" width={window.innerWidth} height={window.innerHeight * 0.7}>
                 <Layer ref="layer">
-                  {
-                    <Text
-                      ref="mainWord"
-                      text={this.state.currentWord}
-                      fontFamily="Fredoka One"
-                      fontSize={62}
-                      fill="#ffffff"
-                      x={this.calculateMainWordPosition().x}
-                      y={this.calculateMainWordPosition().y}
-                    />
-                  }
+                  <Text
+                    ref="mainWord"
+                    text={this.state.currentWord}
+                    fontFamily="Fredoka One"
+                    fontSize={62}
+                    fill="#ffffff"
+                    x={this.calculateMainWordPosition().x}
+                    y={this.calculateMainWordPosition().y}
+                  />
                   {
                     words && words.map((word, index) => {
                       return (
                         <Text
                           ref={word.word}
-                          key={index}
+                          key={word.word}
                           text={word.word}
                           fontFamily="Roboto"
                           opacity={0}

@@ -19,7 +19,7 @@ const style = {
   },
   leftContainer: {
     backgroundColor: "#ffffff",
-    padding: "2em",
+    padding: "3em 2em",
     marginBottom: "4em",
     borderRadius: "10px",
     boxShadow: "0 0 25px rgba(0,0,0,.04)",
