@@ -18,7 +18,10 @@ const Main = (props) => {
       flexDirection: 'column',
     },
     containerFull: {
-      marginTop: '6rem',
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      margin: '6em auto 0',
       flex: '1',
       display: 'flex',
       flexDirection: 'column',
