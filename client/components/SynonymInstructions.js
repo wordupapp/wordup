@@ -5,12 +5,13 @@ export default function SynonymInstructions() {
     div: {
       backgroundColor: "#ffffff",
       height: "100%",
-      width: "75%",
+      width: "50%",
       color: '#2b282e',
       fontSize: 20,
       margin: "auto",
       borderRadius: 15,
       padding: 50,
+      boxShadow: "0px 0px 7px rgba(0,0,0,0.1)"
     },
   };
 

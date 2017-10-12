@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Icon, Button, Message } from 'semantic-ui-react';
 import { sendWords } from '../store/userWords';
 import { TweenLite, Power1, TimelineMax } from 'gsap';
@@ -19,6 +20,7 @@ class Record extends Component {
       prompt: '',
       interimResults: '',
       showCard: false,
+      dirty: false,
     };
     this.recordingToggle = this.recordingToggle.bind(this);
     this.randomPrompt = this.randomPrompt.bind(this);
@@ -47,16 +49,14 @@ class Record extends Component {
         dispatchSendWords(speechResult, user.id);
       }
       let resultsToPrint = home.state.interimResults.concat(speechResult);
-      console.log('all results', resultsToPrint.length)
       if (resultsToPrint.length > 250) {
         const beginCutIndex = resultsToPrint.length - 250;
-        console.log('begincutindex', beginCutIndex);
         resultsToPrint = resultsToPrint.slice(beginCutIndex);
       }
       home.setState({
         interimResults: resultsToPrint,
+        dirty: true,
       });
-      console.log('interimResults', home.state.interimResults.length)
     };
 
     recognition.onerror = function (event) {
@@ -196,6 +196,7 @@ class Record extends Component {
         top: 25,
         left: 175,
         cursor: "pointer",
+        boxShadow: "0px 0px 7px rgba(0,0,0,0.1)",
       },
       outerCircle: {
         width: 350,
@@ -217,6 +218,14 @@ class Record extends Component {
         borderRadius: 10,
         padding: 20,
         textAlign: "center",
+        boxShadow: "0px 0px 7px rgba(0,0,0,0.1)",
+      },
+      link: {
+        textDecoration: "none",
+        color: "#2b282e",
+      },
+      h3: {
+        marginBottom: 11,
       },
     };
 
@@ -230,6 +239,29 @@ class Record extends Component {
           }
         </h2>
         <h3>{this.state.interimResults}</h3>
+      </div>
+    );
+
+    const afterRecordCard = (
+      <div style={styles.card}>
+        <h2>Done?</h2>
+        <h3>Make another Recording! Just click the mic.</h3>
+        <Link style={styles.link} to={"/data/1"}>
+          <h3 style={styles.h3}>Check out your stats</h3>
+        </Link>
+        <Link style={styles.link} to={"/newwords"}>
+          <h3 style={styles.h3}>Learn some new words</h3>
+        </Link>
+      </div>
+    );
+
+    const card = (
+      <div>
+        {
+          this.state.recording
+            ? resultsCard
+            : afterRecordCard
+        }
       </div>
     );
 
@@ -252,8 +284,8 @@ class Record extends Component {
           <div style={styles.innerCircle} onClick={this.recordingToggle} />
           <img style={styles.mic} src="mic.svg" onClick={this.recordingToggle} />
           {
-            this.state.interimResults
-              ? resultsCard
+            this.state.dirty
+              ? card
               : null
           }
         </div>
