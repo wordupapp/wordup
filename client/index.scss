@@ -24,7 +24,7 @@ body {
   .ui.purple.tiny.progress {
     width: 100%;
   }
-  
+
   .node {
   cursor: pointer;
   }
@@ -50,17 +50,7 @@ body {
   .node--leaf {
     pointer-events: none;
   }
-  
 
-  // nav a {
-  //   display: inline-block;
-  //   margin: 1em;
-  // }
-
-  // form div {
-  //   margin: 1em;
-  //   display: inline-block;
-  // }
 
   @media (min-width: 500px)  {
     .definitions-container {

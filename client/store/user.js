@@ -37,7 +37,7 @@ export const auth = (email, password, method, name) =>
       .then(res => {
         dispatch(getUser(res.data));
         if (res.data) dispatch(getWords(res.data.id));
-        history.push('/home');
+        history.push('/');
       })
       .catch(error =>
         dispatch(getUser({error})));
