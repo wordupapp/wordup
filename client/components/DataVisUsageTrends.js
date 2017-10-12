@@ -275,7 +275,7 @@ class DataVisUsageTrends extends Component {
       // @v4 scales now have a flattened naming scheme
       var fillColor = d3.scaleOrdinal()
         .domain(['low', 'medium', 'high'])
-        .range(['#d84b2a', '#beccae', '#7aa25c']);
+        .range(['#ffd600', '#ffff52', '#9d46ff']);
 
 
       /*
@@ -478,10 +478,12 @@ class DataVisUsageTrends extends Component {
 
         var content = '<span class="name"></span><span class="value">' +
           d.word +
-          '</span><br/>' +
+          '</span><br/><br/>' +
           `<span class="name"># of times said in ${d.year}: </span><span class="value">` + d.numUsedYear +
           '</span><br/>' +
           '<span class="name"># of times said ever: </span><span class="value">' + d.numUsedEver +
+          '</span><br/>' +
+          '<span class="name">Level: </span><span class="value">' + d.level +
           '</span>';
 
         tooltip.showTooltip(content, d3.event);
