@@ -37,9 +37,9 @@ class DataVisUsageTrends extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.createBubbles(this.createBubbleStructure(nextProps));
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   this.createBubbles(this.createBubbleStructure(nextProps));
+  // }
 
   createBubbleStructure(data) {
     // const userSampleWords = [
@@ -123,8 +123,8 @@ class DataVisUsageTrends extends Component {
     const componentThis = this;
     function bubbleChart() {
       // Constants for sizing
-      var width = 940;
-      var height = 600;
+      var width = 1100;
+      var height = 702;
 
       // tooltip for mouseover functionality
       /*
@@ -216,7 +216,7 @@ class DataVisUsageTrends extends Component {
 
       // Locations to move bubbles towards, depending
       // on which view mode is selected.
-      var center = { x: width / 2, y: height / 2 };
+      var center = { x: width / 2 + 100, y: height / 2 + 100 };
 
       var yearCenters = {
         2015: { x: width / 3, y: height / 2 },
@@ -226,13 +226,13 @@ class DataVisUsageTrends extends Component {
 
       // X locations of the year titles.
       var yearsTitleX = {
-        2015: 160,
-        2016: width / 2,
-        2017: width - 160
+        2015: 250,
+        2016: width / 2 + 50,
+        2017: width - 150
       };
 
       // @v4 strength to apply to the position forces
-      var forceStrength = 0.03;
+      var forceStrength = 0.05;
 
       // These will be set in create_nodes and create_vis
       var svg = null;
@@ -476,15 +476,12 @@ class DataVisUsageTrends extends Component {
         // change outline to indicate hover state.
         d3.select(this).attr('stroke', 'black');
 
-        var content = '<span class="name">Word: </span><span class="value">' +
+        var content = '<span class="name"></span><span class="value">' +
           d.word +
           '</span><br/>' +
-          '<span class="name">Usage: </span><span class="value">' + d.numUsedYear +
+          `<span class="name"># of times said in ${d.year}: </span><span class="value">` + d.numUsedYear +
           '</span><br/>' +
-          '<span class="name">All-time use: </span><span class="value">' + d.numUsedEver +
-          '</span><br/>' +
-          '<span class="name">Year: </span><span class="value">' +
-          d.year +
+          '<span class="name"># of times said ever: </span><span class="value">' + d.numUsedEver +
           '</span>';
 
         tooltip.showTooltip(content, d3.event);
@@ -596,13 +593,13 @@ class DataVisUsageTrends extends Component {
       <div className="svgBody">
         <div className="container">
           <div id="toolbar">
-            <a href="#" id="all" className="button active">All Grants</a>
-            <a href="#" id="year" className="button">Grants By Year</a>
+            <a href="#" id="all" className="button active">All Words</a>
+            <a href="#" id="year" className="button">Usage By Year</a>
           </div>
           <div id="vis">
             <svg
-              height={svgLength}
-              width={svgLength}
+              height="702"
+              width="1100"
               style={this.styles.svg}
               ref={svg => this.svgRoot = svg}
             />

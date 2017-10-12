@@ -2,7 +2,7 @@ body {
   font-family: 'Roboto', sans-serif;
 
   a {
-    text-decoration: none;
+    // text-decoration: none;
   }
 
   label {
@@ -57,7 +57,7 @@ body {
 
 .container {
   max-width: 900px;
-  margin: auto;
+  // margin: auto;
 }
 
 .button {
@@ -120,17 +120,6 @@ body {
 .footer {
   text-align: center;
 }
-  
-
-  // nav a {
-  //   display: inline-block;
-  //   margin: 1em;
-  // }
-
-  // form div {
-  //   margin: 1em;
-  //   display: inline-block;
-  // }
 
   @media (min-width: 500px)  {
     .definitions-container {
