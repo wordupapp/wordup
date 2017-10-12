@@ -68,7 +68,7 @@ class DataVisPanel extends Component {
           </Grid.Column>
           <Grid.Column stretched width={12}>
             {(this.props.location.pathname === '/data/1' || this.props.location.pathname === '/data') && <DataVisWordCloud />}
-            {/* {this.props.location.pathname === '/data/2' && <DataVisUsageTrends />} */}
+             {this.props.location.pathname === '/data/2' && <DataVisUsageTrends />}
           </Grid.Column>
         </Grid>
       </Container>
