@@ -33,86 +33,80 @@ class DataVisUsageTrends extends Component {
 
   componentDidMount() {
     if ((Object.keys(this.props.userWords)).length) {
-      this.createBubbles(this.props.userWords);
+      this.createBubbles(this.createBubbleStructure(this.props));
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   this.createBubbles(nextProps.userWords);
-  // }
+  componentWillReceiveProps(nextProps) {
+    this.createBubbles(this.createBubbleStructure(nextProps));
+  }
 
   createBubbleStructure(data) {
-    const userSampleWords = [
-      { id: 1, word: "test", level: 1, numUsed: 30, year: 2015 },
-      { id: 2, word: "magnanimous", level: 2, numUsed: 40, year: 2016 },
-      { id: 3, word: "daddy", level: 3, numUsed: 50, year: 2017 },
-    ];
+    // const userSampleWords = [
+    //   { id: 1, word: "test", level: 1, numUsed: 30, year: 2015 },
+    //   { id: 2, word: "magnanimous", level: 2, numUsed: 40, year: 2016 },
+    //   { id: 3, word: "daddy", level: 3, numUsed: 50, year: 2017 },
+    // ];
 
     const bubblesData = [];
+    // const bubblesData2015 = [];
+    // const bubblesData2016 = [];
+    // const bubblesData2017 = [];
     const userWords = data.userWords;
-    // 2015 nyeCusp = 1420092000000
-    // 2016 nyeballdrop = 1451628000000
-    // 2017 nyeballdrop = 1483250400000
-    // 2018 nyeballdrop = 1514786400000
-    Object.entries(userWords).forEach(function (entry, index) {
-      // if (entry[1].)
-      bubblesData.push({
-        id: index,
-        word: entry[0],
-        level: entry[1].level,
-        numUsed: entry[1].numUsed,
+    // const newYearMilliseconds2015 = 1420092000000;
+    const newYearMilliseconds2016 = 1451628000000;
+    const newYearMilliseconds2017 = 1483250400000;
+    const newYearMilliseconds2018 = 1514786400000;
+    let bubbleId = 0;
 
+    Object.entries(userWords).forEach(function (entry, entryIndex) {
+      console.log(entry);
+      let useCounter2015 = 0;
+      let useCounter2016 = 0;
+      let useCounter2017 = 0;
+
+      entry[1].dates.forEach(function (date) {
+        if (date < newYearMilliseconds2016) useCounter2015++;
+        else if (date < newYearMilliseconds2017 && date >= newYearMilliseconds2016) useCounter2016++;
+        else if (date < newYearMilliseconds2018 && date >= newYearMilliseconds2017) useCounter2017++;
       });
-    });
 
-    let level1Words = [];
-    let level2Words = [];
-    let level3Words = [];
-    let level4Words = [];
-    let level5Words = [];
-    let level6Words = [];
-    let level7Words = [];
-    let level8Words = [];
-    let level9Words = [];
-    let level10Words = [];
+      if (useCounter2015) {
+        bubblesData.push({
+          id: ++bubbleId,
+          word: entry[0],
+          group: 1,
+          level: entry[1].level,
+          numUsedEver: entry[1].numUsed,
+          numUsedYear: useCounter2015,
+          year: 2015,
+        });
+      }
 
-    var rootWords = Object.entries(data.userWords);
-    rootWords.forEach(function (word) {
-      if (word[1].level === 1) {
-        level1Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 2) {
-        level2Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 3) {
-        level3Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 4) {
-        level4Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 5) {
-        level5Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 6) {
-        level6Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 7) {
-        level7Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 8) {
-        level8Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 9) {
-        level9Words.push({ "name": word[0], "size": word[1].numUsed });
-      } else if (word[1].level === 10) {
-        level10Words.push({ "name": word[0], "size": word[1].numUsed });
+      if (useCounter2016) {
+        bubblesData.push({
+          id: ++bubbleId,
+          word: entry[0],
+          group: 2,
+          level: entry[1].level,
+          numUsedEver: entry[1].numUsed,
+          numUsedYear: useCounter2016,
+          year: 2016,
+        });
+      }
+
+      if (useCounter2017) {
+        bubblesData.push({
+          id: ++bubbleId,
+          word: entry[0],
+          group: 3,
+          level: entry[1].level,
+          numUsedEver: entry[1].numUsed,
+          numUsedYear: useCounter2017,
+          year: 2017,
+        });
       }
     });
-
-    const childrenWords = [];
-    if (!level1Words.length) level1Words = [{ "name": "You have not used any words from level 1 yet!", "size": 10 }];
-    if (!level2Words.length) level2Words = [{ "name": "You have not used any words from level 2 yet!", "size": 10 }];
-    if (!level3Words.length) level3Words = [{ "name": "You have not used any words from level 3 yet!", "size": 10 }];
-    if (!level4Words.length) level4Words = [{ "name": "You have not used any words from level 4 yet!", "size": 10 }];
-    if (!level5Words.length) level5Words = [{ "name": "You have not used any words from level 5 yet!", "size": 10 }];
-    if (!level6Words.length) level6Words = [{ "name": "You have not used any words from level 6 yet!", "size": 10 }];
-    if (!level7Words.length) level7Words = [{ "name": "You have not used any words from level 7 yet!", "size": 10 }];
-    if (!level8Words.length) level8Words = [{ "name": "You have not used any words from level 8 yet!", "size": 10 }];
-    if (!level9Words.length) level9Words = [{ "name": "You have not used any words from level 9 yet!", "size": 10 }];
-    if (!level10Words.length) level10Words = [{ "name": "You have not used any words from level 10 yet!", "size": 10 }];
-    childrenWords.push({ "name": "Level 1", "children": level1Words }, { "name": "Level 2", "children": level2Words }, { "name": "Level 3", "children": level3Words }, { "name": "Level 4", "children": level4Words }, { "name": "Level 5", "children": level5Words }, { "name": "Level 6", "children": level6Words }, { "name": "Level 7", "children": level7Words }, { "name": "Level 8", "children": level8Words }, { "name": "Level 9", "children": level9Words }, { "name": "Level 10", "children": level10Words });
 
     return bubblesData;
   }
@@ -299,7 +293,7 @@ class DataVisUsageTrends extends Component {
       function createNodes(rawData) {
         // Use the max total_amount in the data as the max in the scale's domain
         // note we have to ensure the total_amount is a number.
-        var maxAmount = d3.max(rawData, function (d) { return +d.total_amount; });
+        var maxAmount = d3.max(rawData, function (d) { return +d.numUsedYear; });
 
         // Sizes bubbles based on area.
         // @v4: new flattened scale names.
@@ -314,12 +308,14 @@ class DataVisUsageTrends extends Component {
         var myNodes = rawData.map(function (d) {
           return {
             id: d.id,
-            radius: radiusScale(+d.total_amount),
-            value: +d.total_amount,
-            name: d.grant_title,
-            org: d.organization,
+            radius: radiusScale(+d.numUsedYear),
+            value: d.numUsedYear,
+            word: d.word,
             group: d.group,
-            year: d.start_year,
+            level: d.level,
+            numUsedEver: d.numUsedEver,
+            numUsedYear: d.numUsedYear,
+            year: d.year,
             x: Math.random() * 900,
             y: Math.random() * 800
           };
@@ -480,10 +476,12 @@ class DataVisUsageTrends extends Component {
         // change outline to indicate hover state.
         d3.select(this).attr('stroke', 'black');
 
-        var content = '<span class="name">Title: </span><span class="value">' +
-          d.name +
+        var content = '<span class="name">Word: </span><span class="value">' +
+          d.word +
           '</span><br/>' +
-          '<span class="name">Amount: </span><span class="value">' + d.value +
+          '<span class="name">Usage: </span><span class="value">' + d.numUsedYear +
+          '</span><br/>' +
+          '<span class="name">All-time use: </span><span class="value">' + d.numUsedEver +
           '</span><br/>' +
           '<span class="name">Year: </span><span class="value">' +
           d.year +
@@ -603,8 +601,8 @@ class DataVisUsageTrends extends Component {
           </div>
           <div id="vis">
             <svg
-              width={svgLength}
               height={svgLength}
+              width={svgLength}
               style={this.styles.svg}
               ref={svg => this.svgRoot = svg}
             />
@@ -620,8 +618,8 @@ class DataVisUsageTrends extends Component {
  */
 const mapState = (state) => {
   return {
-    userWords: [{ id: 1, total_amount: 30, grant_title: "Grant Title 1", organization: "Sample Org 1", group: "Sample Group 1", start_year: 2015 }, { id: 2, total_amount: 40, grant_title: "Grant Title 2", organization: "Sample Org 2", group: "Sample Group 2", start_year: 2016 }, { id: 3, total_amount: 50, grant_title: "Grant Title 3", organization: "Sample Org 3", group: "Sample Group 3", start_year: 2017 }],
-    // userWords: state.userWords,
+    // userWords: [{ id: 1, total_amount: 30, grant_title: "Grant Title 1", organization: "Sample Org 1", group: "Sample Group 1", start_year: 2015 }, { id: 2, total_amount: 40, grant_title: "Grant Title 2", organization: "Sample Org 2", group: "Sample Group 2", start_year: 2016 }, { id: 3, total_amount: 50, grant_title: "Grant Title 3", organization: "Sample Org 3", group: "Sample Group 3", start_year: 2017 }],
+    userWords: state.userWords,
   };
 };
 
@@ -635,5 +633,5 @@ export default withRouter(connect(mapState, mapDispatch)(DataVisUsageTrends));
  * PROP TYPES
  */
 DataVisUsageTrends.propTypes = {
-  userWords: PropTypes.array.isRequired,
+  userWords: PropTypes.object.isRequired,
 };
