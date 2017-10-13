@@ -65,46 +65,48 @@ class DataVisUsageTrends extends Component {
       let useCounter2016 = 0;
       let useCounter2017 = 0;
 
-      entry[1].dates.forEach(function (date) {
-        if (date < newYearMilliseconds2016) useCounter2015++;
-        else if (date < newYearMilliseconds2017 && date >= newYearMilliseconds2016) useCounter2016++;
-        else if (date < newYearMilliseconds2018 && date >= newYearMilliseconds2017) useCounter2017++;
-      });
-
-      if (useCounter2015) {
-        bubblesData.push({
-          id: ++bubbleId,
-          word: entry[0],
-          group: 1,
-          level: entry[1].level,
-          numUsedEver: entry[1].numUsed,
-          numUsedYear: useCounter2015,
-          year: 2015,
+      if (entry[1].level) {
+        entry[1].dates.forEach(function (date) {
+          if (date < newYearMilliseconds2016) useCounter2015++;
+          else if (date < newYearMilliseconds2017 && date >= newYearMilliseconds2016) useCounter2016++;
+          else if (date < newYearMilliseconds2018 && date >= newYearMilliseconds2017) useCounter2017++;
         });
-      }
 
-      if (useCounter2016) {
-        bubblesData.push({
-          id: ++bubbleId,
-          word: entry[0],
-          group: 2,
-          level: entry[1].level,
-          numUsedEver: entry[1].numUsed,
-          numUsedYear: useCounter2016,
-          year: 2016,
-        });
-      }
+        if (useCounter2015) {
+          bubblesData.push({
+            id: ++bubbleId,
+            word: entry[0],
+            group: 1,
+            level: entry[1].level,
+            numUsedEver: entry[1].numUsed,
+            numUsedYear: useCounter2015,
+            year: 2015,
+          });
+        }
 
-      if (useCounter2017) {
-        bubblesData.push({
-          id: ++bubbleId,
-          word: entry[0],
-          group: 3,
-          level: entry[1].level,
-          numUsedEver: entry[1].numUsed,
-          numUsedYear: useCounter2017,
-          year: 2017,
-        });
+        if (useCounter2016) {
+          bubblesData.push({
+            id: ++bubbleId,
+            word: entry[0],
+            group: 2,
+            level: entry[1].level,
+            numUsedEver: entry[1].numUsed,
+            numUsedYear: useCounter2016,
+            year: 2016,
+          });
+        }
+
+        if (useCounter2017) {
+          bubblesData.push({
+            id: ++bubbleId,
+            word: entry[0],
+            group: 3,
+            level: entry[1].level,
+            numUsedEver: entry[1].numUsed,
+            numUsedYear: useCounter2017,
+            year: 2017,
+          });
+        }
       }
     });
 
