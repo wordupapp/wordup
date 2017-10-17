@@ -3,98 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { Table, Header, Grid, Container, Icon, Button, Label } from 'semantic-ui-react';
-
-const style = {
-  all: {
-    width: "100%",
-    backgroundColor: "#e9e9e9",
-    flexGrow: 1,
-  },
-  container: {
-    padding: "2em 0em 4em",
-    minWidth: "65%",
-  },
-  leftContainer: {
-    backgroundColor: "#ffffff",
-    padding: "3em 2em",
-    marginBottom: "4em",
-    borderRadius: "10px",
-    boxShadow: "0 0 25px rgba(0,0,0,.04)",
-    textAlign: "center",
-  },
-  rightContainerTop: {
-    backgroundColor: "#ffffff",
-    maxHeight: "380px",
-    minWidth: "330px",
-    padding: "2em",
-    marginBottom: "3em",
-    borderRadius: "10px",
-    boxShadow: "0 0 25px rgba(0,0,0,.04)",
-    textAlign: "center",
-  },
-  rightContainerBot: {
-    backgroundColor: "#ffffff",
-    minWidth: "330px",
-    padding: "2em",
-    marginTop: "-2em",
-    marginBottom: "3em",
-    borderRadius: "10px",
-    boxShadow: "0 0 25px rgba(0,0,0,.04)",
-    textAlign: "center",
-  },
-  title: {
-    fontSize: '4em',
-    marginTop: '0.5em',
-    fontFamily: "Fredoka One",
-    fontWeight: 500,
-  },
-  subTitle: {
-    fontSize: '2em',
-    fontFamily: "Fredoka One",
-    fontWeight: 200,
-  },
-  gameGroup: {
-    margin: '2.5em auto 1em',
-  },
-  buttonCol: {
-    margin: '0.6em auto',
-  },
-  gameContainer: {
-    marginTop: '0.6em',
-  },
-  gameButton: {
-    height: '100%',
-    width: '90%',
-    background: '#2b282e',
-    borderRadius: '20px',
-    boxShadow: " 0px 8px 5px -5px rgba(0,0,0,0.4)",
-  },
-  gameIcon: {
-    margin: 'auto',
-    color: '#ffd600',
-  },
-  gameLabel: {
-    margin: '0.8em auto 0 auto',
-    color: '#ffd600',
-  },
-  levelContainer: {
-    marginTop: '6em',
-    marginBottom: '-5em',
-  },
-  levelIcon: {
-    fontSize: '11em',
-    display: 'inline-block',
-    position: 'relative',
-    color: '#ffd600',
-  },
-  levelNumber: {
-    fontWeight: 100,
-    fontSize: '0.6em',
-  },
-  userCol: {
-    minWidth: '8em',
-  },
-};
+import styles from './styles';
 
 const Games = props => {
   const { level } = props;
@@ -110,18 +19,18 @@ const Games = props => {
   ];
 
   const gameButtons = games.map(game => (
-    <Grid.Column key={game.key} style={style.buttonCol}>
+    <Grid.Column key={game.key} style={styles.buttonCol}>
       <Button
         icon as={Link}
         to={`/games/${game.ref}`}
-        style={style.gameButton}>
-        <Container style={style.gameContainer}>
+        style={styles.gameButton}>
+        <Container style={styles.gameContainer}>
           <Icon
-            style={style.gameIcon}
+            style={styles.gameIcon}
             name={game.icon}
             size="massive"
           />
-          <Header as="h3" style={style.gameLabel}>
+          <Header as="h3" style={styles.gameLabel}>
             {game.name}
           </Header>
         </Container>
@@ -130,19 +39,19 @@ const Games = props => {
   ));
 
   const userLevelBlock = (
-    <Container style={style.rightContainerTop}>
-      <Header as="h2" style={style.subTitle}>
+    <Container style={styles.rightContainerTop}>
+      <Header as="h2" style={styles.subTitle}>
         {'Your level: '}
         <Label
           circular
           color="red"
-          style={style.levelNumber}>
+          style={styles.levelNumber}>
           {level}
         </Label>
       </Header>
-      <Container style={style.levelContainer}>
+      <Container style={styles.levelContainer}>
         <Icon
-          style={style.levelIcon}
+          style={styles.levelIcon}
           name={'trophy'}
         />
       </Container>
@@ -203,20 +112,20 @@ const Games = props => {
   ))
 
   return (
-    <Container style={style.all}>
+    <Container style={styles.all}>
       <Grid
         container
         stackable
         stretched
         relaxed
-        style={style.container}>
+        style={styles.container}>
         <Grid.Row>
           <Grid.Column width={11}>
-            <Container style={style.leftContainer}>
-              <Header as="h1" style={style.title}>
+            <Container style={styles.leftContainer}>
+              <Header as="h1" style={styles.title}>
                 Playground
               </Header>
-              <Grid columns={3} doubling style={style.gameGroup}>
+              <Grid columns={3} doubling style={styles.gameGroup}>
                 {gameButtons}
               </Grid>
             </Container>
@@ -226,14 +135,14 @@ const Games = props => {
               {userLevelBlock}
             </Grid.Row>
             <Grid.Row>
-              <Container style={style.rightContainerBot}>
-                <Header as="h2" style={style.subTitle}>Top scores</Header>
+              <Container style={styles.rightContainerBot}>
+                <Header as="h2" style={styles.subTitle}>Top scores</Header>
                 <Table color="red">
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>Rank</Table.HeaderCell>
                       <Table.HeaderCell>Score</Table.HeaderCell>
-                      <Table.HeaderCell style={style.userCol}>User</Table.HeaderCell>
+                      <Table.HeaderCell style={styles.userCol}>User</Table.HeaderCell>
                       <Table.HeaderCell>Level</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>

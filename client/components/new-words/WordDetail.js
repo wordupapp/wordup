@@ -2,21 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Label, Header, List, Segment, Icon } from 'semantic-ui-react';
+import { wordDetail } from './styles';
 
 /**
  * COMPONENT STYLE
  */
-const styles = {
-  all: {
-    margin: '3em auto',
-    textAlign: 'left',
-    maxWidth: '70%',
-    paddingBottom: '8em',
-  },
-  listItem: {
-    margin: '1em',
-  },
-};
+const styles = wordDetail;
 
 /**
  * COMPONENT

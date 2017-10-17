@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Menu, Icon, Dropdown, Image } from 'semantic-ui-react';
-import { logout } from '../store';
+import { logout } from '../../store';
+import styles from './styles';
 
 /* eslint-disable arrow-parens */
 /* eslint-disable react/jsx-indent */
@@ -19,32 +20,6 @@ class Navbar extends Component {
       { url: '/data/1', name: 'Stats' },
       { url: '/games', name: 'Play' },
     ];
-    this.styles = {
-      navbar: {
-        height: "6rem",
-        background: '#2b282e',
-      },
-      logo: {
-        paddingTop: 15,
-        paddingLeft: 20,
-        paddingBottom: 5,
-        paddingRight: 5,
-      },
-      menuItem: {
-        color: '#ffffff',
-        fontWeight: 'bold',
-      },
-      menuMenu: {
-        fontSize: '20px',
-        color: '#ffffff',
-      },
-      rightMenu: {
-        fontSize: '20px',
-        marginRight: 30,
-        color: '#ffffff',
-        fontWeight: 'bold',
-      },
-    };
   }
 
   render() {
@@ -73,14 +48,14 @@ class Navbar extends Component {
     )
 
     return (
-      <Menu floated fixed="top" secondary style={this.styles.navbar}>
-        <Menu.Menu style={this.styles.menuMenu} >
+      <Menu floated fixed="top" secondary style={styles.navbar}>
+        <Menu.Menu style={styles.menuMenu} >
           <Link to="/">
             <img
               alt="wordUP"
               src="/logo.svg"
               height="75"
-              style={this.styles.logo}
+              style={styles.logo}
             />
           </Link>
           {isLoggedIn ?
@@ -89,8 +64,8 @@ class Navbar extends Component {
           }
         </Menu.Menu>
         {isLoggedIn ? (
-          <Menu.Menu position="right" style={this.styles.rightMenu}>
-            <Dropdown trigger={dropTrigger} item style={this.styles.menuItem}>
+          <Menu.Menu position="right" style={styles.rightMenu}>
+            <Dropdown trigger={dropTrigger} item style={styles.menuItem}>
               <Dropdown.Menu>
                 <Dropdown.Item as={Link} to={'/home'}>
                   <Icon name='user' />
@@ -116,7 +91,7 @@ class Navbar extends Component {
             </Dropdown>
           </Menu.Menu>
         ) : (
-          <Menu.Item name="Login" as={Link} to={`/login`} position="right" style={this.styles.rightMenu} />
+          <Menu.Item name="Login" as={Link} to={`/login`} position="right" style={styles.rightMenu} />
         )}
       </Menu>
     );

@@ -2,13 +2,13 @@
 /* eslint-disable react/jsx-indent */
 /* eslint-disable indent */
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Router} from 'react-router';
-import {Route, Switch} from 'react-router-dom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Router } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import history from './history';
-import {Main,
+import { Main,
         UserHome,
         Landing,
         Record,
@@ -18,7 +18,7 @@ import {Main,
         Games,
         NewWordsPanel,
       } from './components';
-import {me} from './store';
+import { me } from './store';
 
 class Routes extends Component {
   componentDidMount() {

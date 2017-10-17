@@ -2,64 +2,26 @@ import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Icon } from 'semantic-ui-react';
-
-import Splash from './Splash';
+import styles from './styles';
+// import Splash from './Splash';
 import {
   Login,
   Signup,
-} from './auth-form';
-
-const containerStyles = {
-  width: "50%",
-  display: "flex",
-  alignItems: "left",
-  flexWrap: "wrap",
-  flexDirection: "column",
-  marginLeft: "5rem",
-  marginTop: "15rem",
-};
-
-const subContainerStyles = {
-  display: "flex",
-  marginTop: "2rem",
-};
-
-const headerStyles = {
-  h1: {
-    color: '#2b282e',
-    fontSize: 36,
-  },
-  h3: {
-    color: '#2b282e',
-    fontSize: 28,
-  },
-  h4: {
-    color: '#2b282e',
-    fontSize: 20,
-    margin: "auto 2rem",
-  },
-  button: {
-    marginTop: 25,
-  },
-};
-
-const iconStyles = {
-  color: '#2b282e',
-};
+} from '../auth';
 
 const Visitor = () => (
-  <div style={containerStyles}>
-    <h1 style={headerStyles.h1}>
+  <div style={styles.container}>
+    <h1 style={styles.h1}>
       Want to up your vocabulary game?
     </h1>
-    <h3 style={headerStyles.h3}>
+    <h3 style={styles.h3}>
       Analyze your vocabulary level, get custom recommendations and play some games to learn new words.
     </h3>
     <Link to="/signup">
       <Button
         inverted
         size="massive"
-        style={headerStyles.button}>
+        style={styles.button}>
       Get Started
       </Button>
     </Link>
@@ -73,16 +35,16 @@ const options = [
 ];
 
 const User = () => (
-  <div style={containerStyles}>
-    <h1 style={headerStyles.h1}>
+  <div style={styles.container}>
+    <h1 style={styles.h1}>
       What would you like to do today?
     </h1>
     {
       options.map(option => {
         return (
-          <Link to={`/${option.ref}`} key={option.key} style={subContainerStyles}>
-            <Icon size="huge" name={option.icon} style={iconStyles} />
-            <h4 style={headerStyles.h4}>
+          <Link to={`/${option.ref}`} key={option.key} style={styles.subContainer}>
+            <Icon size="huge" name={option.icon} style={styles.icon} />
+            <h4 style={styles.h4}>
               {option.text}
             </h4>
           </Link>
@@ -109,9 +71,9 @@ const Landing = props => {
     default: component = <Welcome user={props.user} />;
   }
   return (
-    <Splash>
+    <Container style={styles.splash} fluid>
       {component}
-    </Splash>
+    </Container>
   );
 };
 

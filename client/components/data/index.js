@@ -8,7 +8,9 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Grid, Menu, Container } from 'semantic-ui-react';
 // import history from '../history';
-import { DataVisWordCloud, DataVisUsageTrends } from '../components';
+import { DataVisUsageTrends } from './DataVisUsageTrends';
+import { DataVisWordCloud } from './DataVisWordCloud';
+import styles from './styles';
 
 /**
  * COMPONENT
@@ -21,33 +23,18 @@ class DataVisPanel extends Component {
       { url: '/data/1', name: 'Your Word Cloud' },
       { url: '/data/2', name: 'Top Word Usage Trends' },
     ];
-    this.styles = {
-      all: {
-        // width: "100%",
-        height: "100vh",
-        backgroundColor: "#e9e9e9",
-        flexGrow: 1,
-      },
-      container: {
-        padding: "1em 0em 1em 1em",
-        minWidth: "80%",
-      },
-      menuColumn: {
-        zIndex: 1,
-      },
-    };
   }
 
   render() {
     return (
       <Container
         fluid
-        style={this.styles.all}>
+        style={styles.all}>
         <Grid
           stackable
-          style={this.styles.container}>
+          style={styles.container}>
           <Grid.Column
-            style={this.styles.menuColumn}
+            style={styles.menuColumn}
             width={3}>
             {
               <Menu vertical pointing>
