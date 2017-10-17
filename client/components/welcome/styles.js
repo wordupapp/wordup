@@ -36,7 +36,7 @@ const styles = {
     position: 'absolute',
     top: 0,
     bottom: 0,
-    background: `url('yellowLanding.jpg') no-repeat`,
+    background: `url('assets/image/yellowLanding.jpg') no-repeat`,
     backgroundSize: "cover",
     marginTop: "6rem",
   },

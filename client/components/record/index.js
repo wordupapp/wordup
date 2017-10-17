@@ -197,7 +197,7 @@ class Record extends Component {
         <div style={styles.innerDiv}>
           <div style={styles.outerCircle} ref="outerCircle" />
           <div style={styles.innerCircle} onClick={this.recordingToggle} />
-          <img style={styles.mic} src="mic.svg" onClick={this.recordingToggle} />
+          <img style={styles.mic} src="assets/image/mic.svg" onClick={this.recordingToggle} />
           {
             this.state.dirty
               ? card

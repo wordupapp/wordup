@@ -10,7 +10,7 @@ const wordData = require('./public/assets/json/college-words.json');
 const getDefinition = (wordName) => {
   return new Promise((resolve, reject) => {
     unirest.get(`https://twinword-word-graph-dictionary.p.mashape.com/definition/?entry=${wordName}`)
-      .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
+      .header("X-Mashape-Key", process.env.X_MASHAPE_KEY)
       .header("Accept", "application/json")
       .end(result => {
         if (result.status === 200) resolve(result.body.meaning);
@@ -22,7 +22,7 @@ const getDefinition = (wordName) => {
 const getExample = (wordName) => {
   return new Promise((resolve, reject) => {
     unirest.get(`https://twinword-word-graph-dictionary.p.mashape.com/example/?entry=${wordName}`)
-      .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
+      .header("X-Mashape-Key", process.env.X_MASHAPE_KEY)
       .header("Accept", "application/json")
       .end(result => {
         if (result.status === 200) resolve(result.body.example);
@@ -34,7 +34,7 @@ const getExample = (wordName) => {
 const getRelation = (wordName) => {
   return new Promise((resolve, reject) => {
     unirest.get(`https://twinword-word-graph-dictionary.p.mashape.com/reference/?entry=${wordName}`)
-      .header("X-Mashape-Key", "5F9jWJK7bDmshtKmwVHBO61VICEFp1qAo5EjsnPJeSefmtA065")
+      .header("X-Mashape-Key", process.env.X_MASHAPE_KEY)
       .header("Accept", "application/json")
       .end(result => {
         if (result.status === 200) resolve(result.body.relation);

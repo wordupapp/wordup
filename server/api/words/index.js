@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const Promise = require('bluebird');
-const { graphDb } = require('../db');
+const { graphDb } = require('../../db');
 
 const session = graphDb.session();
 

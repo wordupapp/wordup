@@ -5,9 +5,9 @@ const neo4j = require('neo4j-driver').v1;
 const Api = require('rosette-api');
 const ArgumentParser = require('argparse').ArgumentParser;
 
-const { User } = require('../db/models');
-const { graphDb } = require('../db');
-const stopWords = require('../../public/assets/json/stopwords.json');
+const { User } = require('../../db/models');
+const { graphDb } = require('../../db');
+const stopWords = require('../../../public/assets/json/stopwords.json');
 
 const session = graphDb.session();
 
@@ -54,6 +54,8 @@ router.get('/:id/words', (req, res, next) => {
 
 const getWordDefinitions = wordArr => {
 
+  if (!wordArr) return [null, null];
+
   const wordNameArr = wordArr.map(wordData => {
     return wordData._fields[0].properties.name;
   })
@@ -71,6 +73,8 @@ const getWordDefinitions = wordArr => {
 }
 
 const getWordExamples = ([wordNameArr, wordDefDataArr]) => {
+
+  if (!wordNameArr) return [null, null, null];
 
   const wordDefArr = wordDefDataArr.map(wordData => {
     return wordData.records.map(record => ({
@@ -95,6 +99,8 @@ const getWordExamples = ([wordNameArr, wordDefDataArr]) => {
 
 const getWordRelations = ([wordNameArr, wordDefArr, wordExampleDataArr]) => {
 
+  if (!wordNameArr) return [null, null, null, null];
+
   const wordExampleArr = wordExampleDataArr.map(wordData => {
     return wordData.records.map(record => record._fields[0]);
   })
@@ -114,6 +120,8 @@ const getWordRelations = ([wordNameArr, wordDefArr, wordExampleDataArr]) => {
 }
 
 const combineAllWordDetails = ([wordNameArr, wordDefArr, wordExampleArr, wordRelationDataArr]) => {
+
+  if (!wordNameArr) return;
 
   const wordRelationArr = wordRelationDataArr.map(wordData => {
     return wordData.records.map(record => ({
@@ -173,7 +181,7 @@ router.get('/:id/words/suggest/level/:level', (req, res, next) => {
       `;
       return session.run(cypherCodeForWord);
     })
-    .then(data => data.records)
+    .then(data => data ? data.records : null)
     .then(getWordDefinitions)
     .then(getWordExamples)
     .then(getWordRelations)
