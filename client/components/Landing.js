@@ -10,14 +10,13 @@ import {
 } from './auth-form';
 
 const containerStyles = {
-  width: "900px",
+  width: "50%",
   display: "flex",
   alignItems: "left",
-  justifyContent: "center",
   flexWrap: "wrap",
   flexDirection: "column",
-  marginTop: "auto",
-  padding: "0px 0px 500px 100px",
+  marginLeft: "5rem",
+  marginTop: "15rem",
 };
 
 const subContainerStyles = {
