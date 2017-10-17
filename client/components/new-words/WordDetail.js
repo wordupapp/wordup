@@ -2,21 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Label, Header, List, Segment, Icon } from 'semantic-ui-react';
-
-/**
- * COMPONENT STYLE
- */
-const styles = {
-  all: {
-    margin: '3em auto',
-    textAlign: 'left',
-    maxWidth: '70%',
-    paddingBottom: '8em',
-  },
-  listItem: {
-    margin: '1em',
-  },
-};
+import styles from './styles';
 
 /**
  * COMPONENT
@@ -33,7 +19,7 @@ export const WordDetail = props => {
       contentKey += 1;
       const dispText = text.split(')').slice(1).join('');
       return (
-        <List.Description key={contentKey} style={styles.listItem}>
+        <List.Description key={contentKey} style={styles.wordDetail.listItem}>
           <List.Icon name="bookmark" />
           {dispText}
         </List.Description>
@@ -54,7 +40,7 @@ export const WordDetail = props => {
   const exampleList = examples.map(example => {
     contentKey += 1;
     return (
-      <List.Item key={contentKey} style={styles.listItem}>
+      <List.Item key={contentKey} style={styles.wordDetail.listItem}>
         <List.Icon name="book" />
         {`"${example}"`}
       </List.Item>
@@ -62,7 +48,7 @@ export const WordDetail = props => {
   });
 
   return (
-    <div style={styles.all}>
+    <div style={styles.wordDetail.all}>
       <Header as="h2" attached="top">
         <Icon name="book" />
         <Header.Content>

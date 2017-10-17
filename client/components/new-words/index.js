@@ -8,30 +8,8 @@ import { Header, Container, Menu, Icon } from 'semantic-ui-react';
 import history from '../../history';
 import LevelWordView from './LevelWords';
 import OhterUserWordView from './OtherUserWords';
+import styles from './styles';
 
-const styles = {
-  all: {
-    width: "100%",
-    backgroundColor: "#e9e9e9",
-    flexGrow: 1,
-  },
-  container: {
-    padding: "2em 0em 4em",
-    // minWidth: "60%",
-  },
-  subContainer: {
-    backgroundColor: "#ffffff",
-    borderRadius: "10px",
-    boxShadow: "0 0 25px rgba(0,0,0,.04)",
-    textAlign: "center",
-  },
-  iconHeader: {
-    marginTop: "1em",
-    fontSize: '2em',
-    fontFamily: "Fredoka One",
-    fontWeight: 500,
-  },
-};
 
 class NewWordsPanel extends React.Component {
   constructor(props) {
@@ -50,10 +28,10 @@ class NewWordsPanel extends React.Component {
     const { activeItem } = this.state;
 
     return (
-      <Container style={styles.all}>
-        <Container style={styles.container}>
-          <Container style={styles.subContainer}>
-            <Header as='h1' icon style={styles.iconHeader}>
+      <Container style={styles.panel.all}>
+        <Container style={styles.panel.container}>
+          <Container style={styles.panel.subContainer}>
+            <Header as='h1' icon style={styles.panel.iconHeader}>
               <Icon name='graduation' />
               <Header.Content>
                 Learn new words

@@ -6,14 +6,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Card, Form, Message, Button, Icon } from 'semantic-ui-react';
-import { auth } from '../store';
-
-const authStyles = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  margin: "0em auto 15em",
-};
+import { auth } from '../../store';
+import styles from './styles';
 
 /**
  * COMPONENT
@@ -22,7 +16,7 @@ const AuthForm = (props) => {
   const { name, displayName, handleSubmit, error } = props;
 
   return (
-    <div style={authStyles}>
+    <div style={styles}>
       <Card centered raised>
         <Card.Content>
           <Card.Header as="h2" textAlign="center">

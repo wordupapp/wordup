@@ -4,26 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { logout } from '../store';
-import {
-  Navbar,
-} from './';
+import { logout } from '../../store';
+import Navbar from '../navbar';
+import styles from './styles';
 
 const Main = (props) => {
   const { children, handleClick, isLoggedIn } = props;
-  const styles = {
-    body: {
-      display: 'flex',
-      minHeight: '100vh',
-      flexDirection: 'column',
-    },
-    containerFull: {
-      marginTop: '6em',
-      flex: '1',
-      display: 'flex',
-      flexDirection: 'column',
-    },
-  };
 
   return (
     <div style={styles.body}>

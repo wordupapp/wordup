@@ -4,16 +4,16 @@
  * having to figure out which file they belong to!
  */
 export { default as Main } from './main';
-export { default as Landing } from './Landing';
-export { default as Splash } from './Splash';
-export { default as DataVisPanel } from './DataVisPanel';
-export { default as DataVisWordCloud } from './DataVisWordCloud';
-export { default as DataVisUsageTrends } from './DataVisUsageTrends';
+export { default as Landing } from './welcome';
+// export { default as Splash } from './Splash';
+export { default as DataVisPanel } from './data';
+export { default as DataVisWordCloud } from './data/DataVisWordCloud';
+export { default as DataVisUsageTrends } from './data/DataVisUsageTrends';
 export { default as UserHome } from './user-home';
-export { default as Record } from './Record';
-export { default as Navbar } from './Navbar';
-export { default as Games } from './Games';
-export { default as SynonymGame } from './SynonymGame';
-export { default as Definitions } from './games/Definitions';
-export { Login, Signup } from './auth-form';
-export { default as NewWordsPanel } from './new-words/NewWordsPanel';
+export { default as Record } from './record';
+export { default as Navbar } from './navbar';
+export { default as Games } from './games';
+export { default as SynonymGame } from './games/synonym-game';
+export { default as Definitions } from './games/definitions-game';
+export { Login, Signup } from './auth';
+export { default as NewWordsPanel } from './new-words';

@@ -3,90 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Button, Container, Header, Icon, Image, Grid, List, Table, Label } from 'semantic-ui-react';
-
-/**
- * COMPONENT STYLE
- */
-const style = {
-  all: {
-    width: "100%",
-    backgroundColor: "#e9e9e9",
-    flexGrow: 1,
-  },
-  container: {
-    padding: "2em 0em 4em",
-    minWidth: "60%",
-  },
-  leftContainer: {
-    backgroundColor: "#ffffff",
-    padding: "3em 2em",
-    marginBottom: "4em",
-    borderRadius: "10px",
-    boxShadow: "0 0 25px rgba(0,0,0,.04)",
-    textAlign: "center",
-  },
-  rightContainerTop: {
-    backgroundColor: "#ffffff",
-    maxHeight: "380px",
-    minWidth: "300px",
-    padding: "2em",
-    marginBottom: "3em",
-    borderRadius: "10px",
-    boxShadow: "0 0 25px rgba(0,0,0,.04)",
-    textAlign: "center",
-  },
-  rightContainerBot: {
-    backgroundColor: "#ffffff",
-    minWidth: "300px",
-    padding: "2em",
-    marginTop: "-2em",
-    marginBottom: "3em",
-    borderRadius: "10px",
-    boxShadow: "0 0 25px rgba(0,0,0,.04)",
-    textAlign: "center",
-  },
-  userImage: {
-    margin: '3em auto',
-  },
-  title: {
-    fontSize: '3em',
-    marginTop: '0.5em',
-    fontFamily: "Fredoka One",
-    fontWeight: 500,
-  },
-  subTitle: {
-    fontSize: '2em',
-    fontFamily: "Fredoka One",
-    fontWeight: 200,
-  },
-  list: {
-    fontSize: '1.5em',
-    margin: '3em auto 2em',
-    width: '50%',
-  },
-  emailLink: {
-    color: '#2185d0',
-  },
-  editButton: {
-    marginBottom: '1em',
-    background: '#ffd600',
-    color: '#2b282e',
-  },
-  levelContainer: {
-    marginTop: '6em',
-    marginBottom: '-5em',
-  },
-  levelIcon: {
-    fontSize: '11em',
-    display: 'inline-block',
-    position: 'relative',
-    color: '#ffd600',
-  },
-  levelNumber: {
-    fontWeight: 100,
-    fontSize: '0.6em',
-  },
-};
+import styles from './styles';
 
 /**
  * COMPONENT
@@ -100,17 +17,17 @@ export const UserHome = props => {
   if (!image) image = 'http://www.answerspoint.com/user/uploads/users/default_user.png';
 
   const userInfoBlock = (
-    <Container style={style.leftContainer}>
-      <Header as='h3' style={style.title}>
+    <Container style={styles.leftContainer}>
+      <Header as='h3' style={styles.title}>
         Hello, {firstName}!
       </Header>
       <Image
         size="small"
         shape="circular"
         src={image}
-        style={style.userImage}
+        style={styles.userImage}
       />
-      <List style={style.list} >
+      <List style={styles.list} >
         <List.Item>
           <List.Icon name='user' />
           <List.Content>{name}</List.Content>
@@ -122,7 +39,7 @@ export const UserHome = props => {
         <List.Item>
           <List.Icon name='mail' />
           <List.Content>
-            <a style={style.emailLink} href={`mailto$:${email}`}>
+            <a style={styles.emailLink} href={`mailto$:${email}`}>
               {email}
             </a>
           </List.Content>
@@ -138,26 +55,26 @@ export const UserHome = props => {
             null
         }
       </List>
-      <Button size='huge' style={style.editButton}>
+      <Button size='huge' style={styles.editButton}>
         Edit your profile
       </Button>
     </Container>
   );
 
   const userLevelBlock = (
-    <Container style={style.rightContainerTop}>
-      <Header as="h2" style={style.subTitle}>
+    <Container style={styles.rightContainerTop}>
+      <Header as="h2" style={styles.subTitle}>
         {'Your level: '}
         <Label
           circular
           color="red"
-          style={style.levelNumber}>
+          style={styles.levelNumber}>
           {level}
         </Label>
       </Header>
-      <Container style={style.levelContainer}>
+      <Container style={styles.levelContainer}>
         <Icon
-          style={style.levelIcon}
+          style={styles.levelIcon}
           name={'trophy'}
         />
       </Container>
@@ -183,8 +100,8 @@ export const UserHome = props => {
   ));
 
   const userTopWordsBlock = (
-    <Container style={style.rightContainerBot}>
-      <Header as="h2" style={style.subTitle}>Your top words</Header>
+    <Container style={styles.rightContainerBot}>
+      <Header as="h2" style={styles.subTitle}>Your top words</Header>
       <Table color="red">
         <Table.Header>
           <Table.Row>
@@ -202,13 +119,13 @@ export const UserHome = props => {
   );
 
   return (
-    <Container style={style.all}>
+    <Container style={styles.all}>
       <Grid
         container
         stackable
         stretched
         relaxed
-        style={style.container}>
+        style={styles.container}>
         <Grid.Row>
           <Grid.Column width={10}>
             {userInfoBlock}
