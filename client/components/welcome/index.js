@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Container, Icon } from 'semantic-ui-react';
 import styles from './styles';
 // import Splash from './Splash';
 import {

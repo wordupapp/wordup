@@ -33,7 +33,7 @@ class Navbar extends Component {
           name={link.name}
           as={Link}
           to={link.url}
-          style={this.styles.menuItem}>
+          style={styles.menuItem}>
           {link.name}
         </Menu.Item>
       );

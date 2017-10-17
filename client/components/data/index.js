@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { Grid, Menu, Container } from 'semantic-ui-react';
 // import history from '../history';
-import { DataVisUsageTrends } from './DataVisUsageTrends';
-import { DataVisWordCloud } from './DataVisWordCloud';
+import DataVisUsageTrends from './DataVisUsageTrends';
+import DataVisWordCloud from './DataVisWordCloud';
 import styles from './styles';
 
 /**

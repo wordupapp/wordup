@@ -4,25 +4,7 @@ import { connect } from 'react-redux';
 import { Container, Grid, Button, Message } from 'semantic-ui-react';
 
 import WordDetailPage from './WordDetail';
-
-/**
- * COMPONENT STYLE
- */
-const styles = {
-  buttonGroup: {
-    padding: '3em 5em 4em 5em',
-  },
-  infoMessage: {
-    maxWidth: '33%',
-    margin: '3em auto 0 auto',
-    background: '#2b282e',
-    color: '#fff',
-  },
-  wordButton: {
-    background: '#ffd600',
-    color: '#2b282e',
-  },
-};
+import styles from './styles';
 
 /**
  * COMPONENT
@@ -65,7 +47,7 @@ class LevelWords extends React.Component {
               value={word.name}
               onClick={this.handleMenuClick}
               size="massive"
-              style={styles.wordButton}>
+              style={styles.levelWords.wordButton}>
               {word.name}
             </Button>
           </Grid.Column>
@@ -83,9 +65,9 @@ class LevelWords extends React.Component {
                   icon="commenting"
                   header="Word suggestions based on your level"
                   content="These are high level words you haven't used."
-                  style={styles.infoMessage}
+                  style={styles.levelWords.infoMessage}
                 />
-                <Grid columns={3} stackable style={styles.buttonGroup}>
+                <Grid columns={3} stackable style={styles.levelWords.buttonGroup}>
                   {suggestionButtons}
                 </Grid>
               </Container>

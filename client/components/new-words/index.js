@@ -8,9 +8,8 @@ import { Header, Container, Menu, Icon } from 'semantic-ui-react';
 import history from '../../history';
 import LevelWordView from './LevelWords';
 import OhterUserWordView from './OtherUserWords';
-import { panel } from './styles';
+import styles from './styles';
 
-const styles = panel;
 
 class NewWordsPanel extends React.Component {
   constructor(props) {
@@ -29,10 +28,10 @@ class NewWordsPanel extends React.Component {
     const { activeItem } = this.state;
 
     return (
-      <Container style={styles.all}>
-        <Container style={styles.container}>
-          <Container style={styles.subContainer}>
-            <Header as='h1' icon style={styles.iconHeader}>
+      <Container style={styles.panel.all}>
+        <Container style={styles.panel.container}>
+          <Container style={styles.panel.subContainer}>
+            <Header as='h1' icon style={styles.panel.iconHeader}>
               <Icon name='graduation' />
               <Header.Content>
                 Learn new words
