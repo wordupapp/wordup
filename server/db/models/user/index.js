@@ -39,18 +39,18 @@ module.exports = User;
  */
 User.prototype.correctPassword = function (candidatePwd) {
   return User.encryptPassword(candidatePwd, this.salt) === this.password;
-}
+};
 
 /**
  * classMethods
  */
 User.generateSalt = function () {
   return crypto.randomBytes(16).toString('base64');
-}
+};
 
 User.encryptPassword = function (plainText, salt) {
   return crypto.createHash('sha1').update(plainText).update(salt).digest('hex');
-}
+};
 
 /**
  * hooks
@@ -61,7 +61,7 @@ const setSaltAndPassword = user => {
     updatedUser.salt = User.generateSalt()
     updatedUser.password = User.encryptPassword(user.password, user.salt);
   }
-}
+};
 
 User.beforeCreate(setSaltAndPassword);
 User.beforeUpdate(setSaltAndPassword);
