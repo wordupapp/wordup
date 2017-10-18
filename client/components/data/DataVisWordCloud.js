@@ -8,7 +8,6 @@
 /* eslint-disable vars-on-top */
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable no-return-assign */
-/* eslint-disable no-console */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-else-return */
 
@@ -217,7 +216,6 @@ class DataVisWordCloud extends Component {
   }
 
   render() {
-    console.log('windowHeight ', window.innerHeight, '\nwindowWidth', window.innerWidth);
     const svgLength = Math.min(window.innerHeight * 0.9, window.innerWidth * 0.9);
     return (
         <svg

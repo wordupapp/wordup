@@ -8,7 +8,6 @@
 /* eslint-disable vars-on-top */
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable no-return-assign */
-/* eslint-disable no-console */
 /* eslint-disable no-plusplus */
 
 import React, { Component } from 'react';
@@ -60,7 +59,6 @@ class DataVisUsageTrends extends Component {
     let bubbleId = 0;
 
     Object.entries(userWords).forEach(function (entry, entryIndex) {
-      console.log(entry);
       let useCounter2015 = 0;
       let useCounter2016 = 0;
       let useCounter2017 = 0;
@@ -406,7 +404,6 @@ class DataVisUsageTrends extends Component {
        * x force.
        */
       function nodeYearPos(d) {
-        console.log(d);
         return yearCenters[d.year].x;
       }
 
@@ -531,18 +528,6 @@ class DataVisUsageTrends extends Component {
     myBubbleChart(this.svgRoot, rootParam);
 
     /*
-     * Function called once data is loaded from CSV.
-     * Calls bubble chart function to display inside #vis div.
-     */
-    // function display(error, data) {
-    //   if (error) {
-    //     console.log(error);
-    //   }
-
-    //   myBubbleChart('#vis', data);
-    // }
-
-    /*
      * Sets up the layout buttons to allow for toggling between view modes.
      */
     function setupButtons() {
@@ -591,7 +576,6 @@ class DataVisUsageTrends extends Component {
   }
 
   render() {
-    console.log(this.props.userWords);
     const svgLength = Math.min(window.innerHeight * 0.9, window.innerWidth * 0.9);
     return (
       <div className="svgBody">

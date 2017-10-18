@@ -423,7 +423,6 @@ const rosetteAnalysis = async (speech) => {
           console.log(err);
           reject (`Rosette analysis failed for: ${speech}`);
       } else {
-          // console.log(JSON.stringify(res, null, 2));
           const retWordArr = [];
           const excludePOS = ["NUM", "PRON", "PROPN", "PUNCT", "SYM", "X"];
           if (res) {
