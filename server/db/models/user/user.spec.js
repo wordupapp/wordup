@@ -6,7 +6,7 @@ const { db } = require('../../index');
 const User = db.model('user');
 // const User = require('./index');
 
-describe.only('User model', () => {
+describe('User model', () => {
   beforeEach(() => db.sync({ force: true }));
 
   describe('model definition', () => {

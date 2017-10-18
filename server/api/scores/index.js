@@ -7,10 +7,6 @@ module.exports = router;
 // GET for all spcres for a user
 router.get('/:userId', (req, res, next) => {
 
-  // if (!req.user) {
-  //   res.status(401).send('You must be logged in to get your score.');
-  // }
-
   Score.findAll({
     where: {
       userId: req.params.userId,
@@ -22,10 +18,6 @@ router.get('/:userId', (req, res, next) => {
 
 // POST for new score for a user
 router.post('/:userId', (req, res, next) => {
-
-  // if (!req.user) {
-  //   res.status(401).send('You must be logged in to add a score.');
-  // }
 
   User.findById(req.params.userId)
     .then(user => {
