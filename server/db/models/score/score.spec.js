@@ -4,7 +4,6 @@ const { expect } = require('chai');
 const { db } = require('../../index');
 
 const Score = db.model('score');
-// const Score = require('./index');
 
 describe('Score model', () => {
   beforeEach(() => db.sync({ force: true }));
@@ -12,7 +11,7 @@ describe('Score model', () => {
   let userScore;
 
   beforeEach(() => (
-    Score.Create({
+    Score.create({
       score: 100,
     })
       .then(score => {
@@ -24,7 +23,7 @@ describe('Score model', () => {
     expect(userScore.score).to.be.equal(100);
   });
 
-  it('has star value greater than equal to 0', () => {
+  it('has score greater than equal to 0', () => {
     userScore.score = -50;
 
     return userScore.validate()
@@ -33,7 +32,7 @@ describe('Score model', () => {
       },
       result => {
         expect(result).to.be.an.instanceOf(Error);
-        expect(result.message).to.contain('Validation min on scire failed');
+        expect(result.message).to.contain('Validation min on score failed');
       });
   });
 });
