@@ -53,7 +53,7 @@ class Navbar extends Component {
           <Link to="/">
             <img
               alt="wordUP"
-              src="/logo.svg"
+              src="assets/image/logo.svg"
               height="75"
               style={styles.logo}
             />

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Score } = require('../db/models');
+const { User, Score } = require('../../db/models');
 const Promise = require('bluebird');
 
 module.exports = router;
