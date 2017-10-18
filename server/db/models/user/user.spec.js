@@ -1,14 +1,13 @@
 /* global describe beforeEach it */
 
 const { expect } = require('chai');
-const db = require('../../index');
+const { db } = require('../../index');
 
 const User = db.model('user');
+// const User = require('./index');
 
 describe.only('User model', () => {
-  beforeEach(() => {
-    return db.sync({ force: true })
-  });
+  beforeEach(() => db.sync({ force: true }));
 
   describe('model definition', () => {
     let testUser;

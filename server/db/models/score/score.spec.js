@@ -1,9 +1,10 @@
 /* global describe beforeEach it */
 
 const { expect } = require('chai');
-const db = require('../../index');
+const { db } = require('../../index');
 
 const Score = db.model('score');
+// const Score = require('./index');
 
 describe('Score model', () => {
   beforeEach(() => db.sync({ force: true }));
