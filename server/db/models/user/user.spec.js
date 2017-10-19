@@ -4,9 +4,8 @@ const { expect } = require('chai');
 const { db } = require('../../index');
 
 const User = db.model('user');
-// const User = require('./index');
 
-describe.only('User model', () => {
+describe('User model', () => {
   beforeEach(() => db.sync({ force: true }));
 
   describe('model definition', () => {
@@ -44,15 +43,15 @@ describe.only('User model', () => {
     });
 
     it('includes a correct name', () => {
-      expect(testUser.email).to.be.equal('Test First');
+      expect(testUser.name).to.be.equal('Test First');
     });
 
     it('includes a correct phone', () => {
-      expect(testUser.email).to.be.equal('222-222-2222');
+      expect(testUser.phone).to.be.equal('222-222-2222');
     });
 
     it('includes a correct gender', () => {
-      expect(testUser.email).to.be.equal('female');
+      expect(testUser.gender).to.be.equal('female');
     });
 
     it('cannot set invalid gender', () => {
