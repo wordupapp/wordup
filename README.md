@@ -41,7 +41,13 @@ While there are many indicators of a broad education, a strong command of langua
 
 To clone and run this application, you'll need [Git](https://git-scm.com/) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](https://www.npmjs.com/)) installed on your computer.
 
-You'll also need [Neo4j](https://neo4j.com/download/?ref=home), a popular graph database, as well as [PostgreSQL](https://www.postgresql.org/download/), a traditional object-relational database.
+You'll also need to install following:
+* [Neo4j](https://neo4j.com/download/?ref=home)
+  * a popular graph database
+* [PostgreSQL](https://www.postgresql.org/download/)
+  * a traditional object-relational database.
+* [Canvas](https://www.npmjs.com/package/canvas)
+  * Cairo backed Canvas implementation for NodeJS.
 
 Lastly, you'll need to make accounts for several APIs:
 * [twinword](https://www.twinword.com/api/)
