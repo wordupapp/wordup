@@ -3,16 +3,16 @@
 import { expect } from 'chai';
 import React from 'react';
 import { shallow } from 'enzyme';
-import { NewWords } from './index';
+import { NewWordsPanel } from './index';
 
-describe('NewWords', () => {
-  let newWords;
+describe.only('NewWordsPanel', () => {
+  let newWordsPanel;
 
   beforeEach(() => {
-    newWords = shallow(<NewWords email={'cody@email.com'} />);
+    newWordsPanel = shallow(<NewWordsPanel />);
   });
 
-  it('renders the email in an h3', () => {
-    expect(newWords.find('h3').text()).to.be.equal('Welcome, cody@email.com');
+  it('renders page header with text in an h1', () => {
+    expect(newWordsPanel.find('.panelHeader').text()).to.be.equal('Learn new words');
   });
 });

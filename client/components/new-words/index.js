@@ -11,7 +11,7 @@ import OhterUserWordView from './OtherUserWords';
 import styles from './styles';
 
 
-class NewWordsPanel extends React.Component {
+export class NewWordsPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,7 @@ class NewWordsPanel extends React.Component {
       <Container style={styles.panel.all}>
         <Container style={styles.panel.container}>
           <Container style={styles.panel.subContainer}>
-            <Header as='h1' icon style={styles.panel.iconHeader}>
+            <Header as='h1' className='panelHeader' icon style={styles.panel.iconHeader}>
               <Icon name='graduation' />
               <Header.Content>
                 Learn new words
