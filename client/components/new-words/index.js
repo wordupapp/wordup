@@ -31,33 +31,33 @@ export class NewWordsPanel extends React.Component {
       <Container style={styles.panel.all}>
         <Container style={styles.panel.container}>
           <Container style={styles.panel.subContainer}>
-            <Header as='h1' className='panelHeader' icon style={styles.panel.iconHeader}>
-              <Icon name='graduation' />
-              <Header.Content>
-                Learn new words
-                <Header.Subheader>
-                  learn and up your vocabulary game!
+            <Header as="h1" className="panelHeader" icon style={styles.panel.iconHeader}>
+              <Icon name="graduation" />
+              <Header.Content className="panelHeaderContent">
+                <span>Learn new words</span>
+                <Header.Subheader className="panelSubHeaderContent">
+                  <span>learn and up your vocabulary game!</span>
                 </Header.Subheader>
               </Header.Content>
             </Header>
-            <Menu pointing secondary size='massive'>
+            <Menu pointing secondary size="massive">
               <Menu.Item
-                name='level'
-                active={activeItem === 'level'}
+                name="level"
+                active={activeItem === "level"}
                 onClick={this.handleMenuClick}
                 as={Link}
                 to="/newwords/level"
               />
               <Menu.Item
-                name='user'
-                active={activeItem === 'user'}
+                name="user"
+                active={activeItem === "user"}
                 onClick={this.handleMenuClick}
                 as={Link}
                 to="/newwords/user"
               />
               <Menu.Item
-                name='extra'
-                active={activeItem === 'extra'}
+                name="extra"
+                active={activeItem === "extra"}
                 onClick={this.handleMenuClick}
                 as={Link}
                 to="/newwords/extra"

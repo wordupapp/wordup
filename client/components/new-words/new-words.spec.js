@@ -12,7 +12,23 @@ describe.only('NewWordsPanel', () => {
     newWordsPanel = shallow(<NewWordsPanel />);
   });
 
-  it('renders page header with text in an h1', () => {
-    expect(newWordsPanel.find('.panelHeader').text()).to.be.equal('Learn new words');
+  it('renders 1 page header', () => {
+    expect(newWordsPanel.find('.panelHeader').length).to.be.equal(1);
+  });
+
+  it('renders 1 page header content', () => {
+    expect(newWordsPanel.find('.panelHeaderContent').length).to.be.equal(1);
+  });
+
+  it('renders page header with correct text', () => {
+    expect(newWordsPanel.find('.panelHeaderContent > span').text()).to.be.equal('Learn new words');
+  });
+
+  it('renders 1 page subheader content', () => {
+    expect(newWordsPanel.find('.panelSubHeaderContent').length).to.be.equal(1);
+  });
+
+  it('renders page subheader with correct text', () => {
+    expect(newWordsPanel.find('.panelSubHeaderContent > span').text()).to.be.equal('learn and up your vocabulary game!');
   });
 });
